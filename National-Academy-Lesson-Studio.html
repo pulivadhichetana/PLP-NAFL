@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>National Academy for Learning · Lesson Plan & Worksheet Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --ink:#13233f;          /* deep academic navy */
+  --ink2:#1d3358;
+  --gold:#c79a3e;         /* warm academic gold */
+  --gold-d:#a87f2c;
+  --parch:#f6f1e7;        /* parchment */
+  --parch2:#efe7d6;
+  --crest:#7c1f2e;        /* heraldic maroon accent */
+  --card:#ffffff;
+  --line:#e2dccd;
+  --line2:#d8e0ea;
+  --muted:#6a7384;
+  --text:#1c2433;
+  --sky:#B8CCE4;          /* TTA doc colours preserved for exports */
+  --peach:#FBD4B4;
+  --ok:#1f7a4d;--warn:#a4421c;
+  --shadow:0 1px 2px rgba(19,35,63,.06),0 8px 24px rgba(19,35,63,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Inter",system-ui,Arial,sans-serif;color:var(--text);line-height:1.55;
+  background:
+    radial-gradient(1200px 400px at 80% -120px,rgba(199,154,62,.10),transparent 60%),
+    linear-gradient(180deg,#faf7f0,#f4eee2 240px,#f4eee2);min-height:100vh}
+.wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+.serif{font-family:"Fraunces",Georgia,serif}
+
+/* ===== Masthead ===== */
+header.top{background:linear-gradient(115deg,var(--ink),var(--ink2));color:#fff;position:relative;overflow:hidden;
+  border-bottom:3px solid var(--gold)}
+header.top::after{content:"";position:absolute;inset:0;background:
+  repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 1px,transparent 1px 64px);pointer-events:none}
+.top .wrap{display:flex;align-items:center;gap:18px;padding:20px 22px 18px;position:relative;z-index:1;flex-wrap:wrap}
+.crest{width:60px;height:64px;flex:none;position:relative;filter:drop-shadow(0 3px 6px rgba(0,0,0,.3))}
+.crest svg{width:100%;height:100%}
+.identity h1{font-size:1.5rem;margin:0;letter-spacing:.3px;font-weight:600;line-height:1.1}
+.identity .estd{display:flex;align-items:center;gap:10px;margin-top:5px}
+.identity .estd .ln{height:1px;width:26px;background:var(--gold)}
+.identity .estd span{font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:#dcc89a;font-weight:600}
+.identity p{margin:6px 0 0;font-size:.84rem;color:#c4d2e8}
+.mast-right{margin-left:auto;text-align:right}
+.mast-right .pill{display:inline-block;font-size:.72rem;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.2);
+  padding:6px 13px;border-radius:30px;color:#f0e7d2}
+.mast-right .motto{margin-top:8px;font-family:"Fraunces",serif;font-style:italic;font-size:.86rem;color:#dcc89a}
+@media(max-width:620px){.mast-right{margin-left:0;width:100%;text-align:left}}
+
+/* ===== Mode tabs ===== */
+.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0 4px}
+@media(max-width:860px){.modes{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.modes{grid-template-columns:1fr}}
+.mode-btn{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;cursor:pointer;
+  transition:.16s;display:flex;gap:13px;align-items:flex-start;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.mode-btn::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:transparent;transition:.16s}
+.mode-btn:hover{transform:translateY(-2px);border-color:var(--gold)}
+.mode-btn.active{border-color:var(--gold)}
+.mode-btn.active::before{background:var(--gold)}
+.mode-btn .ic{width:40px;height:40px;border-radius:11px;background:var(--parch2);color:var(--ink);font-size:1.15rem;
+  display:flex;align-items:center;justify-content:center;flex:none;font-weight:700}
+.mode-btn.active .ic{background:var(--ink);color:var(--gold)}
+.mode-btn h3{margin:0 0 3px;font-size:.96rem;font-weight:600}
+.mode-btn p{margin:0;font-size:.78rem;color:var(--muted)}
+
+/* ===== Panels ===== */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin:16px 0 30px;box-shadow:var(--shadow)}
+.panel h2{margin:0 0 4px;font-size:1.2rem;font-weight:600}
+.panel .sub{margin:0 0 18px;color:var(--muted);font-size:.86rem}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+@media(max-width:820px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.grid{grid-template-columns:1fr}}
+.field label{display:block;font-size:.72rem;font-weight:600;color:var(--ink);margin-bottom:5px;text-transform:uppercase;letter-spacing:.6px}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font:inherit;background:#fdfcf9;color:var(--text)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(199,154,62,.16);background:#fff}
+.field.full{grid-column:1/-1}
+textarea{resize:vertical;min-height:74px}
+
+.section-h{display:flex;align-items:center;gap:11px;margin:26px 0 13px;flex-wrap:wrap}
+.section-h .bar{width:5px;height:20px;border-radius:3px;background:var(--gold)}
+.section-h h3{margin:0;font-size:1rem;font-weight:600;font-family:"Fraunces",serif}
+.section-h .hint{font-size:.78rem;color:var(--muted);margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.lib-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.lib-tab{font-size:.78rem;padding:6px 13px;border-radius:30px;border:1.5px solid var(--line);background:#fff;cursor:pointer;color:var(--muted);font-weight:500}
+.lib-tab.active{background:var(--ink);color:var(--gold);border-color:var(--ink)}
+.acts{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+@media(max-width:680px){.acts{grid-template-columns:1fr}}
+.act{border:1.5px solid var(--line);border-radius:13px;padding:13px;cursor:pointer;transition:.13s;background:#fff;position:relative}
+.act:hover{border-color:var(--gold)}
+.act.sel{border-color:var(--gold);background:#fffdf6;box-shadow:0 0 0 2px rgba(199,154,62,.15)}
+.act .catdot{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 8px;border-radius:30px;margin-bottom:7px}
+.act h4{margin:0 0 4px;font-size:.9rem;font-weight:600}
+.act p{margin:0;font-size:.78rem;color:var(--muted)}
+.act .check{position:absolute;top:12px;right:12px;width:21px;height:21px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.72rem;color:#fff}
+.act.sel .check{background:var(--gold);border-color:var(--gold)}
+.cat-starter{background:#f6ead0;color:#8a6516}.cat-collaborative{background:#dde9f5;color:#1b4f82}
+.cat-formative{background:#dcefe4;color:#176844}.cat-plenary{background:#ece3f3;color:#5a3a86}
+.selbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 4px;font-size:.82rem;color:var(--muted)}
+.chip{background:var(--parch2);color:var(--ink);padding:4px 11px;border-radius:30px;font-size:.76rem;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.chip b{cursor:pointer;color:var(--crest)}
+
+.drop{border:2px dashed var(--line);border-radius:16px;padding:28px 20px;text-align:center;background:#fdfbf6;cursor:pointer;transition:.15s}
+.drop:hover,.drop.over{border-color:var(--gold);background:#fffdf6}
+.drop .big{font-size:1.9rem}
+.drop h3{margin:8px 0 3px;font-size:1rem;font-weight:600}
+.drop p{margin:0;color:var(--muted);font-size:.84rem}
+.filemeta{margin-top:12px;font-size:.84rem;display:none;align-items:center;gap:10px;background:#fffdf6;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.filemeta.show{display:flex}
+
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;align-items:center}
+.btn{border:none;border-radius:11px;padding:11px 21px;font:inherit;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.14s}
+.btn-primary{background:var(--ink);color:#fff}.btn-primary:hover{background:var(--ink2)}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+.btn-gold{background:var(--gold);color:#2a2008}.btn-gold:hover{background:var(--gold-d)}
+.btn-ghost{background:#fff;border:1.5px solid var(--line);color:var(--text)}.btn-ghost:hover{border-color:var(--gold)}
+.btn-sm{padding:8px 15px;font-size:.82rem}
+.status{font-size:.84rem;color:var(--muted)}.status.ok{color:var(--ok)}.status.err{color:var(--warn)}
+.note{font-size:.8rem;background:#fbf4e3;border:1px solid #ecdcb4;color:#76591f;border-radius:11px;padding:10px 13px;margin-top:11px}
+.hide{display:none}
+
+/* qtypes */
+.qtypes{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px;margin-bottom:8px}
+.qt{border:1.5px solid var(--line);border-radius:11px;padding:9px 12px;cursor:pointer;font-size:.84rem;display:flex;align-items:center;gap:9px;background:#fff}
+.qt.sel{border-color:var(--gold);background:#fffdf6}
+.qt .cb{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;flex:none}
+.qt.sel .cb{background:var(--gold);border-color:var(--gold)}
+.qt small{display:block;color:var(--muted);font-size:.7rem}
+.qtype-rows{display:flex;flex-direction:column;gap:7px;margin-top:7px}
+.qtype-row{display:flex;gap:9px;align-items:center;font-size:.82rem;background:#fdfbf6;border:1px solid var(--line);border-radius:9px;padding:7px 11px;flex-wrap:wrap}
+.qtype-row label{flex:1;min-width:120px;font-weight:600}.qtype-row input{width:66px;padding:5px 7px;border:1.5px solid var(--line);border-radius:7px;font:inherit}
+
+/* preview */
+#previewWrap{display:none;margin-top:8px}
+.lp-preview,.ws-preview{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;margin-bottom:18px;box-shadow:var(--shadow)}
+.lp-head{background:linear-gradient(115deg,var(--ink),var(--ink2));color:#fff;padding:13px 17px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;border-bottom:2px solid var(--gold)}
+.lp-head h3{margin:0;font-size:1rem;font-weight:600;font-family:"Fraunces",serif}
+.lp-body{padding:17px;overflow-x:auto}
+table.lp{border-collapse:collapse;width:100%;font-size:.8rem;min-width:760px}
+table.lp th,table.lp td{border:1px solid #c9d3e0;padding:7px 9px;vertical-align:top;text-align:left}
+table.lp .metarow td{background:#eef2f8}
+table.lp .aimrow td,table.lp .objrow td{background:var(--peach)}
+table.lp .colhdr th{background:var(--ink);color:#fff;font-size:.75rem}
+table.lp ul{margin:4px 0;padding-left:18px}.reflrow td{background:#f6f3ec;font-style:italic}
+.extra{margin-top:14px;font-size:.82rem}.extra h4{margin:14px 0 5px;color:var(--ink);font-size:.86rem;font-family:"Fraunces",serif}.extra ul{margin:4px 0;padding-left:18px}
+.ws-section{margin-bottom:13px}.ws-section h4{margin:9px 0 5px;font-size:.88rem;color:var(--ink);font-family:"Fraunces",serif}
+.ws-q{font-size:.82rem;padding:5px 0;border-bottom:1px dashed #ece6d8}.ws-q .opts{color:var(--muted);margin-top:2px}
+.imgbox{border:1.5px dashed #cdbf9c;border-radius:9px;height:120px;display:flex;align-items:center;justify-content:center;color:#a89668;font-size:.8rem;margin:6px 0;background:repeating-linear-gradient(45deg,#fdfbf6,#fdfbf6 10px,#f6f1e6 10px,#f6f1e6 20px)}
+.ws-q pre{background:#f6f3ec;border:1px solid var(--line);border-radius:7px;padding:8px;font-size:.78rem;overflow:auto;margin:5px 0}
+
+footer{color:var(--muted);font-size:.76rem;text-align:center;padding:26px 0 42px}
+footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;letter-spacing:.4px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="crest" aria-hidden="true">
+      <svg viewBox="0 0 60 64">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1d3358"/><stop offset="1" stop-color="#0e1b30"/></linearGradient></defs>
+        <path d="M30 2 L56 10 V32 C56 48 44 58 30 62 C16 58 4 48 4 32 V10 Z" fill="url(#g)" stroke="#c79a3e" stroke-width="2.2"/>
+        <path d="M30 14 L36 26 L49 26 L38.5 34 L42.5 47 L30 39 L17.5 47 L21.5 34 L11 26 L24 26 Z" fill="#c79a3e"/>
+        <path d="M16 50 h28" stroke="#c79a3e" stroke-width="1.6" fill="none" opacity=".8"/>
+      </svg>
+    </div>
+    <div class="identity">
+      <h1 class="serif">National Academy for Learning</h1>
+      <div class="estd"><span class="ln"></span><span>Teacher Studio</span><span class="ln"></span></div>
+      <p>Lesson plans, worksheets &amp; chapter objectives · CBSE · Grades 1–12 · Every subject</p>
+    </div>
+    <div class="mast-right">
+      <span class="pill">In-session format · Word + PDF</span>
+      <div class="motto">Learn · Teach · Engage</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="modes">
+    <div class="mode-btn active" id="m1" onclick="setMode('build')"><div class="ic">＋</div><div><h3>Build lesson plan</h3><p>Topic + activities → formatted plan.</p></div></div>
+    <div class="mode-btn" id="m2" onclick="setMode('convert')"><div class="ic">↑</div><div><h3>Convert a file</h3><p>PPT / PDF / Word → school format.</p></div></div>
+    <div class="mode-btn" id="m3" onclick="setMode('worksheet')"><div class="ic">✎</div><div><h3>Make worksheet</h3><p>Questions + marks for a topic.</p></div></div>
+    <div class="mode-btn" id="m4" onclick="setMode('pow')"><div class="ic">▦</div><div><h3>Plan of Work</h3><p>Upload syllabus → objectives.</p></div></div>
+  </div>
+
+  <!-- BUILD -->
+  <div class="panel" id="buildPanel">
+    <h2 class="serif">Lesson details</h2><p class="sub">Fills the header row of the plan exactly as in the school's In-session format.</p>
+    <div class="grid">
+      <div class="field"><label>Teacher</label><input id="f_teacher" placeholder="Ms / Mr …"></div>
+      <div class="field"><label>Class / Grade</label><select id="f_grade"><option value="">Select grade</option></select></div>
+      <div class="field"><label>Subject</label><select id="f_subject"><option value="">Select subject</option></select></div>
+      <div class="field"><label>Content / Unit / Chapter</label><input id="f_topic" placeholder="e.g. Light – Reflection, Fractions"></div>
+      <div class="field"><label>Date</label><input id="f_date" type="date"></div>
+      <div class="field"><label>Lesson duration</label><select id="f_dur"><option>30 min</option><option>35 min</option><option selected>40 min</option><option>45 min</option><option>60 min</option><option>80 min</option></select></div>
+      <div class="field full"><label>Aim (optional — auto-written if blank)</label><input id="f_aim" placeholder="One sentence describing the overall purpose"></div>
+      <div class="field full"><label>Learning objectives (optional, one per line)</label><textarea id="f_obj" placeholder="describe …&#10;explain …&#10;apply …"></textarea>
+        <div style="margin-top:7px"><button class="btn btn-ghost btn-sm" onclick="aiObjectives()">✨ Suggest objectives with AI</button> <span class="status" id="aiObjStatus"></span></div></div>
+    </div>
+    <div class="section-h"><div class="bar"></div><h3>Choose activities</h3><span class="hint">From the school's Goody Bag resources</span></div>
+    <div class="lib-tabs" id="libTabs"></div>
+    <div class="acts" id="actGrid"></div>
+    <div class="selbar" id="selBar"></div>
+    <div class="note">A balanced plan usually has one <b>Starter</b>, one or two <b>Collaborative / Formative</b> main activities, and one <b>Plenary</b>.</div>
+    <div class="actions"><button class="btn btn-primary" onclick="buildPlan()">Generate lesson plan</button><button class="btn btn-ghost" onclick="resetBuild()">Clear</button><span class="status" id="buildStatus"></span></div>
+  </div>
+
+  <!-- CONVERT -->
+  <div class="panel hide" id="convertPanel">
+    <h2 class="serif">Convert an existing lesson</h2><p class="sub">Upload a PowerPoint, PDF or Word file. It is restructured into the school's In-session format.</p>
+    <div class="drop" id="drop"><div class="big">⬆</div><h3>Drop a file or click to browse</h3><p>.pptx · .pdf · .docx</p><input type="file" id="fileInput" class="hide" accept=".pptx,.pdf,.docx"></div>
+    <div class="filemeta" id="fileMeta"><span id="fmName"></span><span id="fmSize" style="color:var(--muted)"></span><b style="margin-left:auto;cursor:pointer;color:var(--warn)" onclick="clearFile()">remove</b></div>
+    <div class="grid" style="margin-top:18px">
+      <div class="field"><label>Teacher</label><input id="c_teacher" placeholder="Ms / Mr …"></div>
+      <div class="field"><label>Class / Grade</label><select id="c_grade"><option value="">Select grade</option></select></div>
+      <div class="field"><label>Subject</label><select id="c_subject"><option value="">Select subject</option></select></div>
+      <div class="field"><label>Content / Unit / Chapter</label><input id="c_topic" placeholder="auto-detected if blank"></div>
+      <div class="field"><label>Date</label><input id="c_date" type="date"></div>
+      <div class="field"><label>Lesson duration</label><select id="c_dur"><option>30 min</option><option>35 min</option><option selected>40 min</option><option>45 min</option><option>60 min</option><option>80 min</option></select></div>
+    </div>
+    <div class="note">Keeps the file's activities &amp; sequence, splits content into timed rows, and adds Formative Assessment + Resources columns. Long decks auto-split into multiple lesson plans.</div>
+    <div class="actions"><button class="btn btn-primary" id="convBtn" onclick="convertFile()" disabled>Convert to lesson plan</button><button class="btn btn-ghost" onclick="clearFile()">Clear</button><span class="status" id="convStatus"></span></div>
+  </div>
+
+  <!-- WORKSHEET -->
+  <div class="panel hide" id="wsPanel">
+    <h2 class="serif">Worksheet generator</h2><p class="sub">Build a topic worksheet with marks. AI can draft questions (needs internet); you can edit everything.</p>
+    <div class="grid">
+      <div class="field"><label>Class / Grade</label><select id="w_grade"><option value="">Select grade</option></select></div>
+      <div class="field"><label>Subject</label><select id="w_subject"><option value="">Select subject</option></select></div>
+      <div class="field"><label>Topic / Chapter</label><input id="w_topic" placeholder="e.g. Photosynthesis, Fractions, Python loops"></div>
+    </div>
+    <div class="section-h"><div class="bar"></div><h3>Question types &amp; marks</h3></div>
+    <div class="qtypes" id="qtypes"></div>
+    <div class="qtype-rows" id="qtypeRows"></div>
+    <div class="section-h"><div class="bar"></div><h3>Image-based question</h3><span class="hint">A blank labelled box the teacher fills later</span></div>
+    <div class="grid">
+      <div class="field"><label>Image box preset</label><select id="w_imgpreset">
+        <option value="">None</option>
+        <option value="map">Map work (Social Studies) — mark / locate</option>
+        <option value="bio">Label the diagram (Biology) — name the parts</option>
+        <option value="code_err">Coding — find the error (Gr 1–3)</option>
+        <option value="code_out">Coding — write the output (Gr 1–3)</option>
+        <option value="generic">Generic labelled box</option>
+      </select></div>
+      <div class="field"><label>Box instruction (optional)</label><input id="w_imginstr" placeholder="auto-filled from preset"></div>
+      <div class="field"><label>Marks for image question</label><input id="w_imgmarks" type="number" value="5" min="0"></div>
+    </div>
+    <div class="actions"><button class="btn btn-primary" onclick="generateWorksheet()">Generate worksheet</button><button class="btn btn-gold" onclick="aiWorksheet()">✨ Draft questions with AI</button><span class="status" id="wsStatus"></span></div>
+  </div>
+
+  <!-- POW -->
+  <div class="panel hide" id="powPanel">
+    <h2 class="serif">Plan of Work (syllabus)</h2><p class="sub">Upload the year / term Plan of Work PDF. It is read into a chapter list so you can set day-wise / chapter-wise objectives and a summary worksheet.</p>
+    <div class="drop" id="powDrop"><div class="big">▦</div><h3>Drop the POW PDF or click to browse</h3><p>.pdf syllabus breakdown</p><input type="file" id="powInput" class="hide" accept=".pdf"></div>
+    <div class="filemeta" id="powMeta"><span id="pmName"></span><span id="pmSize" style="color:var(--muted)"></span><b style="margin-left:auto;cursor:pointer;color:var(--warn)" onclick="clearPow()">remove</b></div>
+    <div class="grid" style="margin-top:18px">
+      <div class="field"><label>Class / Grade</label><select id="p_grade"><option value="">Select grade</option></select></div>
+      <div class="field"><label>Subject</label><select id="p_subject"><option value="">Select subject</option></select></div>
+    </div>
+    <div id="powList" class="hide">
+      <div class="section-h"><div class="bar"></div><h3>Detected chapters / units</h3><span class="hint">Pick one to set objectives</span></div>
+      <div id="powChapters"></div>
+    </div>
+    <div class="note">After picking a chapter, the tool drafts learning objectives for it. Reading the PDF works offline; AI objective-drafting needs internet.</div>
+    <div class="actions"><button class="btn btn-primary" id="powBtn" onclick="readPow()" disabled>Read syllabus</button><button class="btn btn-ghost" onclick="clearPow()">Clear</button><span class="status" id="powStatus"></span></div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div id="previewWrap">
+    <div class="section-h"><div class="bar"></div><h3 id="prevTitle">Preview</h3>
+      <span class="hint">
+        <button class="btn btn-primary btn-sm" onclick="downloadDocxOut()">⬇ Word (.docx)</button>
+        <button class="btn btn-gold btn-sm" onclick="downloadPdfOut()">⬇ PDF</button>
+      </span>
+    </div>
+    <div id="previewBody"></div>
+  </div>
+
+  <footer><span class="seal">National Academy for Learning</span> · Teacher Studio · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF, no internet required.</footer>
+</div>
+
+<script>
+/* ===== engines (zip/docx/pdf/inflate) ===== */
+/* ============================================================
+   engines.js — zero-dependency DOCX + PDF + ZIP, browser-native
+   ============================================================ */
+
+/* ---------- CRC32 (for ZIP) ---------- */
+const _crcTable=(()=>{let c,t=[];for(let n=0;n<256;n++){c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(bytes){let c=0xFFFFFFFF;for(let i=0;i<bytes.length;i++)c=_crcTable[(c^bytes[i])&0xFF]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+
+/* ---------- minimal STORE-only ZIP (valid .docx container) ---------- */
+function makeZip(files){
+  // files: [{name, data(Uint8Array)}]
+  const enc=new TextEncoder();
+  let chunks=[],central=[],offset=0;
+  function u16(n){return [n&0xff,(n>>8)&0xff];}
+  function u32(n){return [n&0xff,(n>>8)&0xff,(n>>16)&0xff,(n>>24)&0xff];}
+  for(const f of files){
+    const nameB=enc.encode(f.name);
+    const data=f.data;
+    const crc=crc32(data);
+    const local=[].concat(
+      u32(0x04034b50),u16(20),u16(0),u16(0),u16(0),u16(0),
+      u32(crc),u32(data.length),u32(data.length),
+      u16(nameB.length),u16(0)
+    );
+    chunks.push(new Uint8Array(local));chunks.push(nameB);chunks.push(data);
+    const central_rec=[].concat(
+      u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),
+      u32(crc),u32(data.length),u32(data.length),
+      u16(nameB.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset)
+    );
+    central.push({rec:new Uint8Array(central_rec),name:nameB});
+    offset+=local.length+nameB.length+data.length;
+  }
+  let centralStart=offset,centralSize=0,centralChunks=[];
+  for(const c of central){centralChunks.push(c.rec);centralChunks.push(c.name);centralSize+=c.rec.length+c.name.length;}
+  const end=[].concat(
+    u32(0x06054b50),u16(0),u16(0),u16(central.length),u16(central.length),
+    u32(centralSize),u32(centralStart),u16(0)
+  );
+  const all=[...chunks,...centralChunks,new Uint8Array(end)];
+  let total=all.reduce((a,b)=>a+b.length,0),out=new Uint8Array(total),p=0;
+  for(const a of all){out.set(a,p);p+=a.length;}
+  return out;
+}
+
+/* ---------- XML escape ---------- */
+function xescape(s){return (s==null?"":String(s))
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;").replace(/'/g,"&apos;");}
+
+/* ============================================================
+   DOCX builder — tables, shading, bullets, page breaks
+   API: docBuilder() -> b; b.para(), b.table(), b.pageBreak(); b.toBlob()
+   Block model is a simple JSON tree we serialize to OOXML.
+   ============================================================ */
+function docBuilder(opts={}){
+  const blocks=[];
+  const landscape=opts.landscape!==false;
+  return {
+    para(runs,o={}){blocks.push({t:"p",runs:Array.isArray(runs)?runs:[{text:runs,...o}],o});return this;},
+    heading(text,o={}){blocks.push({t:"p",runs:[{text,bold:true,size:o.size||24,color:o.color||"0F2A52"}],o:{spacingBefore:o.before||160,spacingAfter:o.after||60}});return this;},
+    bullets(items,o={}){items.forEach(it=>blocks.push({t:"p",bullet:true,runs:[{text:it,size:o.size||18}]}));return this;},
+    numbered(items,o={}){items.forEach((it,i)=>blocks.push({t:"p",num:i+1,runs:[{text:it,size:o.size||18}]}));return this;},
+    table(rows,cols){blocks.push({t:"tbl",rows,cols});return this;},
+    spacer(){blocks.push({t:"p",runs:[{text:""}]});return this;},
+    pageBreak(){blocks.push({t:"pb"});return this;},
+    blob(){return docxBlob(blocks,landscape);}
+  };
+}
+
+function runXml(r){
+  const rpr=[];
+  if(r.bold)rpr.push("<w:b/>");
+  if(r.italics)rpr.push("<w:i/>");
+  rpr.push(`<w:sz w:val="${r.size||18}"/>`);
+  rpr.push(`<w:szCs w:val="${r.size||18}"/>`);
+  if(r.color)rpr.push(`<w:color w:val="${r.color}"/>`);
+  rpr.push(`<w:rFonts w:ascii="Arial" w:hAnsi="Arial"/>`);
+  const txt=xescape(r.text||"");
+  const space=(/^\s|\s$/.test(r.text||""))?' xml:space="preserve"':"";
+  return `<w:r><w:rPr>${rpr.join("")}</w:rPr><w:t${space}>${txt}</w:t></w:r>`;
+}
+function paraXml(b){
+  const ppr=[];
+  if(b.bullet)ppr.push(`<w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr>`);
+  if(b.num)ppr.push(`<w:numPr><w:ilvl w:val="0"/><w:numId w:val="2"/></w:numPr>`);
+  const o=b.o||{};
+  const sp=[];if(o.spacingBefore)sp.push(`w:before="${o.spacingBefore}"`);if(o.spacingAfter!=null)sp.push(`w:after="${o.spacingAfter}"`);else sp.push(`w:after="40"`);
+  ppr.push(`<w:spacing ${sp.join(" ")}/>`);
+  if(o.align)ppr.push(`<w:jc w:val="${o.align}"/>`);
+  const runs=(b.runs||[]).map(runXml).join("");
+  return `<w:p><w:pPr>${ppr.join("")}</w:pPr>${runs}</w:p>`;
+}
+function cellXml(c,colW){
+  // c: {runs:[...] | blocks:[paraXml...], fill, span, w, valign}
+  const tcpr=[`<w:tcW w:w="${c.w||colW}" w:type="dxa"/>`];
+  if(c.span&&c.span>1)tcpr.push(`<w:gridSpan w:val="${c.span}"/>`);
+  if(c.fill)tcpr.push(`<w:shd w:val="clear" w:color="auto" w:fill="${c.fill}"/>`);
+  tcpr.push(`<w:tcMar><w:top w:w="60" w:type="dxa"/><w:left w:w="90" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:right w:w="90" w:type="dxa"/></w:tcMar>`);
+  if(c.valign)tcpr.push(`<w:vAlign w:val="${c.valign}"/>`);
+  let inner;
+  if(c.paras)inner=c.paras.map(p=>paraXml(p)).join("");
+  else inner=paraXml({runs:c.runs||[{text:c.text||""}],o:c.o||{}});
+  return `<w:tc><w:tcPr>${tcpr.join("")}</w:tcPr>${inner}</w:tc>`;
+}
+function tableXml(b){
+  const cols=b.cols;
+  const grid=cols.map(w=>`<w:gridCol w:w="${w}"/>`).join("");
+  const border=`<w:tblBorders><w:top w:val="single" w:sz="4" w:color="9FB3CC"/><w:left w:val="single" w:sz="4" w:color="9FB3CC"/><w:bottom w:val="single" w:sz="4" w:color="9FB3CC"/><w:right w:val="single" w:sz="4" w:color="9FB3CC"/><w:insideH w:val="single" w:sz="4" w:color="9FB3CC"/><w:insideV w:val="single" w:sz="4" w:color="9FB3CC"/></w:tblBorders>`;
+  const totalW=cols.reduce((a,c)=>a+c,0);
+  const rows=b.rows.map(r=>{
+    const cells=r.map((c,i)=>cellXml(c,cols[i]||cols[cols.length-1])).join("");
+    const trpr=r._header?`<w:trPr><w:tblHeader/></w:trPr>`:"";
+    return `<w:tr>${trpr}${cells}</w:tr>`;
+  }).join("");
+  return `<w:tbl><w:tblPr><w:tblW w:w="${totalW}" w:type="dxa"/>${border}<w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>${grid}</w:tblGrid>${rows}</w:tbl>`;
+}
+function docxBlob(blocks,landscape){
+  const body=blocks.map(b=>{
+    if(b.t==="p")return paraXml(b);
+    if(b.t==="tbl")return tableXml(b);
+    if(b.t==="pb")return `<w:p><w:r><w:br w:type="page"/></w:r></w:p>`;
+    return "";
+  }).join("");
+  const W=landscape?15840:12240,H=landscape?12240:15840;
+  const sect=`<w:sectPr><w:pgSz w:w="${W}" w:h="${H}"${landscape?' w:orient="landscape"':""}/><w:pgMar w:top="720" w:right="720" w:bottom="720" w:left="720" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr>`;
+  const documentXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><w:body>${body}${sect}</w:body></w:document>`;
+  const numberingXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:abstractNum w:abstractNumId="0"><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="•"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="540" w:hanging="280"/></w:pPr></w:lvl></w:abstractNum>
+<w:abstractNum w:abstractNumId="1"><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1."/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="540" w:hanging="280"/></w:pPr></w:lvl></w:abstractNum>
+<w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num>
+<w:num w:numId="2"><w:abstractNumId w:val="1"/></w:num>
+</w:numbering>`;
+  const stylesXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="18"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>`;
+  const contentTypes=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/></Types>`;
+  const rels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`;
+  const docRels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/></Relationships>`;
+  const enc=new TextEncoder();
+  const files=[
+    {name:"[Content_Types].xml",data:enc.encode(contentTypes)},
+    {name:"_rels/.rels",data:enc.encode(rels)},
+    {name:"word/document.xml",data:enc.encode(documentXml)},
+    {name:"word/styles.xml",data:enc.encode(stylesXml)},
+    {name:"word/numbering.xml",data:enc.encode(numberingXml)},
+    {name:"word/_rels/document.xml.rels",data:enc.encode(docRels)}
+  ];
+  const zip=makeZip(files);
+  return new Blob([zip],{type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
+}
+
+/* ============================================================
+   PDF builder — text + lines + rectangles, multi-page, A4 portrait
+   Minimal but valid PDF 1.4. Helvetica only. Word-wrapping included.
+   ============================================================ */
+function pdfBuilder(o={}){
+  const PW=o.landscape?842:595, PH=o.landscape?595:842; // A4 points
+  const M=40;
+  const pages=[]; let cur=[]; let y=PH-M;
+  const lh=14;
+  function newPage(){if(cur.length)pages.push(cur);cur=[];y=PH-M;}
+  function ensure(h){if(y-h<M){newPage();}}
+  function wrap(text,maxW,fs){
+    const words=String(text).split(/\s+/);const lines=[];let line="";
+    const cw=fs*0.5; // approx Helvetica avg char width
+    const max=Math.floor(maxW/cw);
+    for(const w of words){const test=line?line+" "+w:w;if(test.length>max&&line){lines.push(line);line=w;}else line=test;}
+    if(line)lines.push(line);return lines.length?lines:[""];
+  }
+  const api={
+    PW,PH,M,
+    text(t,opts={}){
+      const fs=opts.size||10,x=(opts.x!=null?opts.x:M),maxW=opts.maxW||(PW-2*M-(x-M));
+      const bold=opts.bold;
+      const lines=opts.wrap===false?[String(t)]:wrap(t,maxW,fs);
+      for(const ln of lines){ensure(lh);cur.push({op:"text",x,y:y-fs,fs,bold,t:ln,color:opts.color});y-=(opts.lh||lh);}
+      return this;
+    },
+    gap(h){y-=(h||8);if(y<M)newPage();return this;},
+    rect(x,w,h,opts={}){ensure(h);cur.push({op:"rect",x,y:y-h,w,h,fill:opts.fill,stroke:opts.stroke!==false});if(opts.advance!==false)y-=h;return this;},
+    line(){ensure(2);cur.push({op:"line",x1:M,x2:PW-M,y:y});y-=6;return this;},
+    setY(v){y=v;},getY(){return y;},
+    blob(){newPage();return renderPDF(pages,PW,PH);}
+  };
+  return api;
+}
+function renderPDF(pages,PW,PH){
+  function esc(s){return String(s).replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)");}
+  const objs=[];
+  function add(s){objs.push(s);return objs.length;}
+  // 1 catalog, 2 pages tree — fill later
+  const catalogId=add("<< /Type /Catalog /Pages 2 0 R >>");
+  const pageIds=[];const contentIds=[];
+  // reserve pages node
+  const pagesNodeId=add(""); // id 2
+  for(const pg of pages){
+    let stream="";
+    for(const it of pg){
+      if(it.op==="text"){
+        const f=it.bold?"F2":"F1";const c=it.color||"000000";
+        const r=parseInt(c.substr(0,2),16)/255,g=parseInt(c.substr(2,2),16)/255,b=parseInt(c.substr(4,2),16)/255;
+        stream+=`${r.toFixed(2)} ${g.toFixed(2)} ${b.toFixed(2)} rg BT /${f} ${it.fs} Tf 1 0 0 1 ${it.x.toFixed(1)} ${it.y.toFixed(1)} Tm (${esc(it.t)}) Tj ET 0 0 0 rg\n`;
+      }else if(it.op==="rect"){
+        if(it.fill){const r=parseInt(it.fill.substr(0,2),16)/255,g=parseInt(it.fill.substr(2,2),16)/255,b=parseInt(it.fill.substr(4,2),16)/255;
+          stream+=`${r.toFixed(2)} ${g.toFixed(2)} ${b.toFixed(2)} rg ${it.x} ${it.y} ${it.w} ${it.h} re f 0 0 0 rg\n`;}
+        if(it.stroke)stream+=`0.6 0.7 0.8 RG ${it.x} ${it.y} ${it.w} ${it.h} re S 0 0 0 RG\n`;
+      }else if(it.op==="line"){
+        stream+=`0.7 0.7 0.7 RG ${it.x1} ${it.y} m ${it.x2} ${it.y} l S 0 0 0 RG\n`;
+      }
+    }
+    const cid=add(`<< /Length ${stream.length} >>\nstream\n${stream}endstream`);
+    contentIds.push(cid);
+    const pid=add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /Font << /F1 ${'%F1%'} 0 R /F2 ${'%F2%'} 0 R >> >> /Contents ${cid} 0 R >>`);
+    pageIds.push(pid);
+  }
+  const f1=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+  const f2=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
+  // patch font refs
+  for(let i=0;i<objs.length;i++)objs[i]=objs[i].replace(/%F1%/g,f1).replace(/%F2%/g,f2);
+  objs[pagesNodeId-1]=`<< /Type /Pages /Kids [${pageIds.map(id=>id+" 0 R").join(" ")}] /Count ${pageIds.length} >>`;
+  // assemble
+  let out="%PDF-1.4\n";const offsets=[];
+  for(let i=0;i<objs.length;i++){offsets.push(out.length);out+=`${i+1} 0 obj\n${objs[i]}\nendobj\n`;}
+  const xref=out.length;
+  out+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`;
+  for(const off of offsets)out+=String(off).padStart(10,"0")+" 00000 n \n";
+  out+=`trailer\n<< /Size ${objs.length+1} /Root ${catalogId} 0 R >>\nstartxref\n${xref}\n%%EOF`;
+  return new Blob([out],{type:"application/pdf"});
+}
+
+/* ---------- universal download ---------- */
+function downloadBlob(blob,filename){
+  const a=document.createElement("a");const url=URL.createObjectURL(blob);
+  a.href=url;a.download=filename;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},800);
+}
+
+/* ============================================================
+   INFLATE (raw DEFLATE + zlib) + ZIP reader — for PPTX/DOCX/PDF
+   Compact tinf-style implementation.
+   ============================================================ */
+function inflate(data){
+  // detect zlib header (0x78) and skip 2 bytes
+  if(data.length>2 && data[0]===0x78 && (data[1]===0x01||data[1]===0x9c||data[1]===0xda||data[1]===0x5e))
+    return rawInflate(data.subarray(2));
+  return rawInflate(data);
+}
+function rawInflate(input){
+  let out=[],bitBuf=0,bitCnt=0,pos=0;
+  function getbit(){if(bitCnt===0){bitBuf=input[pos++];bitCnt=8;}const b=bitBuf&1;bitBuf>>=1;bitCnt--;return b;}
+  function getbits(n){let v=0;for(let i=0;i<n;i++)v|=getbit()<<i;return v;}
+  function buildTree(lengths){
+    const MAXBITS=15;let bl_count=new Array(MAXBITS+1).fill(0);
+    for(const l of lengths)if(l)bl_count[l]++;
+    let next_code=new Array(MAXBITS+1).fill(0),code=0;
+    for(let bits=1;bits<=MAXBITS;bits++){code=(code+bl_count[bits-1])<<1;next_code[bits]=code;}
+    const codes=new Array(lengths.length);
+    for(let n=0;n<lengths.length;n++){const len=lengths[n];if(len){codes[n]=next_code[len]++;}}
+    return {lengths,codes};
+  }
+  function decode(tree){
+    let code=0,len=0;
+    for(;;){code|=getbit();len++;
+      for(let i=0;i<tree.lengths.length;i++){if(tree.lengths[i]===len&&tree.codes[i]===reverseBits(code,len))return i;}
+      code<<=1;if(len>15)throw new Error("bad code");}
+  }
+  function reverseBits(v,n){let r=0;for(let i=0;i<n;i++){r=(r<<1)|((v>>i)&1);}return r;}
+  // The naive decode above is slow; use canonical fast decode instead:
+  function makeFast(lengths){
+    const MAXBITS=15;let bl_count=new Array(MAXBITS+1).fill(0);
+    for(const l of lengths)if(l)bl_count[l]++;
+    let next=new Array(MAXBITS+1).fill(0),code=0;
+    for(let b=1;b<=MAXBITS;b++){code=(code+bl_count[b-1])<<1;next[b]=code;}
+    const map={};
+    for(let n=0;n<lengths.length;n++){const len=lengths[n];if(len){const c=next[len]++;map[len+"_"+c]=n;}}
+    return {map};
+  }
+  function decodeFast(t){let code=0,len=0;for(;;){code=(code<<1)|getbit();len++;const s=t.map[len+"_"+code];if(s!==undefined)return s;if(len>15)throw new Error("bad");}}
+  const lenBase=[3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258];
+  const lenExtra=[0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
+  const distBase=[1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577];
+  const distExtra=[0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+  let final=0;
+  do{
+    final=getbit();const type=getbits(2);
+    if(type===0){ // stored
+      bitCnt=0;const len=input[pos]|(input[pos+1]<<8);pos+=4;for(let i=0;i<len;i++)out.push(input[pos++]);
+    }else{
+      let litTree,distTree;
+      if(type===1){
+        const litLen=new Array(288);for(let i=0;i<144;i++)litLen[i]=8;for(let i=144;i<256;i++)litLen[i]=9;for(let i=256;i<280;i++)litLen[i]=7;for(let i=280;i<288;i++)litLen[i]=8;
+        litTree=makeFast(litLen);const dl=new Array(30).fill(5);distTree=makeFast(dl);
+      }else{
+        const hlit=getbits(5)+257,hdist=getbits(5)+1,hclen=getbits(4)+4;
+        const order=[16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
+        const clLen=new Array(19).fill(0);for(let i=0;i<hclen;i++)clLen[order[i]]=getbits(3);
+        const clTree=makeFast(clLen);const all=[];
+        while(all.length<hlit+hdist){const s=decodeFast(clTree);if(s<16)all.push(s);else if(s===16){const r=getbits(2)+3,p=all[all.length-1];for(let i=0;i<r;i++)all.push(p);}else if(s===17){const r=getbits(3)+3;for(let i=0;i<r;i++)all.push(0);}else{const r=getbits(7)+11;for(let i=0;i<r;i++)all.push(0);}}
+        litTree=makeFast(all.slice(0,hlit));distTree=makeFast(all.slice(hlit));
+      }
+      for(;;){const s=decodeFast(litTree);if(s===256)break;if(s<256)out.push(s);else{const li=s-257;const len=lenBase[li]+getbits(lenExtra[li]);const ds=decodeFast(distTree);const dist=distBase[ds]+getbits(distExtra[ds]);const start=out.length-dist;for(let i=0;i<len;i++)out.push(out[start+i]);}}
+    }
+  }while(!final);
+  return new Uint8Array(out);
+}
+
+function unzip(bytes){
+  // read central directory
+  const dv=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
+  let eocd=-1;
+  for(let i=bytes.length-22;i>=0;i--){if(dv.getUint32(i,true)===0x06054b50){eocd=i;break;}}
+  if(eocd<0)throw new Error("Not a zip");
+  const count=dv.getUint16(eocd+10,true);let off=dv.getUint32(eocd+16,true);
+  const files={};
+  for(let n=0;n<count;n++){
+    if(dv.getUint32(off,true)!==0x02014b50)break;
+    const method=dv.getUint16(off+10,true);
+    const compSize=dv.getUint32(off+20,true);
+    const nameLen=dv.getUint16(off+28,true),extraLen=dv.getUint16(off+30,true),commLen=dv.getUint16(off+32,true);
+    const localOff=dv.getUint32(off+42,true);
+    const name=new TextDecoder().decode(bytes.subarray(off+46,off+46+nameLen));
+    // read local header to find data start
+    const lNameLen=dv.getUint16(localOff+26,true),lExtraLen=dv.getUint16(localOff+28,true);
+    const dataStart=localOff+30+lNameLen+lExtraLen;
+    const comp=bytes.subarray(dataStart,dataStart+compSize);
+    files[name]=method===0?comp:rawInflate(comp);
+    off+=46+nameLen+extraLen+commLen;
+  }
+  return files;
+}
+
+</script>
+<script>
+/* ===== activity library ===== */
+// Activity library extracted from TTA Goody Bag resources.
+// Categories: starter, plenary, collaborative, formative
+const ACTIVITIES = [
+  // ---------- STARTERS ----------
+  { id:"s_60sec", cat:"starter", name:"60 Second Challenge",
+    purpose:"Improves thinking, reasoning, short-term memory and listing/grouping skills by observing a topic image and recalling what was seen.",
+    teacher:"Project a picture related to the topic for 60 seconds and ask learners to observe. Stop sharing and give 1 minute to recall and list what they saw. Ask a few learners to share; redisplay the image so they can self-check and note anything they missed.",
+    learner:"Observe the image, recall and list items/details in the notebook or on a post-it, share responses when called, then self-check against the redisplayed image.",
+    assessment:"Oral questioning; notebook/post-it review",
+    resources:"PPT/Chart with topic image, Notebook, Timer" },
+  { id:"s_readhigh", cat:"starter", name:"Read and Highlight",
+    purpose:"Helps learners organise reading by selecting and highlighting only key words, phrases, vocabulary and central ideas.",
+    teacher:"Assign a paragraph/section from the textbook. Instruct learners to highlight or underline only the key words, phrases and central ideas. Set a timer and circulate to guide and observe.",
+    learner:"Read the assigned text within the time limit, highlight/underline key words and central ideas, and share highlighted work.",
+    assessment:"Observation while circulating; review of highlighted text",
+    resources:"Textbook/handout, Highlighter/pen, Timer" },
+  { id:"s_123q", cat:"starter", name:"1+2+3 Questions",
+    purpose:"Tests prior knowledge through quick multiple-choice questions and engages every learner in responding.",
+    teacher:"Prepare a series of MCQs on the topic. Display a question, give a few seconds to think, then on the cue '1,2,3 Show Me!' ask all learners to show the option (fingers/chat). Mentally note incorrect responses and reveal the correct answer before the next question.",
+    learner:"Read each question, decide on an answer, and show the chosen option on the teacher's cue; self-correct when the answer is revealed.",
+    assessment:"Whole-class show of responses; mental note of misconceptions",
+    resources:"PPT with MCQs, Whiteboard" },
+  { id:"s_venn", cat:"starter", name:"Venn Diagram",
+    purpose:"Supports comparing/contrasting to make connections, determine key ideas and distinguish facts.",
+    teacher:"Provide a Venn diagram template (handout or drawn on A4) with a word bank. Explain the concept and instruct learners to place words/phrases under the correct headings, including the overlap. Circulate to support.",
+    learner:"Complete the Venn diagram by sorting words/phrases into the correct regions; display work and read peers' work on a gallery walk.",
+    assessment:"Worksheet review; gallery walk peer review",
+    resources:"Venn diagram handout/A4 sheet, Word bank" },
+  { id:"s_allyouknow", cat:"starter", name:"All You Know",
+    purpose:"Assesses prior knowledge or revises a previous concept by listing everything known about a shown image/topic.",
+    teacher:"Show a topic picture and give 15–20 seconds to think; explain all answers are welcome. Give 1 minute to list everything they know. Read out responses and add one or two facts to push thinking beyond the obvious.",
+    learner:"Observe the image, then list everything they know about it; listen to peers and the teacher's added facts.",
+    assessment:"Oral sharing; post-it/notebook review",
+    resources:"PPT with image, Post-its/Notebook" },
+  { id:"s_oddoneout", cat:"starter", name:"Odd One Out",
+    purpose:"Develops critical thinking and analysis; tests prior knowledge by spotting the item that does not belong.",
+    teacher:"Display a set of 4–5 images/words/phrases where one is different. Pause for thinking, then give 1 minute to write the odd one and the reason. Read a few responses and confirm the correct option with reasoning.",
+    learner:"Analyse the set, choose the odd one out, write the reason, and share their reasoning.",
+    assessment:"Oral reasoning; notebook/chat review",
+    resources:"PPT with sets" },
+  { id:"s_1020q", cat:"starter", name:"10/20 Questions",
+    purpose:"Builds memory, listening, analytical and questioning skills by guessing a hidden topic item via yes/no questions.",
+    teacher:"Choose a mystery person/place/event/word linked to the lesson and write it on paper. Share the category, then let learners ask up to 20 (or 10) yes/no questions, keeping a count. Reveal the answer at the end.",
+    learner:"Ask yes/no questions in turn, track clues, and attempt to guess the mystery item.",
+    assessment:"Observation of questioning/reasoning",
+    resources:"Paper for the mystery word" },
+  { id:"s_mysterybag", cat:"starter", name:"Mystery Bag",
+    purpose:"Generates interest and an element of surprise at the start of a lesson.",
+    teacher:"Prepare a bag with 3–5 items/pictures linked to the topic. Reveal them one at a time, pausing for learners to guess the topic. Read a few guesses before the next item; give clues if needed.",
+    learner:"Observe each revealed clue, write guesses about the topic, and refine guesses as more clues appear.",
+    assessment:"Oral/written guesses; topic prediction check",
+    resources:"Cloth bag, 3–5 topic-related items/pictures" },
+  { id:"s_complete", cat:"starter", name:"Complete the Sentence",
+    purpose:"Checks prior knowledge, revises concepts, or hooks interest via a sentence starter.",
+    teacher:"Prepare a sentence starter on the topic (e.g. 'An angle is…'). Display it and give 1 minute to complete it. Read a few responses, discuss, and reveal the target sentence.",
+    learner:"Complete the sentence about the topic, share the response, and compare with the target answer.",
+    assessment:"Oral sharing; post-it review",
+    resources:"PPT/Post-its" },
+  { id:"s_whatquestion", cat:"starter", name:"What is the Question?",
+    purpose:"Encourages creative thinking by generating questions for a given answer.",
+    teacher:"Show learners an answer and ask them to think of questions that would produce it. Give 30 seconds to list questions, then collect responses. Reveal the question you had in mind.",
+    learner:"Generate and write possible questions for the given answer; share responses.",
+    assessment:"Review of generated questions",
+    resources:"Whiteboard/notebook" },
+
+  // ---------- COLLABORATIVE LEARNING ----------
+  { id:"c_numbered", cat:"collaborative", name:"Numbered Heads",
+    purpose:"Builds collaboration and communication; used to summarise learning, check prior knowledge or process new information.",
+    teacher:"Form mixed-ability teams of four and assign each member a number 1–4. Pose a topic question and tell teams everyone must know the answer. Give time to discuss in groups, then call a random number to answer. Summarise before the next question.",
+    learner:"Discuss in the team so every member knows the answer; the called number shares the team's response.",
+    assessment:"Random-number oral response; group observation",
+    resources:"Grouping list, PPT with questions" },
+  { id:"c_fourcorners", cat:"collaborative", name:"Four Corners",
+    purpose:"Promotes listening, communication, cooperation, critical thinking and decision-making.",
+    teacher:"Display a question/statement with 4 options and assign each option a corner. Ask learners to choose individually and note a reason, then move to the matching corner to discuss and agree collective reasons. Each group presents a summary.",
+    learner:"Choose an option, write a reason, move to the corner, discuss with the group, and present a summary.",
+    assessment:"Group discussion observation; summary presentation",
+    resources:"4 corner option cards/slides" },
+  { id:"c_placemats", cat:"collaborative", name:"Placemats",
+    purpose:"Lets every learner record individual ideas before reaching a group consensus, maximising participation.",
+    teacher:"Divide into groups of 4–5 and give each a placemat template for the task. Each learner first answers individually (silently) in their section, then the group discusses and writes a collective answer in the centre. Groups present their placemat.",
+    learner:"Write individual responses silently, then discuss and co-write the group's collective answer; present to the class.",
+    assessment:"Placemat review; presentation",
+    resources:"Placemat worksheet per group" },
+  { id:"c_diamond", cat:"collaborative", name:"Diamond Ranking",
+    purpose:"Helps learners prioritise information, clarify thinking and reason about importance.",
+    teacher:"Give each group 9 statement cards on the topic. Ask them to discuss and arrange the cards from most to least important in a diamond shape. Specify time; groups present or display rankings.",
+    learner:"Discuss and rank the nine statements from most to least important; justify the ranking to the class.",
+    assessment:"Ranking rationale; group observation",
+    resources:"9 statement cards per group" },
+  { id:"c_tps", cat:"collaborative", name:"Team-Pair-Solo",
+    purpose:"Helps learners attempt challenging tasks with support before working independently; builds problem-solving.",
+    teacher:"Design a challenging task. Learners first work as a team, then in pairs, then solo on the task. Display team and pair groupings, time each stage, and collect the individual work at the end.",
+    learner:"Work the task as a team, then refine in pairs, then complete it individually and submit.",
+    assessment:"Collection of solo work; staged observation",
+    resources:"Task worksheet, Grouping list, Timer" },
+  { id:"c_buzz", cat:"collaborative", name:"Buzz Groups",
+    purpose:"Small-group discussion to reach consensus quickly, maximising individual participation.",
+    teacher:"Form small groups of 3–4 and display the discussion task. Give a set time to discuss and work, assigning roles if useful. Cold-call or take volunteers for an oral summary; circulate to support.",
+    learner:"Discuss the task in a small group, work towards a consensus, and share an oral summary.",
+    assessment:"Oral group summary; discussion observation",
+    resources:"Discussion prompt, Grouping list" },
+  { id:"c_roundrobin", cat:"collaborative", name:"Round Robin Brainstorming",
+    purpose:"Lists many possibilities to an open-ended question while working cooperatively.",
+    teacher:"Pose an open-ended question. In groups, learners take turns adding non-repeating responses to a shared worksheet until time is up. Each group presents their list.",
+    learner:"Take turns contributing distinct ideas without repetition; present the group's collected list.",
+    assessment:"Review of group lists; presentation",
+    resources:"Group worksheet/board" },
+  { id:"c_showdown", cat:"collaborative", name:"Showdown",
+    purpose:"Reviews a previously taught concept cooperatively, with peers coaching each other.",
+    teacher:"Give each group a list of review questions. Learners take turns leading: the leader reads a question, all solve independently, then 'Showdown!' reveals answers. Correct answers are struck off; if anyone errs, the group coaches before moving on.",
+    learner:"Take turns leading, solve each question independently, reveal answers, and coach peers who make errors.",
+    assessment:"Peer assessment; notebook check",
+    resources:"Review question worksheet" },
+  { id:"c_gallery", cat:"collaborative", name:"Gallery Walk",
+    purpose:"Lets learners share work and examine multiple displays, responding with questions and feedback.",
+    teacher:"Set a topic that can be expressed creatively. Groups design content on charts. At the end, groups rotate to view each display, discussing and leaving a post-it with one thing they liked and one question/suggestion.",
+    learner:"Create a group display, then rotate to view others' work and leave constructive feedback.",
+    assessment:"Peer feedback; display quality review",
+    resources:"Chart paper, Stationery, Post-its" },
+  { id:"c_whatsmissing", cat:"collaborative", name:"What's Missing?",
+    purpose:"Reviews and reinforces previously taught concepts using observation skills.",
+    teacher:"Show a list/diagram/picture/sequence with one piece of information omitted. In groups, learners discuss and identify what is missing. A volunteer lists findings; verify and summarise as consolidation.",
+    learner:"Examine the item in a group, discuss and note what is missing, and present findings.",
+    assessment:"Oral findings; consolidation check",
+    resources:"Prepared incomplete list/diagram" },
+
+  // ---------- FORMATIVE ASSESSMENT ----------
+  { id:"f_postit", cat:"formative", name:"Post-it Parade",
+    purpose:"Checks the current level of knowledge mid-lesson in a visual way before moving on.",
+    teacher:"After teaching a key idea, pause and pose a question. Distribute post-its and ask learners to respond and add them to the board. Scan responses to gauge understanding.",
+    learner:"Write a response on a post-it and add it to the board; review the collective responses.",
+    assessment:"Post-it board scan",
+    resources:"Post-its, Notice board" },
+  { id:"f_polling", cat:"formative", name:"Polling Booth",
+    purpose:"Quickly checks prior/current knowledge by having all learners vote for the best option.",
+    teacher:"Pose a multiple-choice question and display the options. On the signal, learners show their choice (fingers/poll). Read the spread of responses and address misconceptions.",
+    learner:"Read the question and options, then vote by showing the chosen option.",
+    assessment:"Whole-class vote spread",
+    resources:"PPT/poll with MCQ" },
+  { id:"f_exitcards", cat:"formative", name:"Exit Cards",
+    purpose:"Checks cumulative knowledge at the end of class and prompts learners to reflect on key ideas.",
+    teacher:"Prepare an exit prompt (e.g. 'Today I learnt…'). A few minutes before the end, display the prompt and distribute cards. Ask learners to complete and submit before leaving.",
+    learner:"Complete the exit card reflecting on the lesson and submit it.",
+    assessment:"Exit card review",
+    resources:"Exit card slips" },
+  { id:"f_summarisation", cat:"formative", name:"Summarisation",
+    purpose:"Measures content learning by having learners condense what was covered in their own words.",
+    teacher:"Teach for 8–10 minutes, then pause. Ask learners to write a short summary of what has been covered in their own words, reminding them of key vocabulary. Ask a few to read out their summaries.",
+    learner:"Write a concise summary using key vocabulary; read it aloud when asked.",
+    assessment:"Summary review; oral read-out",
+    resources:"Notebook, Key vocabulary list" },
+  { id:"f_predictions", cat:"formative", name:"Predictions",
+    purpose:"Applies learning to predict an outcome with supporting reasoning.",
+    teacher:"Pause mid-lesson and display a prediction question about what happens next. Give thinking time, then on '1,2,3 Show Me!' learners reveal their prediction and reason.",
+    learner:"Make a prediction with an explanation and reveal it on the cue.",
+    assessment:"Prediction + reasoning review",
+    resources:"PPT with prediction prompt" },
+  { id:"f_kwl", cat:"formative", name:"KWL Chart",
+    purpose:"Checks what learners Know, Want to know and have Learned; best at the start of a topic.",
+    teacher:"Distribute a KWL chart. Learners fill K (know) and W (want to know) at the start; teach as planned; revisit at the end for L (learned). Use responses to gauge prior knowledge and interests.",
+    learner:"Complete the K and W columns at the start and the L column at the end of the lesson.",
+    assessment:"KWL chart review",
+    resources:"KWL worksheet" },
+  { id:"f_owlpost", cat:"formative", name:"Owl Post",
+    purpose:"Checks understanding by having learners write a short postcard about their learning.",
+    teacher:"Ask learners to jot the main points, then write a 3–5 sentence postcard to a loved one explaining the topic. Display or 'post' the completed cards.",
+    learner:"Note key points, then write a short postcard explaining the topic in their own words.",
+    assessment:"Postcard content review",
+    resources:"Postcard template" },
+  { id:"f_graffiti", cat:"formative", name:"Cooperative Graffiti",
+    purpose:"Enables free expression of ideas and assesses what learners understand about a topic.",
+    teacher:"Group learners and pose a prompt. Each group creates a visually appealing graffiti chart for the prompt, following agreed rules. Display charts and run a whole-class discussion on the responses.",
+    learner:"Collaborate to create a topic graffiti chart; share and discuss it with the class.",
+    assessment:"Graffiti chart review; class discussion",
+    resources:"Chart paper, Colour pens" },
+  { id:"f_presentations", cat:"formative", name:"Presentations",
+    purpose:"Gauges understanding as learners share knowledge creatively in groups or individually.",
+    teacher:"Assign each group a sub-topic and ask them to prepare a poster/song/slides and a short presentation. Specify time, then have groups present, encouraging questions and feedback after each.",
+    learner:"Prepare and deliver a short presentation on the sub-topic; ask and answer questions.",
+    assessment:"Presentation rubric; Q&A",
+    resources:"Chart/slides, Stationery" },
+  { id:"f_miniwhiteboard", cat:"formative", name:"Mini Whiteboard",
+    purpose:"Quickly checks individual understanding at any point in the lesson.",
+    teacher:"Distribute mini whiteboards. Pose a question; on '1,2,3 Show Me!' learners hold up their written answer. Confirm the correct answer before the next question.",
+    learner:"Write the answer on a mini whiteboard and show it on the cue.",
+    assessment:"Whole-class whiteboard check",
+    resources:"Mini whiteboards, Markers" },
+
+  // ---------- PLENARIES ----------
+  { id:"p_goodbetter", cat:"plenary", name:"Good and Better",
+    purpose:"Gathers feedback on what learners found good and what could be improved.",
+    teacher:"Give two coloured post-its. Ask learners to write one thing they understood well and one thing they could have done better, then post them on the board.",
+    learner:"Write one strength and one improvement point and post them on the board.",
+    assessment:"Feedback post-it review",
+    resources:"Two-colour post-its" },
+  { id:"p_tweet", cat:"plenary", name:"Tweet It!",
+    purpose:"Summarises and reflects on learning in a few sentences (a 'tweet').",
+    teacher:"Provide a tweet slip with a prompt. Learners write a 280-character/3–4 sentence tweet about the topic, adding a # hashtag for something memorable, then submit or share.",
+    learner:"Write a short tweet summarising learning with a hashtag and submit it.",
+    assessment:"Tweet content review",
+    resources:"Tweet slip template" },
+  { id:"p_reflection", cat:"plenary", name:"Reflection",
+    purpose:"Gives learners an opportunity to reflect on and articulate what they have learned.",
+    teacher:"Pose reflection prompts (e.g. three things you did well, one to improve and why, where you can use this). Give time to respond and submit.",
+    learner:"Respond to the reflection prompts about their learning and submit.",
+    assessment:"Reflection review",
+    resources:"Reflection card/form" },
+  { id:"p_give5", cat:"plenary", name:"Give me Five",
+    purpose:"Structures reflection time around five prompts and identifies next steps.",
+    teacher:"Provide a 'Give me Five' hand template with five prompts (learnt, skills used, found difficult, did well, will remember). Learners complete each finger and submit.",
+    learner:"Complete the five reflection prompts on the hand template and submit.",
+    assessment:"Completed template review",
+    resources:"Give-me-Five worksheet" },
+  { id:"p_quiz", cat:"plenary", name:"Quiz Time",
+    purpose:"A competitive way to answer questions and gauge the level of learning.",
+    teacher:"Prepare a quiz (oral, written or online). Run it within a time limit; review answers and address gaps revealed.",
+    learner:"Answer the quiz questions individually or in groups within the time limit.",
+    assessment:"Quiz scores",
+    resources:"Quiz questions/worksheet" },
+  { id:"p_riddles", cat:"plenary", name:"Riddles",
+    purpose:"Creates excitement and consolidates the lesson through topic-linked riddles.",
+    teacher:"Prepare riddles on the lesson. Tell learners a riddle is coming, read it aloud, pause, then on the cue take answers. Reveal and appreciate the first correct response.",
+    learner:"Solve the riddle and answer on the cue.",
+    assessment:"Oral answers",
+    resources:"Riddle slides" },
+  { id:"p_bingo", cat:"plenary", name:"Bingo!",
+    purpose:"Consolidates terms and definitions and sharpens recall through a competitive game.",
+    teacher:"Provide bingo cards of topic terms. Call out questions/clues; learners cross matching answers. The first to complete the card calls 'Bingo!' and the teacher verifies.",
+    learner:"Cross out answers on the bingo card and call 'Bingo!' on completion.",
+    assessment:"Bingo verification; recall check",
+    resources:"Bingo cards" },
+  { id:"p_pyramid", cat:"plenary", name:"Plenary Pyramid",
+    purpose:"Checks understanding in a simple pyramid form and aids reflection.",
+    teacher:"Provide a pyramid template with prompts (e.g. three things learnt, two questions, one thing already known). Learners complete the boxes within the time limit and submit.",
+    learner:"Fill the pyramid prompts and submit.",
+    assessment:"Pyramid review",
+    resources:"Pyramid template" },
+  { id:"p_stuck", cat:"plenary", name:"What stuck with you today?",
+    purpose:"Reflection aid showing which part of the lesson made the strongest impact.",
+    teacher:"Provide a board/post-its headed 'What stuck with you today?'. Learners add a fact/thing that stuck with them from the lesson.",
+    learner:"Write and post the idea that stuck with them most.",
+    assessment:"Post-it review",
+    resources:"Post-its/board" },
+  { id:"p_321", cat:"plenary", name:"3, 2, 1",
+    purpose:"Versatile reflection: gauges learning through three tiered prompts.",
+    teacher:"Set three prompts (e.g. 3 facts recalled, 2 examples, 1 question/use). Learners complete and submit within the time limit.",
+    learner:"Respond to the 3-2-1 prompts and submit.",
+    assessment:"3-2-1 response review",
+    resources:"3-2-1 form/worksheet" }
+];
+
+</script>
+<script>
+/* ===================== reference data ===================== */
+const GRADES=Array.from({length:12},(_,i)=>"Grade "+(i+1));
+const SUBJECTS=["English","Hindi","Sanskrit","Kannada","Tamil","Telugu","Marathi","French","German",
+  "Mathematics","EVS (Environmental Studies)","Science","Physics","Chemistry","Biology",
+  "Social Science","History","Geography","Civics / Political Science","Economics",
+  "Computer Science","Information Technology","Accountancy","Business Studies",
+  "General Knowledge","Art & Craft","Physical Education","Moral Science / Value Education"];
+const LIB_CATS=[{id:"all",label:"All"},{id:"starter",label:"Starters"},{id:"collaborative",label:"Collaborative"},{id:"formative",label:"Formative"},{id:"plenary",label:"Plenaries"}];
+const QTYPES=[
+  {id:"tf",label:"True / False",sub:"statements",defCount:5,defMarks:1},
+  {id:"mcq",label:"MCQ",sub:"4 options",defCount:5,defMarks:1},
+  {id:"fib",label:"Fill in the blanks",sub:"one-word answer",defCount:5,defMarks:1},
+  {id:"short",label:"Short answer",sub:"with marks",defCount:3,defMarks:3},
+  {id:"code_err",label:"Find the error",sub:"coding (Gr 1–3)",defCount:2,defMarks:2},
+  {id:"code_out",label:"Write the output",sub:"coding (Gr 1–3)",defCount:2,defMarks:2}
+];
+const IMG_PRESETS={
+  map:"Mark and label the following on the given map:",
+  bio:"Label the parts of the diagram shown below:",
+  code_err:"Look at the code in the box. Find and circle the error, then write the correct line:",
+  code_out:"Read the code in the box and write what it will print as output:",
+  generic:"Study the image in the box and answer in the space provided:"
+};
+
+/* ===================== state ===================== */
+let mode="build",selected=new Set(),libFilter="all";
+let lastOut=null,uploadedText="",powText="",powChaptersData=[];
+let qtypeSel=new Set(["tf","mcq","fib","short"]);
+
+/* ===================== init ===================== */
+function fillSelect(id,arr){const s=document.getElementById(id);if(!s)return;arr.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;s.appendChild(o);});}
+["f_grade","c_grade","w_grade","p_grade"].forEach(id=>fillSelect(id,GRADES));
+["f_subject","c_subject","w_subject","p_subject"].forEach(id=>fillSelect(id,SUBJECTS));
+["f_date","c_date"].forEach(id=>{const e=document.getElementById(id);if(e)e.valueAsDate=new Date();});
+
+function renderLibTabs(){const w=document.getElementById("libTabs");w.innerHTML="";LIB_CATS.forEach(c=>{const b=document.createElement("button");b.className="lib-tab"+(libFilter===c.id?" active":"");b.textContent=c.label;b.onclick=()=>{libFilter=c.id;renderLibTabs();renderActs();};w.appendChild(b);});}
+function renderActs(){const g=document.getElementById("actGrid");g.innerHTML="";ACTIVITIES.filter(a=>libFilter==="all"||a.cat===libFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(selected.has(a.id)?" sel":"");d.onclick=()=>{selected.has(a.id)?selected.delete(a.id):selected.add(a.id);renderActs();renderSelBar();};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${selected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
+function renderSelBar(){const bar=document.getElementById("selBar");if(selected.size===0){bar.innerHTML="<span>No activities selected yet.</span>";return;}const order=["starter","collaborative","formative","plenary"];const items=[...selected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));bar.innerHTML="<span>Selected ("+items.length+"):</span>"+items.map(a=>`<span class="chip">${a.name}<b onclick="event.stopPropagation();selected.delete('${a.id}');renderActs();renderSelBar();">✕</b></span>`).join("");}
+renderLibTabs();renderActs();renderSelBar();
+
+function renderQTypes(){
+  const w=document.getElementById("qtypes");w.innerHTML="";
+  QTYPES.forEach(q=>{const d=document.createElement("div");d.className="qt"+(qtypeSel.has(q.id)?" sel":"");d.onclick=()=>{qtypeSel.has(q.id)?qtypeSel.delete(q.id):qtypeSel.add(q.id);renderQTypes();};d.innerHTML=`<div class="cb">${qtypeSel.has(q.id)?"✓":""}</div><div>${q.label}<small>${q.sub}</small></div>`;w.appendChild(d);});
+  const rw=document.getElementById("qtypeRows");
+  const prev={};QTYPES.forEach(q=>{const c=document.getElementById("qc_"+q.id),mm=document.getElementById("qm_"+q.id);if(c)prev[q.id]={c:c.value,m:mm.value};});
+  rw.innerHTML="";
+  QTYPES.filter(q=>qtypeSel.has(q.id)).forEach(q=>{const r=document.createElement("div");r.className="qtype-row";const pv=prev[q.id]||{};r.innerHTML=`<label>${q.label}</label><span style="color:var(--muted);font-size:.76rem">Questions</span><input id="qc_${q.id}" type="number" min="0" value="${pv.c||q.defCount}"><span style="color:var(--muted);font-size:.76rem">Marks each</span><input id="qm_${q.id}" type="number" min="0" value="${pv.m||q.defMarks}">`;rw.appendChild(r);});
+}
+renderQTypes();
+document.getElementById("w_imgpreset").addEventListener("change",e=>{const v=e.target.value;if(v&&IMG_PRESETS[v])document.getElementById("w_imginstr").value=IMG_PRESETS[v];});
+
+/* ===================== mode switch ===================== */
+function setMode(m){mode=m;[["m1","build","buildPanel"],["m2","convert","convertPanel"],["m3","worksheet","wsPanel"],["m4","pow","powPanel"]].forEach(([btn,name,panel])=>{document.getElementById(btn).classList.toggle("active",m===name);document.getElementById(panel).classList.toggle("hide",m!==name);});document.getElementById("previewWrap").style.display="none";}
+
+/* ===================== helpers ===================== */
+function val(id){const e=document.getElementById(id);return e?(e.value||"").trim():"";}
+function fmtDate(iso){if(!iso)return"";const d=new Date(iso);return String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear();}
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function autoAim(t,s){return `Learners will develop a clear understanding of ${t||"the topic"} in ${s||"the subject"}, connecting prior knowledge to new concepts and applying their learning through guided and collaborative tasks.`;}
+function autoObjectives(t){t=t||"the topic";return [`describe the key ideas and vocabulary related to ${t}`,`explain the main concepts of ${t} in their own words`,`apply their understanding of ${t} to solve problems or complete a task`,`collaborate with peers to discuss and consolidate learning about ${t}`,`reflect on what they have learned about ${t} and identify next steps`];}
+function autoHomework(t){return `Write a short paragraph (5–6 sentences) summarising what you learned about ${t}. Add one question you still have, and one real-life example where ${t} is useful.`;}
+function distribute(total,n,weights){const mins=parseInt(total)||40;weights=weights||Array(n).fill(1);const sum=weights.reduce((a,b)=>a+b,0)||1;let alloc=weights.map(w=>Math.max(3,Math.round(mins*w/sum)));let diff=mins-alloc.reduce((a,b)=>a+b,0),i=0;while(diff!==0&&alloc.length){const idx=i%alloc.length;alloc[idx]+=diff>0?1:-1;if(alloc[idx]<2)alloc[idx]=2;diff=mins-alloc.reduce((a,b)=>a+b,0);i++;if(i>500)break;}return alloc;}
+
+/* ===================== AI (in-artifact Claude API) ===================== */
+async function callAI(prompt,maxTokens){
+  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:maxTokens||1000,messages:[{role:"user",content:prompt}]})});
+  if(!res.ok)throw new Error("AI request failed ("+res.status+")");
+  const data=await res.json();return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();
+}
+function parseJSON(t){return JSON.parse(t.replace(/```json|```/g,"").trim());}
+async function aiObjectives(){
+  const t=val("f_topic"),g=val("f_grade"),s=val("f_subject"),st=document.getElementById("aiObjStatus");
+  if(!t){st.className="status err";st.textContent="Enter a topic first.";return;}
+  st.className="status";st.textContent="Thinking…";
+  try{const out=await callAI(`Write 4 measurable learning objectives for a ${g} ${s} CBSE lesson on "${t}". Start each with an action verb (describe, explain, identify, compare, apply, analyse). Return ONLY a JSON array of strings, no preamble.`,500);const arr=parseJSON(out);document.getElementById("f_obj").value=arr.join("\n");st.className="status ok";st.textContent="Added "+arr.length+" objectives.";}
+  catch(e){st.className="status err";st.textContent="AI unavailable — type objectives manually.";}
+}
+
+/* ===================== BUILD ===================== */
+function buildPlan(){
+  const teacher=val("f_teacher"),grade=val("f_grade"),subject=val("f_subject"),topic=val("f_topic"),date=fmtDate(val("f_date")),dur=val("f_dur");
+  const st=document.getElementById("buildStatus");
+  if(!grade||!subject||!topic){st.className="status err";st.textContent="Fill grade, subject and topic.";return;}
+  if(selected.size===0){st.className="status err";st.textContent="Select at least one activity.";return;}
+  let aim=val("f_aim")||autoAim(topic,subject);
+  let objs=val("f_obj")?val("f_obj").split("\n").map(s=>s.trim()).filter(Boolean):autoObjectives(topic);
+  const order=["starter","collaborative","formative","plenary"];
+  const acts=[...selected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));
+  const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
+  const rows=acts.map((a,i)=>({time:times[i]+" min",teacher:stageLabel(a)+a.teacher.replace(/\btopic\b/g,topic),learner:a.learner.replace(/\btopic\b/g,topic),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
+  lastOut={kind:"lesson",plans:[{meta:{teacher,grade,subject,topic,date,dur},aim,objs,rows,homework:autoHomework(topic),title:"In-session"}],name:"Lesson Plan - "+subject+" "+grade+" - "+topic};
+  renderPreview();st.className="status ok";st.textContent="Done. Preview below.";
+}
+function stageLabel(a){return a.cat==="starter"?"Starter — "+a.name+": ":a.cat==="plenary"?"Plenary — "+a.name+": ":"Main activity — "+a.name+": ";}
+function pedagogyFor(c){return c==="collaborative"?"Collaborative Learning":c==="formative"?"Formative Assessment / AfL":c==="starter"?"Activity-Based Learning":"Reflective Learning";}
+
+/* ===================== CONVERT ===================== */
+const drop=document.getElementById("drop"),fileInput=document.getElementById("fileInput");
+drop.onclick=()=>fileInput.click();
+["dragover","dragenter"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add("over");}));
+["dragleave","drop"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove("over");}));
+drop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handleFile(ev.dataTransfer.files[0]);});
+fileInput.onchange=e=>{if(e.target.files.length)handleFile(e.target.files[0]);};
+function clearFile(){uploadedText="";fileInput.value="";document.getElementById("fileMeta").classList.remove("show");document.getElementById("convBtn").disabled=true;document.getElementById("convStatus").textContent="";}
+async function handleFile(file){
+  const cs=document.getElementById("convStatus");
+  document.getElementById("fmName").textContent=file.name;document.getElementById("fmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("fileMeta").classList.add("show");
+  cs.className="status";cs.textContent="Reading…";
+  try{const ext=file.name.split(".").pop().toLowerCase();
+    if(ext==="pdf")uploadedText=await readPDFtext(file);else if(ext==="pptx")uploadedText=await readPPTX(file);else if(ext==="docx")uploadedText=await readDOCX(file);else throw new Error("Unsupported file type");
+    if(uploadedText.trim().length<20)throw new Error("No readable text (image-only file?).");
+    cs.className="status ok";cs.textContent="Read "+uploadedText.length.toLocaleString()+" characters.";document.getElementById("convBtn").disabled=false;
+    const g=guessTopic(uploadedText);if(g&&!val("c_topic"))document.getElementById("c_topic").value=g;
+  }catch(err){cs.className="status err";cs.textContent="Error: "+err.message;document.getElementById("convBtn").disabled=true;}
+}
+async function readPDFtext(file){
+  const buf=new Uint8Array(await file.arrayBuffer());let raw="";const CH=8192;
+  for(let i=0;i<buf.length;i+=CH)raw+=String.fromCharCode.apply(null,buf.subarray(i,i+CH));
+  let text="";const streamRe=/stream\r?\n([\s\S]*?)\r?\nendstream/g;let m;const t0=Date.now();
+  while((m=streamRe.exec(raw))){
+    if(Date.now()-t0>15000)break;            // time guard
+    let chunk=m[1];
+    if(chunk.length>200000)continue;          // skip big (image) streams
+    try{const bytes=Uint8Array.from(chunk,c=>c.charCodeAt(0)&0xff);const inflated=inflate(bytes);if(inflated&&inflated.length<2000000)text+=" "+extractPdfText(new TextDecoder("latin1").decode(inflated));}catch(e){}
+  }
+  if(text.trim().length<20)text=extractPdfText(raw);
+  return text.replace(/\s+/g," ").split(/(?<=[.\u2022])\s/).map(s=>"[[SEG]] "+s.trim()).filter(s=>s.length>10).join("\n");
+}
+function extractPdfText(s){let out="";const tjRe=/\[((?:[^\[\]\\]|\\.)*)\]\s*TJ|(\((?:[^()\\]|\\.)*\))\s*Tj/g;let m;
+  while((m=tjRe.exec(s))){const parts=(m[0].match(/\((?:[^()\\]|\\.)*\)/g)||[]);parts.forEach(p=>{out+=p.slice(1,-1).replace(/\\(\d{3})/g,(_,o)=>String.fromCharCode(parseInt(o,8))).replace(/\\([()\\])/g,"$1");});out+=" ";}
+  return out;}
+async function readPPTX(file){const files=unzip(new Uint8Array(await file.arrayBuffer()));const slides=Object.keys(files).filter(n=>/ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a,b)=>parseInt(a.match(/slide(\d+)/)[1])-parseInt(b.match(/slide(\d+)/)[1]));let out=[];const dec=new TextDecoder();for(const n of slides){const xml=dec.decode(files[n]);const t=[...xml.matchAll(/<a:t>([\s\S]*?)<\/a:t>/g)].map(x=>x[1].replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">"));const j=t.join(" ").replace(/\s+/g," ").trim();if(j)out.push("[[SEG]] "+j);}return out.join("\n");}
+async function readDOCX(file){const files=unzip(new Uint8Array(await file.arrayBuffer()));const dec=new TextDecoder();const xml=dec.decode(files["word/document.xml"]);const paras=[...xml.matchAll(/<w:p[ >][\s\S]*?<\/w:p>/g)].map(p=>{const t=[...p[0].matchAll(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g)].map(x=>x[1]).join("");return t.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").trim();}).filter(Boolean);return paras.map(p=>"[[SEG]] "+p).join("\n");}
+function guessTopic(t){const f=t.replace(/\[\[SEG\]\]/g,"").trim().split(/[\n.]/)[0].trim();return f.length>3&&f.length<70?f:"";}
+function convertFile(){
+  const cs=document.getElementById("convStatus");if(!uploadedText){cs.className="status err";cs.textContent="Upload a file first.";return;}
+  const teacher=val("c_teacher"),grade=val("c_grade"),subject=val("c_subject");let topic=val("c_topic")||guessTopic(uploadedText)||"Lesson Topic";const date=fmtDate(val("c_date")),dur=val("c_dur");
+  let segs=uploadedText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(s=>s.length>2).filter(s=>!/^(list of contents|table of contents|thank you|learning with tta|tutorial links)/i.test(s));
+  if(segs.length===0)segs=[uploadedText];
+  const ROWS=6,chunks=[];for(let i=0;i<segs.length;i+=ROWS)chunks.push(segs.slice(i,i+ROWS));const multi=chunks.length>1;
+  const plans=chunks.map((chunk,ci)=>{const times=distribute(dur,chunk.length);const rows=chunk.map((seg,i)=>{const e=expandSegment(seg,i,chunk.length);return {time:times[i]+" min",...e,pedagogy:""};});return {meta:{teacher,grade,subject,topic:multi?topic+" — Part "+(ci+1):topic,date,dur},aim:autoAim(topic,subject),objs:autoObjectives(topic),rows,homework:autoHomework(topic),title:multi?"In-session — Lesson Plan "+(ci+1):"In-session"};});
+  lastOut={kind:"lesson",plans,name:"Lesson Plan - "+subject+" "+grade+" - "+topic};
+  renderPreview();cs.className="status ok";cs.textContent=multi?("Done — "+chunks.length+" lesson plans."):"Done. Preview below.";
+}
+function expandSegment(seg,i,n){const clean=seg.replace(/\s+/g," ").trim(),lower=clean.toLowerCase();let stage=i===0?"Introduction":(i===n-1?"Consolidation":"Development");let ped=/group|team|pair|collaborat|discuss/.test(lower)?" Organise learners into groups/pairs to discuss and work collaboratively.":"";if(/question|quiz|poll|exit|reflect/.test(lower))ped+=" Use the responses to check understanding before moving on.";const teacher=`${stage}: Present and explain the following content from the source: “${clip(clean,260)}”. Display any related image/diagram, ask probing questions to connect prior knowledge, and give clear task instructions.`+ped;const learner=`Observe and listen, discuss key points with a partner or group, record important points in the notebook, answer the teacher's questions, and participate actively.`;const fa=/quiz|question|poll|exit/.test(lower)?"Oral questioning / quick quiz":/reflect/.test(lower)?"Reflection review":"Oral questioning; notebook review";const res=/video|image|picture|diagram|ppt|slide/.test(lower)?"PPT/Interactive panel, Notebook, Whiteboard":"Whiteboard, Notebook, Textbook";return {teacher,learner,fa,res};}
+function clip(s,n){return s.length>n?s.slice(0,n).trim()+"…":s;}
+
+/* ===================== WORKSHEET ===================== */
+function gatherQConfig(){return QTYPES.filter(q=>qtypeSel.has(q.id)).map(q=>({id:q.id,label:q.label,count:parseInt(val("qc_"+q.id))||0,marks:parseInt(val("qm_"+q.id))||0})).filter(q=>q.count>0);}
+function generateWorksheet(){
+  const grade=val("w_grade"),subject=val("w_subject"),topic=val("w_topic"),st=document.getElementById("wsStatus");
+  if(!grade||!subject||!topic){st.className="status err";st.textContent="Fill grade, subject and topic.";return;}
+  const cfg=gatherQConfig();if(cfg.length===0&&!val("w_imgpreset")){st.className="status err";st.textContent="Pick at least one question type.";return;}
+  const sections=cfg.map(c=>({type:c.id,label:c.label,marks:c.marks,items:placeholderItems(c)}));
+  const ip=val("w_imgpreset");let img=ip?{instr:val("w_imginstr")||IMG_PRESETS[ip],marks:parseInt(val("w_imgmarks"))||0}:null;
+  buildWorksheetOut({grade,subject,topic,sections,img,date:fmtDate(new Date().toISOString())});
+  st.className="status ok";st.textContent="Worksheet ready (placeholder questions — use AI draft for topic-specific ones).";
+}
+function placeholderItems(c){const items=[];for(let i=0;i<c.count;i++){if(c.id==="tf")items.push({q:"Statement "+(i+1)+" about the topic.",a:"( T / F )"});else if(c.id==="mcq")items.push({q:"Question "+(i+1)+" about the topic?",opts:["(a) option","(b) option","(c) option","(d) option"]});else if(c.id==="fib")items.push({q:"The ______ is an important idea in this topic. (Q"+(i+1)+")"});else if(c.id==="short")items.push({q:"Short-answer question "+(i+1)+" about the topic."});else if(c.id==="code_err")items.push({q:"Find and fix the error in the code below (Q"+(i+1)+"):",box:true});else if(c.id==="code_out")items.push({q:"Write the output of the code below (Q"+(i+1)+"):",box:true});}return items;}
+async function aiWorksheet(){
+  const grade=val("w_grade"),subject=val("w_subject"),topic=val("w_topic"),st=document.getElementById("wsStatus");
+  if(!grade||!subject||!topic){st.className="status err";st.textContent="Fill grade, subject and topic.";return;}
+  const cfg=gatherQConfig();if(cfg.length===0){st.className="status err";st.textContent="Pick at least one question type.";return;}
+  st.className="status";st.textContent="Drafting questions with AI…";
+  const spec=cfg.map(c=>`${c.count} ${c.label} questions`).join(", ");
+  const prompt=`Create worksheet questions for a ${grade} ${subject} CBSE lesson on "${topic}". Generate exactly: ${spec}.
+Return ONLY valid JSON, no preamble:
+{"tf":[{"q":"statement"}],"mcq":[{"q":"question","opts":["a","b","c","d"]}],"fib":[{"q":"sentence with ____"}],"short":[{"q":"question"}],"code_err":[{"q":"instruction","code":"buggy code"}],"code_out":[{"q":"instruction","code":"code"}]}
+Only include keys for requested types. Age-appropriate for ${grade}.`;
+  try{
+    const data=parseJSON(await callAI(prompt,1600));
+    const sections=cfg.map(c=>{const arr=data[c.id]||[];const items=arr.map(it=>{if(c.id==="tf")return {q:it.q,a:"( T / F )"};if(c.id==="mcq")return {q:it.q,opts:(it.opts||[]).map((o,i)=>"("+"abcd"[i]+") "+o)};if(c.id==="fib")return {q:it.q};if(c.id==="short")return {q:it.q};if(c.id==="code_err"||c.id==="code_out")return {q:it.q,code:it.code,box:true};return {q:it.q};});return {type:c.id,label:c.label,marks:c.marks,items};});
+    const ip=val("w_imgpreset");let img=ip?{instr:val("w_imginstr")||IMG_PRESETS[ip],marks:parseInt(val("w_imgmarks"))||0}:null;
+    buildWorksheetOut({grade,subject,topic,sections,img,date:fmtDate(new Date().toISOString())});
+    st.className="status ok";st.textContent="AI questions ready. Preview below.";
+  }catch(e){st.className="status err";st.textContent="AI unavailable — generated placeholder worksheet instead.";generateWorksheet();}
+}
+function buildWorksheetOut(ws){let total=0;ws.sections.forEach(s=>total+=s.marks*s.items.length);if(ws.img)total+=ws.img.marks;ws.total=total;lastOut={kind:"worksheet",ws,name:"Worksheet - "+ws.subject+" "+ws.grade+" - "+ws.topic};renderPreview();}
+
+/* ===================== POW ===================== */
+const powDrop=document.getElementById("powDrop"),powInput=document.getElementById("powInput");
+powDrop.onclick=()=>powInput.click();
+["dragover","dragenter"].forEach(e=>powDrop.addEventListener(e,ev=>{ev.preventDefault();powDrop.classList.add("over");}));
+["dragleave","drop"].forEach(e=>powDrop.addEventListener(e,ev=>{ev.preventDefault();powDrop.classList.remove("over");}));
+powDrop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handlePow(ev.dataTransfer.files[0]);});
+powInput.onchange=e=>{if(e.target.files.length)handlePow(e.target.files[0]);};
+function clearPow(){powText="";powInput.value="";document.getElementById("powMeta").classList.remove("show");document.getElementById("powBtn").disabled=true;document.getElementById("powList").classList.add("hide");document.getElementById("powStatus").textContent="";}
+async function handlePow(file){const ps=document.getElementById("powStatus");document.getElementById("pmName").textContent=file.name;document.getElementById("pmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("powMeta").classList.add("show");ps.className="status";ps.textContent="Reading…";try{powText=await readPDFtext(file);if(powText.trim().length<20)throw new Error("No readable text in PDF.");ps.className="status ok";ps.textContent="Read. Click 'Read syllabus' to list chapters.";document.getElementById("powBtn").disabled=false;}catch(e){ps.className="status err";ps.textContent="Error: "+e.message;document.getElementById("powBtn").disabled=true;}}
+function readPow(){const ps=document.getElementById("powStatus");const segs=powText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(Boolean);const cands=segs.filter(s=>/(chapter|unit|lesson|week|ch\.?\s*\d|topic)\b/i.test(s)&&s.length<140);powChaptersData=[...new Set((cands.length?cands:segs.slice(0,15)).map(s=>s.replace(/^[\-•\d.\s]+/,"").trim()).filter(s=>s.length>3))].slice(0,30);const box=document.getElementById("powChapters");if(powChaptersData.length===0){ps.className="status err";ps.textContent="Couldn't detect chapters — the PDF may be image-only.";return;}box.innerHTML=powChaptersData.map((c,i)=>`<div class="qtype-row"><label>${esc(c)}</label><button class="btn btn-ghost btn-sm" onclick="powObjectives(${i})">Set objectives</button></div>`).join("");document.getElementById("powList").classList.remove("hide");ps.className="status ok";ps.textContent="Found "+powChaptersData.length+" chapters/units.";}
+async function powObjectives(i){const chapter=powChaptersData[i],grade=val("p_grade"),subject=val("p_subject"),ps=document.getElementById("powStatus");ps.className="status";ps.textContent="Drafting objectives for: "+chapter+" …";let objs;try{objs=parseJSON(await callAI(`Write 4 measurable CBSE learning objectives for the ${grade} ${subject} chapter "${chapter}". Start each with an action verb. Return ONLY a JSON array of strings.`,500));}catch(e){objs=autoObjectives(chapter);}lastOut={kind:"lesson",plans:[{meta:{teacher:"",grade,subject,topic:chapter,date:"",dur:"40 min"},aim:autoAim(chapter,subject),objs,rows:[{time:"40 min",teacher:"Plan the activities for "+chapter+" using the Build tab (add starters, main activities and a plenary).",learner:"To be completed.",fa:"To be added",res:"Textbook, PPT, Notebook"}],homework:autoHomework(chapter),title:"Chapter LP — "+chapter}],name:"Chapter Objectives - "+subject+" "+grade+" - "+chapter};renderPreview();ps.className="status ok";ps.textContent="Objectives drafted for "+chapter+". Preview below.";}
+
+/* ===================== PREVIEW ===================== */
+function renderPreview(){const wrap=document.getElementById("previewWrap"),body=document.getElementById("previewBody"),title=document.getElementById("prevTitle");if(lastOut.kind==="lesson"){title.textContent="Lesson plan preview";body.innerHTML=lastOut.plans.map(planHTML).join("<div style='height:18px'></div>");}else{title.textContent="Worksheet preview";body.innerHTML=worksheetHTML(lastOut.ws);}wrap.style.display="block";wrap.scrollIntoView({behavior:"smooth",block:"start"});}
+function planHTML(p){const m=p.meta,objLis=p.objs.map(o=>`<li>${esc(o)}</li>`).join("");const rows=p.rows.map(r=>`<tr><td>${esc(r.time)}</td><td>${esc(r.teacher)}${r.pedagogy?`<br><b style="color:#1b4f82;font-size:.74rem">[${esc(r.pedagogy)}]</b>`:""}</td><td>${esc(r.learner)}</td><td>${esc(r.fa)}</td><td>${esc(r.res)}</td></tr>`).join("");return `<div class="lp-preview"><div class="lp-head"><h3>${esc(p.title)} · Lesson Plan</h3><span style="font-size:.8rem;color:#dcc89a">${esc(m.subject)} · ${esc(m.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="metarow"><td><b>Teacher:</b> ${esc(m.teacher)}</td><td><b>Class:</b> ${esc(m.grade)}</td><td><b>Subject:</b> ${esc(m.subject)}</td><td><b>Content/Unit/Chapter:</b> ${esc(m.topic)}</td><td><b>Date:</b> ${esc(m.date)}</td><td><b>Duration:</b> ${esc(m.dur)}</td></tr><tr class="aimrow"><td colspan="6"><b>Aim:</b> ${esc(p.aim)}</td></tr><tr class="objrow"><td colspan="6"><b>Learning Objectives:</b> The learner will<ul>${objLis}</ul></td></tr><tr class="colhdr"><th style="width:8%">Time</th><th style="width:34%">Teacher Activity</th><th style="width:30%">Learner Activity</th><th style="width:14%">Formative Assessments</th><th style="width:14%">Resources</th></tr>${rows}<tr class="reflrow"><td colspan="6"><b>Teacher Reflection:</b> What would you keep the same / change? &nbsp; <b>Worked well:</b> Yes/No &nbsp; <b>Did not work well:</b> Yes/No</td></tr></table><div class="extra"><h4>Support for Struggling Learners</h4><ul><li>Guided notes and simplified instructions</li><li>Vocabulary support and visual aids</li><li>Peer support / buddy pairing</li></ul><h4>Extension for Advanced Learners</h4><ul><li>Higher-order thinking questions and research tasks</li><li>Additional challenge problems or an independent mini-project</li><li>Opportunity to present findings to the class</li></ul><h4>Homework</h4><ul><li>${esc(p.homework)}</li></ul></div></div></div>`;}
+function worksheetHTML(ws){let secs="";const L="ABCDEFGH";let si=0;ws.sections.forEach(s=>{secs+=`<div class="ws-section"><h4>Section ${L[si++]} — ${esc(s.label)} &nbsp;<span style="color:var(--muted);font-weight:400">(${s.marks} mark${s.marks!==1?"s":""} each)</span></h4>`;s.items.forEach((it,i)=>{secs+=`<div class="ws-q">${i+1}. ${esc(it.q)}`;if(it.opts)secs+=`<div class="opts">${it.opts.map(esc).join(" &nbsp; ")}</div>`;if(it.a)secs+=` <span style="color:var(--muted)">${esc(it.a)}</span>`;if(it.code)secs+=`<pre>${esc(it.code)}</pre>`;else if(it.box)secs+=`<div class="imgbox">answer box</div>`;secs+="</div>";});secs+="</div>";});if(ws.img)secs+=`<div class="ws-section"><h4>Section ${L[si++]} — Image / Diagram &nbsp;<span style="color:var(--muted);font-weight:400">(${ws.img.marks} marks)</span></h4><div class="ws-q">${esc(ws.img.instr)}<div class="imgbox">[ teacher inserts image / map / diagram here ]</div></div></div>`;return `<div class="ws-preview"><div class="lp-head"><h3>Worksheet · ${esc(ws.topic)}</h3><span style="font-size:.8rem;color:#dcc89a">${esc(ws.subject)} · ${esc(ws.grade)} · Total ${ws.total} marks</span></div><div class="lp-body"><div style="font-size:.84rem;margin-bottom:10px;border-bottom:1px solid var(--line);padding-bottom:8px">Name: __________________  Class: ${esc(ws.grade)}  Date: __________  Marks: ____ / ${ws.total}</div>${secs}</div></div>`;}
+
+/* ===================== EXPORTS ===================== */
+function downloadDocxOut(){if(!lastOut)return;(lastOut.kind==="lesson"?lessonDocx(lastOut.plans):worksheetDocx(lastOut.ws)).blob().then(b=>downloadBlob(b,safe(lastOut.name)+".docx"));}
+function downloadPdfOut(){if(!lastOut)return;downloadBlob(lastOut.kind==="lesson"?lessonPdf(lastOut.plans):worksheetPdf(lastOut.ws),safe(lastOut.name)+".pdf");}
+function safe(s){return (s||"output").replace(/[\\/:*?"<>|]+/g,"").slice(0,80);}
+function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p,pi)=>{const m=p.meta;b.para([{text:(p.title||"In-session")+":  Lesson Plan",bold:true,size:24,color:"13233F"}]);b.table([[{runs:[{text:"Teacher: ",bold:true},{text:m.teacher||""}]},{runs:[{text:"Class: ",bold:true},{text:m.grade}]},{runs:[{text:"Subject: ",bold:true},{text:m.subject}]},{runs:[{text:"Content/Unit/Chapter: ",bold:true},{text:m.topic}]},{runs:[{text:"Date: ",bold:true},{text:m.date}]},{runs:[{text:"Lesson Duration: ",bold:true},{text:m.dur}]}],[{span:6,fill:"FBD4B4",runs:[{text:"Aim: ",bold:true},{text:p.aim}]}],[{span:6,fill:"FBD4B4",paras:[{runs:[{text:"Learning Objectives: ",bold:true},{text:"The learner will"}]},...p.objs.map(o=>({bullet:true,runs:[{text:o}]}))]}]],[1560,1560,1560,1560,1560,1560]);b.spacer();const cw=[800,3260,2700,1300,1300];const head=["Time","Teacher Activity","Learner Activity","Formative Assessments","Resources"].map(t=>({fill:"13233F",runs:[{text:t,bold:true,color:"FFFFFF"}]}));head._header=1;const rows=[head];p.rows.forEach(r=>{const tp=[{runs:[{text:r.teacher}]}];if(r.pedagogy)tp.push({runs:[{text:"["+r.pedagogy+"]",italics:true,color:"1b4f82"}]});rows.push([{text:r.time},{paras:tp},{text:r.learner},{text:r.fa},{text:r.res}]);});rows.push([{span:5,fill:"F6F3EC",runs:[{text:"Teacher Reflection: ",bold:true},{text:"What would you keep the same / change?     "},{text:"Worked well: ",bold:true},{text:"Yes / No     "},{text:"Did not work well: ",bold:true},{text:"Yes / No"}]}]);b.table(rows,cw);b.heading("Support for Struggling Learners",{size:20});b.bullets(["Guided notes and simplified instructions","Vocabulary support and visual aids","Peer support / buddy pairing"]);b.heading("Extension for Advanced Learners",{size:20});b.bullets(["Higher-order thinking questions and research tasks","Additional challenge problems or an independent mini-project","Opportunity to present findings to the class"]);b.heading("Homework",{size:20});b.para([{text:p.homework}]);if(pi<plans.length-1)b.pageBreak();});return b;}
+function lessonPdf(plans){const pb=pdfBuilder({landscape:true});plans.forEach(p=>{const m=p.meta;pb.text((p.title||"In-session")+" — Lesson Plan",{size:16,bold:true,color:"13233F"});pb.gap(4);pb.text(`Teacher: ${m.teacher||"-"}    Class: ${m.grade}    Subject: ${m.subject}    Chapter: ${m.topic}    Date: ${m.date||"-"}    Duration: ${m.dur}`,{size:9});pb.line();pb.text("Aim: "+p.aim,{size:10,bold:true});pb.gap(2);pb.text("Learning Objectives — the learner will:",{size:10,bold:true});p.objs.forEach(o=>pb.text("•  "+o,{size:9,x:50}));pb.gap(4);pb.text("Lesson Activities",{size:12,bold:true,color:"13233F"});p.rows.forEach(r=>{pb.gap(3);pb.text(`[${r.time}] ${r.teacher}`,{size:9,bold:true});pb.text("Learner: "+r.learner,{size:9,x:50});pb.text("Formative Assessment: "+r.fa+"    |    Resources: "+r.res,{size:9,x:50,color:"6a7384"});});pb.gap(4);pb.text("Support: guided notes, vocabulary support, visual aids, peer support.",{size:9});pb.text("Extension: higher-order questions, research tasks, mini-project, presentation.",{size:9});pb.text("Homework: "+p.homework,{size:9});pb.gap(6);pb.line();pb.text("Teacher Reflection: keep the same / change?   Worked well: Yes/No   Did not work well: Yes/No",{size:9,color:"6a7384"});});return pb.blob();}
+function worksheetDocx(ws){const b=docBuilder({landscape:false});b.para([{text:"National Academy for Learning",bold:true,size:20,color:"13233F"}]);b.para([{text:"Worksheet — "+ws.topic,bold:true,size:26,color:"13233F"}]);b.para([{text:ws.subject+"  ·  "+ws.grade+"  ·  Total "+ws.total+" marks",size:18,color:"6a7384"}]);b.para([{text:"Name: ____________________     Class: "+ws.grade+"     Date: __________     Marks: ____ / "+ws.total,size:18}]);b.spacer();const L="ABCDEFGH";let si=0;ws.sections.forEach(s=>{b.heading("Section "+L[si++]+" — "+s.label+"   ("+s.marks+" mark"+(s.marks!==1?"s":"")+" each)",{size:20});s.items.forEach((it,i)=>{b.para([{text:(i+1)+".  "+it.q,size:18}]);if(it.opts)b.para([{text:"     "+it.opts.join("    "),size:18}]);if(it.a)b.para([{text:"     "+it.a,size:18,color:"6a7384"}]);if(it.code)b.para([{text:it.code,size:16}]);if(it.box||it.code)b.para([{text:"____________________________________________",size:18}]);});});if(ws.img){b.heading("Section "+L[si++]+" — Image / Diagram   ("+ws.img.marks+" marks)",{size:20});b.para([{text:ws.img.instr,size:18}]);b.para([{text:"[ Teacher inserts image / map / diagram in this space ]",size:18,color:"a89668"}]);for(let k=0;k<4;k++)b.para([{text:" ",size:18}]);}return b;}
+function worksheetPdf(ws){const pb=pdfBuilder({landscape:false});pb.text("National Academy for Learning",{size:11,bold:true,color:"13233F"});pb.gap(4);pb.text("Worksheet — "+ws.topic,{size:16,bold:true,color:"13233F"});pb.gap(4);pb.text(ws.subject+"   ·   "+ws.grade+"   ·   Total "+ws.total+" marks",{size:10,color:"6a7384"});pb.gap(2);pb.text("Name: ____________________   Class: "+ws.grade+"   Date: __________   Marks: ___ / "+ws.total,{size:10});pb.line();const L="ABCDEFGH";let si=0;ws.sections.forEach(s=>{pb.gap(3);pb.text("Section "+L[si++]+" — "+s.label+"   ("+s.marks+" mark"+(s.marks!==1?"s":"")+" each)",{size:12,bold:true});s.items.forEach((it,i)=>{pb.text((i+1)+".  "+it.q,{size:10});if(it.opts)pb.text("     "+it.opts.join("    "),{size:10});if(it.a)pb.text("     "+it.a,{size:10,color:"6a7384"});if(it.code)it.code.split("\n").forEach(l=>pb.text("    "+l,{size:9,color:"333333"}));if(it.box||it.code)pb.rect(40,pb.PW-80,46,{});});});if(ws.img){pb.gap(3);pb.text("Section "+L[si++]+" — Image / Diagram   ("+ws.img.marks+" marks)",{size:12,bold:true});pb.text(ws.img.instr,{size:10});pb.rect(40,pb.PW-80,150,{});pb.text("[ teacher inserts image / map / diagram here ]",{size:9,color:"a89668"});}return pb.blob();}
+
+/* ===================== reset ===================== */
+function resetBuild(){["f_teacher","f_topic","f_aim","f_obj"].forEach(id=>document.getElementById(id).value="");document.getElementById("f_grade").value="";document.getElementById("f_subject").value="";selected.clear();renderActs();renderSelBar();document.getElementById("buildStatus").textContent="";document.getElementById("previewWrap").style.display="none";}
+</script>
+</body>
+</html>
