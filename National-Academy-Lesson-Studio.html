@@ -213,10 +213,9 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
     <button class="btn btn-gold btn-sm" onclick="toggleSettings()">⚙ Turn on AI (free)</button>
     <b style="cursor:pointer;color:var(--muted);font-size:.8rem" onclick="document.getElementById('aiBanner').style.display='none'">dismiss</b>
   </div>
-  <div class="modes">
+  <div class="modes" style="grid-template-columns:repeat(3,1fr)">
     <div class="mode-btn active" id="m1" onclick="setMode('build')"><div class="ic">＋</div><div><h3>Build lesson plan</h3><p>Topic + activities → formatted plan.</p></div></div>
     <div class="mode-btn" id="m2" onclick="setMode('convert')"><div class="ic">↑</div><div><h3>Convert a file</h3><p>PPT / PDF / Word → school format.</p></div></div>
-    <div class="mode-btn" id="m3" onclick="setMode('worksheet')"><div class="ic">✎</div><div><h3>Make worksheet</h3><p>Questions + marks for a topic.</p></div></div>
     <div class="mode-btn" id="m4" onclick="setMode('pow')"><div class="ic">▦</div><div><h3>Plan of Work</h3><p>Upload syllabus → objectives.</p></div></div>
   </div>
 
@@ -262,34 +261,6 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
     <div class="note">Keeps the file's activities &amp; sequence, splits content into timed rows, and adds Formative Assessment + Resources columns. Long decks auto-split into multiple lesson plans. If no named activities are found, you'll be offered the same activity library used in Build.</div>
     <div id="convActPicker" class="hide" style="margin-top:14px"></div>
     <div class="actions"><button class="btn btn-primary" id="convBtn" onclick="convertFile()" disabled>Convert to lesson plan</button><button class="btn btn-ghost" onclick="clearFile()">Clear</button><span class="status" id="convStatus"></span></div>
-  </div>
-
-  <!-- WORKSHEET -->
-  <div class="panel hide" id="wsPanel">
-    <h2 class="serif">Worksheet generator</h2><p class="sub">Build a topic worksheet with marks. AI can draft questions (needs internet); you can edit everything.</p>
-    <div class="grid">
-      <div class="field"><label>Class / Grade</label><select id="w_grade"><option value="">Select grade</option></select></div>
-      <div class="field"><label>Subject</label><select id="w_subject"><option value="">Select subject</option></select></div>
-      <div class="field"><label>Topic / Chapter</label><input id="w_topic" placeholder="e.g. Photosynthesis, Fractions, Python loops"></div>
-    </div>
-    <div class="field full" style="margin-top:14px"><label>Align to objectives (optional, one per line)</label><textarea id="w_obj" placeholder="Paste the lesson objectives so questions map to them (optional)"></textarea></div>
-    <div class="section-h"><div class="bar"></div><h3>Question types &amp; marks</h3></div>
-    <div class="qtypes" id="qtypes"></div>
-    <div class="qtype-rows" id="qtypeRows"></div>
-    <div class="section-h"><div class="bar"></div><h3>Image-based question</h3><span class="hint">A blank labelled box the teacher fills later</span></div>
-    <div class="grid">
-      <div class="field"><label>Image box preset</label><select id="w_imgpreset">
-        <option value="">None</option>
-        <option value="map">Map work (Social Studies) — mark / locate</option>
-        <option value="bio">Label the diagram (Biology) — name the parts</option>
-        <option value="code_err">Coding — find the error (Gr 1–3)</option>
-        <option value="code_out">Coding — write the output (Gr 1–3)</option>
-        <option value="generic">Generic labelled box</option>
-      </select></div>
-      <div class="field"><label>Box instruction (optional)</label><input id="w_imginstr" placeholder="auto-filled from preset"></div>
-      <div class="field"><label>Marks for image question</label><input id="w_imgmarks" type="number" value="5" min="0"></div>
-    </div>
-    <div class="actions"><button class="btn btn-primary" onclick="aiWorksheet()">✨ Generate worksheet questions (AI)</button><button class="btn btn-ghost" onclick="generateWorksheet()">Blank template only</button><span class="status" id="wsStatus"></span></div>
   </div>
 
   <!-- POW -->
@@ -1045,31 +1016,15 @@ const SUBJECTS=["English","Hindi","Sanskrit","Kannada","Tamil","Telugu","Marathi
   "Computer Science","Information Technology","Accountancy","Business Studies",
   "General Knowledge","Art & Craft","Physical Education","Moral Science / Value Education"];
 const LIB_CATS=[{id:"all",label:"All"},{id:"starter",label:"Starters"},{id:"collaborative",label:"Collaborative"},{id:"formative",label:"Formative"},{id:"plenary",label:"Plenaries"}];
-const QTYPES=[
-  {id:"tf",label:"True / False",sub:"statements",defCount:5,defMarks:1},
-  {id:"mcq",label:"MCQ",sub:"4 options",defCount:5,defMarks:1},
-  {id:"fib",label:"Fill in the blanks",sub:"one-word answer",defCount:5,defMarks:1},
-  {id:"short",label:"Short answer",sub:"with marks",defCount:3,defMarks:3},
-  {id:"code_err",label:"Find the error",sub:"coding (Gr 1–3)",defCount:2,defMarks:2},
-  {id:"code_out",label:"Write the output",sub:"coding (Gr 1–3)",defCount:2,defMarks:2}
-];
-const IMG_PRESETS={
-  map:"Mark and label the following on the given map:",
-  bio:"Label the parts of the diagram shown below:",
-  code_err:"Look at the code in the box. Find and circle the error, then write the correct line:",
-  code_out:"Read the code in the box and write what it will print as output:",
-  generic:"Study the image in the box and answer in the space provided:"
-};
 
 /* ===================== state ===================== */
 let mode="build",selected=new Set(),libFilter="all";
 let lastOut=null,uploadedText="",powText="",powChaptersData=[];
-let qtypeSel=new Set(["tf","mcq","fib","short"]);
 
 /* ===================== init ===================== */
 function fillSelect(id,arr){const s=document.getElementById(id);if(!s)return;arr.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;s.appendChild(o);});}
-["f_grade","c_grade","w_grade","p_grade"].forEach(id=>fillSelect(id,GRADES));
-["f_subject","c_subject","w_subject","p_subject"].forEach(id=>fillSelect(id,SUBJECTS));
+["f_grade","c_grade","p_grade"].forEach(id=>fillSelect(id,GRADES));
+["f_subject","c_subject","p_subject"].forEach(id=>fillSelect(id,SUBJECTS));
 ["f_date","c_date"].forEach(id=>{const e=document.getElementById(id);if(e)e.valueAsDate=new Date();});
 
 function renderLibTabs(){const w=document.getElementById("libTabs");w.innerHTML="";LIB_CATS.forEach(c=>{const b=document.createElement("button");b.className="lib-tab"+(libFilter===c.id?" active":"");b.textContent=c.label;b.onclick=()=>{libFilter=c.id;renderLibTabs();renderActs();};w.appendChild(b);});}
@@ -1077,19 +1032,8 @@ function renderActs(){const g=document.getElementById("actGrid");g.innerHTML="";
 function renderSelBar(){const bar=document.getElementById("selBar");if(selected.size===0){bar.innerHTML="<span>No activities selected yet.</span>";return;}const order=["starter","collaborative","formative","plenary"];const items=[...selected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));bar.innerHTML="<span>Selected ("+items.length+"):</span>"+items.map(a=>`<span class="chip">${a.name}<b onclick="event.stopPropagation();selected.delete('${a.id}');renderActs();renderSelBar();">✕</b></span>`).join("");}
 renderLibTabs();renderActs();renderSelBar();
 
-function renderQTypes(){
-  const w=document.getElementById("qtypes");w.innerHTML="";
-  QTYPES.forEach(q=>{const d=document.createElement("div");d.className="qt"+(qtypeSel.has(q.id)?" sel":"");d.onclick=()=>{qtypeSel.has(q.id)?qtypeSel.delete(q.id):qtypeSel.add(q.id);renderQTypes();};d.innerHTML=`<div class="cb">${qtypeSel.has(q.id)?"✓":""}</div><div>${q.label}<small>${q.sub}</small></div>`;w.appendChild(d);});
-  const rw=document.getElementById("qtypeRows");
-  const prev={};QTYPES.forEach(q=>{const c=document.getElementById("qc_"+q.id),mm=document.getElementById("qm_"+q.id);if(c)prev[q.id]={c:c.value,m:mm.value};});
-  rw.innerHTML="";
-  QTYPES.filter(q=>qtypeSel.has(q.id)).forEach(q=>{const r=document.createElement("div");r.className="qtype-row";const pv=prev[q.id]||{};r.innerHTML=`<label>${q.label}</label><span style="color:var(--muted);font-size:.76rem">Questions</span><input id="qc_${q.id}" type="number" min="0" value="${pv.c||q.defCount}"><span style="color:var(--muted);font-size:.76rem">Marks each</span><input id="qm_${q.id}" type="number" min="0" value="${pv.m||q.defMarks}">`;rw.appendChild(r);});
-}
-renderQTypes();
-document.getElementById("w_imgpreset").addEventListener("change",e=>{const v=e.target.value;if(v&&IMG_PRESETS[v])document.getElementById("w_imginstr").value=IMG_PRESETS[v];});
-
 /* ===================== mode switch ===================== */
-function setMode(m){mode=m;[["m1","build","buildPanel"],["m2","convert","convertPanel"],["m3","worksheet","wsPanel"],["m4","pow","powPanel"]].forEach(([btn,name,panel])=>{document.getElementById(btn).classList.toggle("active",m===name);document.getElementById(panel).classList.toggle("hide",m!==name);});document.getElementById("previewWrap").style.display="none";}
+function setMode(m){mode=m;[["m1","build","buildPanel"],["m2","convert","convertPanel"],["m4","pow","powPanel"]].forEach(([btn,name,panel])=>{document.getElementById(btn).classList.toggle("active",m===name);document.getElementById(panel).classList.toggle("hide",m!==name);});document.getElementById("previewWrap").style.display="none";}
 
 /* ===================== helpers ===================== */
 function val(id){const e=document.getElementById(id);return e?(e.value||"").trim():"";}
@@ -1251,7 +1195,7 @@ async function buildPlan(){
   const order=["starter","collaborative","formative","plenary"];
   const acts=[...selected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));
   const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
-  const rows=acts.map((a,i)=>({time:times[i]+" min",act:a,teacher:stageLabel(a)+a.teacher.replace(/\btopic\b/g,topic),learner:a.learner.replace(/\btopic\b/g,topic),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
+  const rows=acts.map((a,i)=>({time:times[i]+" min",act:a,name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,topic),learner:a.learner.replace(/\btopic\b/g,topic),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
   // Objective-driven activity CONTENT (AI). Fills each activity with real topic content.
   const wantContent=document.getElementById("f_content").checked;
   const wantML=document.getElementById("f_minilec").checked;
@@ -1290,8 +1234,8 @@ Return ONLY valid JSON: an array with one object per activity in the same order:
   data.forEach((d,i)=>{
     if(!rows[i])return;
     const a=rows[i].act;
-    let t=stageLabel(a)+(d.teacher||"");
-    if(d.questions&&d.questions.length)t+=" Key prompts: "+d.questions.map(q=>"“"+q+"”").join("; ")+".";
+    let t=(d.teacher||"");
+    if(d.questions&&d.questions.length)t+=" Key prompts: "+d.questions.map(q=>'"'+q+'"').join("; ")+".";
     rows[i].teacher=t;
     if(d.learner)rows[i].learner=d.learner;
   });
@@ -1341,6 +1285,7 @@ Make the explanation substantial — this should be a meaningful share of the le
   }
 }
 function stageLabel(a){return a.cat==="starter"?"Starter — "+a.name+": ":a.cat==="plenary"?"Plenary — "+a.name+": ":"Main activity — "+a.name+": ";}
+function stageName(a){return a.cat==="starter"?"Starter: "+a.name:a.cat==="plenary"?"Plenary: "+a.name:"Main Activity: "+a.name;}
 function pedagogyFor(c){return c==="collaborative"?"Collaborative Learning":c==="formative"?"Formative Assessment / AfL":c==="starter"?"Activity-Based Learning":"Reflective Learning";}
 
 /* ===================== CONVERT ===================== */
@@ -1424,7 +1369,7 @@ function runConvert(segs){
     const order=["starter","collaborative","formative","plenary"];
     const acts=[...convSelected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));
     const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
-    rows=acts.map((a,i)=>({time:times[i]+" min",teacher:stageLabel(a)+a.teacher.replace(/\btopic\b/g,topic),learner:a.learner.replace(/\btopic\b/g,topic),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
+    rows=acts.map((a,i)=>({time:times[i]+" min",name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,topic),learner:a.learner.replace(/\btopic\b/g,topic),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
   }else{
     const ROWS=6,chunk=segs.slice(0,ROWS);const times=distribute(dur,chunk.length);
     rows=chunk.map((seg,i)=>{const e=expandSegment(seg,i,chunk.length);return {time:times[i]+" min",...e,pedagogy:""};});
@@ -1440,49 +1385,8 @@ function runConvert(segs){
   lastOut={kind:"lesson",plans,name:"Lesson Plan - "+subject+" "+grade+" - "+topic};
   renderPreview();cs.className="status ok";cs.textContent=multi?("Done — "+chunks.length+" lesson plans."):"Done. Preview below.";
 }
-function expandSegment(seg,i,n){const clean=seg.replace(/\s+/g," ").trim(),lower=clean.toLowerCase();let stage=i===0?"Introduction":(i===n-1?"Consolidation":"Development");let ped=/group|team|pair|collaborat|discuss/.test(lower)?" Organise learners into groups/pairs to discuss and work collaboratively.":"";if(/question|quiz|poll|exit|reflect/.test(lower))ped+=" Use the responses to check understanding before moving on.";const teacher=`${stage}: Present and explain the following content from the source: "${clip(clean,260)}". Display any related image/diagram, ask probing questions to connect prior knowledge, and give clear task instructions.`+ped;const learner=`Observe and listen, discuss key points with a partner or group, record important points in the notebook, answer the teacher's questions, and participate actively.`;const fa=/quiz|question|poll|exit/.test(lower)?"Oral questioning / quick quiz":/reflect/.test(lower)?"Reflection review":"Oral questioning; notebook review";const res=/video|image|picture|diagram|ppt|slide/.test(lower)?"PPT/Interactive panel, Notebook, Whiteboard":"Whiteboard, Notebook, Textbook";return {teacher,learner,fa,res};}
+function expandSegment(seg,i,n){const clean=seg.replace(/\s+/g," ").trim(),lower=clean.toLowerCase();let stage=i===0?"Introduction":(i===n-1?"Consolidation":"Development");let ped=/group|team|pair|collaborat|discuss/.test(lower)?" Organise learners into groups/pairs to discuss and work collaboratively.":"";if(/question|quiz|poll|exit|reflect/.test(lower))ped+=" Use the responses to check understanding before moving on.";const teacher=`Present and explain the following content from the source: "${clip(clean,260)}". Display any related image/diagram, ask probing questions to connect prior knowledge, and give clear task instructions.`+ped;const learner=`Observe and listen, discuss key points with a partner or group, record important points in the notebook, answer the teacher's questions, and participate actively.`;const fa=/quiz|question|poll|exit/.test(lower)?"Oral questioning / quick quiz":/reflect/.test(lower)?"Reflection review":"Oral questioning; notebook review";const res=/video|image|picture|diagram|ppt|slide/.test(lower)?"PPT/Interactive panel, Notebook, Whiteboard":"Whiteboard, Notebook, Textbook";return {name:stage,teacher,learner,fa,res};}
 function clip(s,n){return s.length>n?s.slice(0,n).trim()+"…":s;}
-
-/* ===================== WORKSHEET ===================== */
-function gatherQConfig(){return QTYPES.filter(q=>qtypeSel.has(q.id)).map(q=>({id:q.id,label:q.label,count:parseInt(val("qc_"+q.id))||0,marks:parseInt(val("qm_"+q.id))||0})).filter(q=>q.count>0);}
-function generateWorksheet(){
-  const grade=val("w_grade"),subject=val("w_subject"),topic=val("w_topic"),st=document.getElementById("wsStatus");
-  if(!grade||!subject||!topic){st.className="status err";st.textContent="Fill grade, subject and topic.";return;}
-  const cfg=gatherQConfig();if(cfg.length===0&&!val("w_imgpreset")){st.className="status err";st.textContent="Pick at least one question type.";return;}
-  const sections=cfg.map(c=>({type:c.id,label:c.label,marks:c.marks,items:placeholderItems(c)}));
-  const ip=val("w_imgpreset");let img=ip?{instr:val("w_imginstr")||IMG_PRESETS[ip],marks:parseInt(val("w_imgmarks"))||0}:null;
-  buildWorksheetOut({grade,subject,topic,sections,img,date:fmtDate(new Date().toISOString())});
-  st.className="status ok";st.textContent="Worksheet ready (placeholder questions — use AI draft for topic-specific ones).";
-}
-function placeholderItems(c){const items=[];for(let i=0;i<c.count;i++){if(c.id==="tf")items.push({q:"Statement "+(i+1)+" about the topic.",a:"( T / F )"});else if(c.id==="mcq")items.push({q:"Question "+(i+1)+" about the topic?",opts:["(a) option","(b) option","(c) option","(d) option"]});else if(c.id==="fib")items.push({q:"The ______ is an important idea in this topic. (Q"+(i+1)+")"});else if(c.id==="short")items.push({q:"Short-answer question "+(i+1)+" about the topic."});else if(c.id==="code_err")items.push({q:"Find and fix the error in the code below (Q"+(i+1)+"):",box:true});else if(c.id==="code_out")items.push({q:"Write the output of the code below (Q"+(i+1)+"):",box:true});}return items;}
-async function aiWorksheet(){
-  const grade=val("w_grade"),subject=val("w_subject"),topic=val("w_topic"),st=document.getElementById("wsStatus");
-  if(!grade||!subject||!topic){st.className="status err";st.textContent="Fill grade, subject and topic.";return;}
-  const cfg=gatherQConfig();if(cfg.length===0){st.className="status err";st.textContent="Pick at least one question type.";return;}
-  if(!hasAI()){requireKeyNotice("wsStatus");return;}
-  st.className="status";st.textContent="Writing topic-specific questions with AI…";
-  const spec=cfg.map(c=>`${c.count} ${c.label} questions`).join(", ");
-  const objText=(val("w_obj")||"").trim();
-  const prompt=`You are an experienced ${subject} subject master creating a CBSE worksheet for ${grade} on "${topic}". Generate exactly: ${spec}.
-Ground every question in ${sourceHint(subject)} so it matches the prescribed syllabus content and the kind of questions students actually face for "${topic}".${objText?` Align questions to these objectives:\n- ${objText.split("\n").join("\n- ")}`:""}
-Use correct subject terminology and a spread of Bloom levels (recall to higher-order). For coding/CS, use real, runnable code in code_err/code_out items and make questions genuinely about "${topic}".
-Return ONLY valid JSON, no preamble:
-{"tf":[{"q":"statement"}],"mcq":[{"q":"question","opts":["a","b","c","d"]}],"fib":[{"q":"sentence with ____"}],"short":[{"q":"question"}],"code_err":[{"q":"instruction","code":"buggy code"}],"code_out":[{"q":"instruction","code":"code"}]}
-Only include keys for requested types. Age-appropriate for ${grade}.`;
-  try{
-    const data=parseJSON(await callAI(prompt,1800));
-    const sections=cfg.map(c=>{const arr=data[c.id]||[];const items=arr.map(it=>{if(c.id==="tf")return {q:it.q,a:"( T / F )"};if(c.id==="mcq")return {q:it.q,opts:(it.opts||[]).map((o,i)=>"("+"abcd"[i]+") "+o)};if(c.id==="fib")return {q:it.q};if(c.id==="short")return {q:it.q};if(c.id==="code_err"||c.id==="code_out")return {q:it.q,code:it.code,box:true};return {q:it.q};});return {type:c.id,label:c.label,marks:c.marks,items};});
-    const ip=val("w_imgpreset");let img=ip?{instr:val("w_imginstr")||IMG_PRESETS[ip],marks:parseInt(val("w_imgmarks"))||0}:null;
-    buildWorksheetOut({grade,subject,topic,sections,img,date:fmtDate(new Date().toISOString())});
-    st.className="status ok";st.textContent="Topic-specific questions ready. Word/PDF download below.";
-  }catch(e){st.className="status err";st.innerHTML="AI couldn’t generate questions: "+esc(e.message||String(e))+". &nbsp;<b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>Add a free AI key</b> in ⚙ AI Settings, then try again.";}
-}
-function requireKeyNotice(statusId){
-  const st=document.getElementById(statusId);
-  st.className="status err";
-  st.innerHTML="To get real, topic-specific questions you need AI. &nbsp;<b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>Add a free AI key</b> in ⚙ AI Settings (one-time, free to set up), then click again. Or use “Blank template only”.";
-}
-function buildWorksheetOut(ws){let total=0;ws.sections.forEach(s=>total+=s.marks*s.items.length);if(ws.img)total+=ws.img.marks;ws.total=total;lastOut={kind:"worksheet",ws,name:"Worksheet - "+ws.subject+" "+ws.grade+" - "+ws.topic};renderPreview();}
 
 /* ===================== POW ===================== */
 const powDrop=document.getElementById("powDrop"),powInput=document.getElementById("powInput");
@@ -1539,11 +1443,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 
 /* ===================== PREVIEW ===================== */
-function renderPreview(){const wrap=document.getElementById("previewWrap"),body=document.getElementById("previewBody"),title=document.getElementById("prevTitle");if(lastOut.kind==="lesson"){title.textContent="Lesson plan preview";body.innerHTML=lastOut.plans.map(planHTML).join("<div style='height:18px'></div>");}else if(lastOut.kind==="pow"){title.textContent="Plan of Work preview";body.innerHTML=powHTML(lastOut.pow);}else{title.textContent="Worksheet preview";body.innerHTML=worksheetHTML(lastOut.ws);}wrap.style.display="block";wrap.scrollIntoView({behavior:"smooth",block:"start"});}
+function renderPreview(){const wrap=document.getElementById("previewWrap"),body=document.getElementById("previewBody"),title=document.getElementById("prevTitle");if(lastOut.kind==="lesson"){title.textContent="Lesson plan preview";body.innerHTML=lastOut.plans.map(planHTML).join("<div style='height:18px'></div>");}else{title.textContent="Plan of Work preview";body.innerHTML=powHTML(lastOut.pow);}wrap.style.display="block";wrap.scrollIntoView({behavior:"smooth",block:"start"});}
 function powHTML(pow){
   const isMonth=pow.layout==="month";
   const colHead=isMonth?"Month":"Topics";
-  const rows=pow.rows.map((r,i)=>`<tr><td style="font-weight:600;${isMonth?"white-space:nowrap":""}">${esc(isMonth?pow.months[i]:r.chapter)}</td><td><ul style="margin:0;padding-left:18px">${r.objectives.map(o=>`<li>${esc(o)}</li>`).join("")}</ul></td></tr>`).join("");
+  const rows=pow.rows.map((r,i)=>`<tr><td style="font-weight:600;${isMonth?"white-space:nowrap":""}">${esc(isMonth?pow.months[i]:r.chapter)}</td><td>${esc(r.objectives.join("; "))}</td></tr>`).join("");
   return `<div class="lp-preview"><div class="lp-head"><h3>Plan of Work</h3><span style="font-size:.8rem;color:#dcc89a">${esc(pow.subject)} · ${esc(pow.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="colhdr"><th style="width:22%">${colHead}</th><th>Objectives</th></tr>${rows}</table></div></div>`;
 }
 function mlHTML(ml){
@@ -1562,41 +1466,48 @@ function mlHTML(ml){
     ${voc?`<p style="margin-top:8px"><b>Key vocabulary:</b> ${voc}</p>`:""}
   </div>`;
 }
-function planHTML(p){const m=p.meta,objLis=p.objs.map(o=>`<li>${esc(o)}</li>`).join("");const rows=p.rows.map(r=>`<tr><td>${esc(r.time)}</td><td>${esc(r.teacher)}${r.pedagogy?`<br><b style="color:#1b4f82;font-size:.74rem">[${esc(r.pedagogy)}]</b>`:""}</td><td>${esc(r.learner)}</td><td>${esc(r.fa)}</td><td>${esc(r.res)}</td></tr>`).join("");return `<div class="lp-preview"><div class="lp-head"><h3>${esc(p.title)} · Lesson Plan</h3><span style="font-size:.8rem;color:#dcc89a">${esc(m.subject)} · ${esc(m.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="metarow"><td><b>Teacher:</b> ${esc(m.teacher)}</td><td><b>Class:</b> ${esc(m.grade)}</td><td><b>Subject:</b> ${esc(m.subject)}</td><td><b>Content/Unit/Chapter:</b> ${esc(m.topic)}</td><td><b>Date:</b> ${esc(m.date)}</td><td><b>Duration:</b> ${esc(m.dur)}</td></tr><tr class="aimrow"><td colspan="6"><b>Aim:</b> ${esc(p.aim)}</td></tr><tr class="objrow"><td colspan="6"><b>Learning Objectives:</b> The learner will<ul>${objLis}</ul></td></tr><tr class="colhdr"><th style="width:8%">Time</th><th style="width:34%">Teacher Activity</th><th style="width:30%">Learner Activity</th><th style="width:14%">Formative Assessments</th><th style="width:14%">Resources</th></tr>${rows}<tr class="reflrow"><td colspan="6"><b>Teacher Reflection:</b> What would you keep the same / change? &nbsp; <b>Worked well:</b> Yes/No &nbsp; <b>Did not work well:</b> Yes/No</td></tr></table>${mlHTML(p.minilec)}<div class="extra"><h4>Support for Struggling Learners</h4><ul><li>Guided notes and simplified instructions</li><li>Vocabulary support and visual aids</li><li>Peer support / buddy pairing</li></ul><h4>Extension for Advanced Learners</h4><ul><li>Higher-order thinking questions and research tasks</li><li>Additional challenge problems or an independent mini-project</li><li>Opportunity to present findings to the class</li></ul><h4>Homework</h4><ul><li>${esc(p.homework)}</li></ul></div></div></div>`;}
-function worksheetHTML(ws){let secs="";const L="ABCDEFGH";let si=0;ws.sections.forEach(s=>{secs+=`<div class="ws-section"><h4>Section ${L[si++]} — ${esc(s.label)} &nbsp;<span style="color:var(--muted);font-weight:400">(${s.marks} mark${s.marks!==1?"s":""} each)</span></h4>`;s.items.forEach((it,i)=>{secs+=`<div class="ws-q">${i+1}. ${esc(it.q)}`;if(it.opts)secs+=`<div class="opts">${it.opts.map(esc).join(" &nbsp; ")}</div>`;if(it.a)secs+=` <span style="color:var(--muted)">${esc(it.a)}</span>`;if(it.code)secs+=`<pre>${esc(it.code)}</pre>`;else if(it.box)secs+=`<div class="imgbox">answer box</div>`;secs+="</div>";});secs+="</div>";});if(ws.img)secs+=`<div class="ws-section"><h4>Section ${L[si++]} — Image / Diagram &nbsp;<span style="color:var(--muted);font-weight:400">(${ws.img.marks} marks)</span></h4><div class="ws-q">${esc(ws.img.instr)}<div class="imgbox">[ teacher inserts image / map / diagram here ]</div></div></div>`;return `<div class="ws-preview"><div class="lp-head"><h3>Worksheet · ${esc(ws.topic)}</h3><span style="font-size:.8rem;color:#dcc89a">${esc(ws.subject)} · ${esc(ws.grade)} · Total ${ws.total} marks</span></div><div class="lp-body"><div style="font-size:.84rem;margin-bottom:10px;border-bottom:1px solid var(--line);padding-bottom:8px">Name: __________________  Class: ${esc(ws.grade)}  Date: __________  Marks: ____ / ${ws.total}</div>${secs}</div></div>`;}
+function planHTML(p){
+  const m=p.meta,objLis=p.objs.map(o=>`<li>${esc(o)}</li>`).join("");
+  const rows=p.rows.map(r=>{
+    const resItems=String(r.res).split(",").map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join("");
+    const learnerItems=String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean).map(s=>`<li>${esc(s.trim())}</li>`).join("");
+    return `<tr><td>${esc(r.time)}</td><td>${r.name?`<b>${esc(r.name)}</b><br>`:""}${esc(r.teacher)}${r.fa?`<br><i style="color:#6a7384">Formative check: ${esc(r.fa)}</i>`:""}${r.pedagogy?`<br><b style="color:#1b4f82;font-size:.74rem">[${esc(r.pedagogy)}]</b>`:""}</td><td><ul style="margin:0;padding-left:16px">${learnerItems||esc(r.learner)}</ul></td><td><ul style="margin:0;padding-left:16px">${resItems||esc(r.res)}</ul></td></tr>`;
+  }).join("");
+  return `<div class="lp-preview"><div class="lp-head"><h3>${esc(p.title)} · Lesson Plan</h3><span style="font-size:.8rem;color:#dcc89a">${esc(m.subject)} · ${esc(m.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="metarow"><td><b>Teacher:</b> ${esc(m.teacher)}</td><td><b>Class:</b> ${esc(m.grade)}</td><td><b>Subject:</b> ${esc(m.subject)}</td><td><b>Content/Unit/Chapter:</b> ${esc(m.topic)}</td><td><b>Date:</b> ${esc(m.date)}</td><td><b>Duration:</b> ${esc(m.dur)}</td></tr><tr class="aimrow"><td colspan="6"><b>Aim:</b> ${esc(p.aim)}</td></tr><tr class="objrow"><td colspan="6"><b>Learning Objectives:</b> Learners will:<ul>${objLis}</ul></td></tr><tr class="colhdr"><th style="width:8%">Time</th><th style="width:42%">Teacher Activity</th><th style="width:30%">Learner Activity</th><th style="width:20%">Resources / IIP</th></tr>${rows}<tr class="reflrow"><td colspan="6"><b>Teacher Reflection:</b> What would you keep the same / change? &nbsp; <b>Worked well:</b> Yes/No &nbsp; <b>Did not work well:</b> Yes/No</td></tr></table>${mlHTML(p.minilec)}<div class="extra"><h4>Support for Struggling Learners</h4><ul><li>Guided notes and simplified instructions</li><li>Vocabulary support and visual aids</li><li>Peer support / buddy pairing</li></ul><h4>Extension for Advanced Learners</h4><ul><li>Higher-order thinking questions and research tasks</li><li>Additional challenge problems or an independent mini-project</li><li>Opportunity to present findings to the class</li></ul><h4>Homework</h4><ul><li>${esc(p.homework)}</li></ul></div></div></div>`;
+}
 
 /* ===================== EXPORTS ===================== */
 function downloadDocxOut(){
-  if(!lastOut){alert("Generate a plan or worksheet first.");return;}
+  if(!lastOut){alert("Generate a lesson plan or Plan of Work first.");return;}
   try{
-    const builder=lastOut.kind==="lesson"?lessonDocx(lastOut.plans):lastOut.kind==="pow"?powDocx(lastOut.pow):worksheetDocx(lastOut.ws);
+    const builder=lastOut.kind==="lesson"?lessonDocx(lastOut.plans):powDocx(lastOut.pow);
     const blob=builder.blob();              // blob() is SYNCHRONOUS (returns a Blob)
     downloadBlob(blob,safe(lastOut.name)+".docx");
   }catch(e){alert("Could not build the Word file: "+(e&&e.message||e));}
 }
 function downloadPdfOut(){
-  if(!lastOut){alert("Generate a plan or worksheet first.");return;}
+  if(!lastOut){alert("Generate a lesson plan or Plan of Work first.");return;}
   try{
-    const blob=lastOut.kind==="lesson"?lessonPdf(lastOut.plans):lastOut.kind==="pow"?powPdf(lastOut.pow):worksheetPdf(lastOut.ws);
+    const blob=lastOut.kind==="lesson"?lessonPdf(lastOut.plans):powPdf(lastOut.pow);
     downloadBlob(blob,safe(lastOut.name)+".pdf");
   }catch(e){alert("Could not build the PDF: "+e.message);}
 }
 function safe(s){return (s||"output").replace(/[\\/:*?"<>|]+/g,"").slice(0,80);}
-/* ---- Plan of Work: Topics|Objectives (school template) or Month|Objectives, landscape, identical layout in Word + PDF ---- */
+/* ---- Plan of Work: Topics|Objectives (school template, portrait, slim single-line rows) ---- */
 function powDocx(pow){
   const isMonth=pow.layout==="month";
   const colHead=isMonth?"Month":"Topics";
-  const b=docBuilder({landscape:true});
-  b.para([{text:"Plan of Work",bold:true,size:26,color:"13233F"}]);
-  b.para([{text:pow.subject+"   ·   "+pow.grade,size:18,color:"6a7384"}]);
+  const b=docBuilder({landscape:false});
+  b.para([{text:"Plan of Work",bold:true,size:24,color:"13233F"}]);
+  b.para([{text:pow.subject+"   ·   "+pow.grade,size:16,color:"6a7384"}]);
   b.spacer();
-  const cw=[1500,7860];
-  const head=[{text:colHead,bold:true,runs:[{text:colHead,bold:true,size:22}]},{text:"Objectives",bold:true,runs:[{text:"Objectives",bold:true,size:22}]}];
+  const cw=[1700,7660];
+  const head=[{runs:[{text:colHead,bold:true,size:22}]},{runs:[{text:"Objectives",bold:true,size:22}]}];
   const rows=[head];
   pow.rows.forEach((r,i)=>{
     rows.push([
-      {runs:[{text:isMonth?pow.months[i]:r.chapter,bold:true}]},
-      {paras:r.objectives.map(o=>({bullet:true,runs:[{text:o}]}))}
+      {runs:[{text:isMonth?pow.months[i]:r.chapter,bold:true,size:18}]},
+      {runs:[{text:r.objectives.join("; "),size:18}]}
     ]);
   });
   b.table(rows,cw);
@@ -1605,17 +1516,17 @@ function powDocx(pow){
 function powPdf(pow){
   const isMonth=pow.layout==="month";
   const colHead=isMonth?"Month":"Topics";
-  const pb=pdfBuilder({landscape:true});
+  const pb=pdfBuilder({landscape:false});
   const TW=pb.PW-2*pb.M;
-  pb.text("Plan of Work",{size:16,bold:true,color:"13233F"});
-  pb.text(pow.subject+"   ·   "+pow.grade,{size:10,color:"6a7384"});
-  pb.gap(4);
-  const cw=[TW*0.20,TW*0.80];
+  pb.text("Plan of Work",{size:14,bold:true,color:"13233F"});
+  pb.text(pow.subject+"   ·   "+pow.grade,{size:9,color:"6a7384"});
+  pb.gap(3);
+  const cw=[TW*0.18,TW*0.82];
   const rows=[[{text:colHead,bold:true},{text:"Objectives",bold:true}]];
   pow.rows.forEach((r,i)=>{
-    rows.push([{text:isMonth?pow.months[i]:r.chapter,bold:true},{text:r.objectives.map(o=>"- "+o).join("   ")}]);
+    rows.push([{text:isMonth?pow.months[i]:r.chapter,bold:true},{text:r.objectives.join("; ")}]);
   });
-  pb.table(rows,cw,{size:9});
+  pb.table(rows,cw,{size:8.5});
   return pb.blob();
 }
 function mlDocx(b,ml){
@@ -1643,7 +1554,19 @@ function mlPdf(pb,ml){
   (ml.questions||[]).forEach((q,i)=>pb.text((i+1)+".  "+q,{size:9,x:50}));
   if(ml.vocabulary&&ml.vocabulary.length)pb.text("Key vocabulary: "+ml.vocabulary.join(" · "),{size:9});
 }
-function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p,pi)=>{const m=p.meta;b.para([{text:(p.title||"In-session")+":  Lesson Plan",bold:true,size:24,color:"13233F"}]);b.table([[{runs:[{text:"Teacher: ",bold:true},{text:m.teacher||""}]},{runs:[{text:"Class: ",bold:true},{text:m.grade}]},{runs:[{text:"Subject: ",bold:true},{text:m.subject}]},{runs:[{text:"Content/Unit/Chapter: ",bold:true},{text:m.topic}]},{runs:[{text:"Date: ",bold:true},{text:m.date}]},{runs:[{text:"Lesson Duration: ",bold:true},{text:m.dur}]}],[{span:6,fill:"FBD4B4",runs:[{text:"Aim: ",bold:true},{text:p.aim}]}],[{span:6,fill:"FBD4B4",paras:[{runs:[{text:"Learning Objectives: ",bold:true},{text:"The learner will"}]},...p.objs.map(o=>({bullet:true,runs:[{text:o}]}))]}]],[1560,1560,1560,1560,1560,1560]);b.spacer();const cw=[800,3260,2700,1300,1300];const head=["Time","Teacher Activity","Learner Activity","Formative Assessments","Resources"].map(t=>({fill:"13233F",runs:[{text:t,bold:true,color:"FFFFFF"}]}));head._header=1;const rows=[head];p.rows.forEach(r=>{const tp=[{runs:[{text:r.teacher}]}];if(r.pedagogy)tp.push({runs:[{text:"["+r.pedagogy+"]",italics:true,color:"1b4f82"}]});rows.push([{text:r.time},{paras:tp},{text:r.learner},{text:r.fa},{text:r.res}]);});rows.push([{span:5,fill:"F6F3EC",runs:[{text:"Teacher Reflection: ",bold:true},{text:"What would you keep the same / change?     "},{text:"Worked well: ",bold:true},{text:"Yes / No     "},{text:"Did not work well: ",bold:true},{text:"Yes / No"}]}]);b.table(rows,cw);if(p.minilec)mlDocx(b,p.minilec);b.heading("Support for Struggling Learners",{size:20});b.bullets(["Guided notes and simplified instructions","Vocabulary support and visual aids","Peer support / buddy pairing"]);b.heading("Extension for Advanced Learners",{size:20});b.bullets(["Higher-order thinking questions and research tasks","Additional challenge problems or an independent mini-project","Opportunity to present findings to the class"]);b.heading("Homework",{size:20});b.para([{text:p.homework}]);if(pi<plans.length-1)b.pageBreak();});return b;}
+function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p,pi)=>{const m=p.meta;b.para([{text:(p.title||"In-session")+":  Lesson Plan",bold:true,size:24,color:"13233F"}]);b.table([[{runs:[{text:"Teacher: ",bold:true},{text:m.teacher||""}]},{runs:[{text:"Class: ",bold:true},{text:m.grade}]},{runs:[{text:"Subject: ",bold:true},{text:m.subject}]},{runs:[{text:"Content/Unit/Chapter: ",bold:true},{text:m.topic}]},{runs:[{text:"Date: ",bold:true},{text:m.date}]},{runs:[{text:"Lesson Duration: ",bold:true},{text:m.dur}]}],[{span:6,fill:"FBD4B4",runs:[{text:"Aim: ",bold:true},{text:p.aim}]}],[{span:6,fill:"FBD4B4",paras:[{runs:[{text:"Learning Objectives: ",bold:true},{text:"Learners will:"}]},...p.objs.map(o=>({bullet:true,runs:[{text:o}]}))]}]],[1560,1560,1560,1560,1560,1560]);b.spacer();
+  const cw=[800,4200,3500,1860];
+  const head=["Time","Teacher Activity","Learner Activity","Resources / IIP"].map(t=>({fill:"13233F",runs:[{text:t,bold:true,color:"FFFFFF"}]}));head._header=1;const rows=[head];
+  p.rows.forEach(r=>{
+    const tp=[{runs:[{text:r.name||"",bold:true}]},{bullet:true,runs:[{text:r.teacher}]}];
+    if(r.fa)tp.push({bullet:true,runs:[{text:"Formative check: "+r.fa,italics:true}]});
+    if(r.pedagogy)tp.push({runs:[{text:"["+r.pedagogy+"]",italics:true,color:"1b4f82"}]});
+    const lp=String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean).map(s=>({bullet:true,runs:[{text:s.trim()}]}));
+    const resItems=String(r.res).split(",").map(s=>s.trim()).filter(Boolean).map(s=>({bullet:true,runs:[{text:s}]}));
+    rows.push([{text:r.time},{paras:tp},{paras:lp.length?lp:[{runs:[{text:r.learner}]}]},{paras:resItems.length?resItems:[{runs:[{text:r.res}]}]}]);
+  });
+  rows.push([{span:4,fill:"F6F3EC",runs:[{text:"Teacher Reflection: ",bold:true},{text:"What would you keep the same / change?     "},{text:"Worked well: ",bold:true},{text:"Yes / No     "},{text:"Did not work well: ",bold:true},{text:"Yes / No"}]}]);
+  b.table(rows,cw);if(p.minilec)mlDocx(b,p.minilec);b.heading("Support for Struggling Learners",{size:20});b.bullets(["Guided notes and simplified instructions","Vocabulary support and visual aids","Peer support / buddy pairing"]);b.heading("Extension for Advanced Learners",{size:20});b.bullets(["Higher-order thinking questions and research tasks","Additional challenge problems or an independent mini-project","Opportunity to present findings to the class"]);b.heading("Homework",{size:20});b.para([{text:p.homework}]);if(pi<plans.length-1)b.pageBreak();});return b;}
 function lessonPdf(plans){
   const pb=pdfBuilder({landscape:true});
   const PW=pb.PW, M=pb.M, TW=PW-2*M;           // total usable width (landscape A4 ≈ 762pt)
@@ -1664,22 +1587,25 @@ function lessonPdf(plans){
     ]],mc,{size:8.5});
     // AIM + OBJECTIVES (peach)
     pb.table([[{text:"Aim: "+p.aim,fill:"FBD4B4"}]],[TW],{size:8.5});
-    pb.table([[{text:"Learning Objectives - the learner will:  -  "+p.objs.join("   -  "),fill:"FBD4B4"}]],[TW],{size:8.5});
-    // ACTIVITY TABLE
-    const cw=[TW*0.07,TW*0.38,TW*0.25,TW*0.15,TW*0.15];
+    pb.table([[{text:"Learning Objectives - Learners will:  -  "+p.objs.join("   -  "),fill:"FBD4B4"}]],[TW],{size:8.5});
+    // ACTIVITY TABLE — 4 columns matching the real TTA In-session format
+    const cw=[TW*0.08,TW*0.44,TW*0.28,TW*0.20];
     const head=[
       {text:"Time",fill:"13233F",color:"FFFFFF",bold:true},
       {text:"Teacher Activity",fill:"13233F",color:"FFFFFF",bold:true},
       {text:"Learner Activity",fill:"13233F",color:"FFFFFF",bold:true},
-      {text:"Formative Assessments",fill:"13233F",color:"FFFFFF",bold:true},
-      {text:"Resources",fill:"13233F",color:"FFFFFF",bold:true}
+      {text:"Resources / IIP",fill:"13233F",color:"FFFFFF",bold:true}
     ];
     const body=[head];
     p.rows.forEach(r=>{
-      const tcell=r.teacher+(r.pedagogy?"  ["+r.pedagogy+"]":"");
-      body.push([{text:r.time},{text:tcell},{text:r.learner},{text:r.fa},{text:r.res}]);
+      const namePart=r.name?r.name+": ":"";
+      let tcell=namePart+r.teacher;
+      if(r.fa)tcell+="  |  Formative check: "+r.fa;
+      if(r.pedagogy)tcell+="  ["+r.pedagogy+"]";
+      const resText=String(r.res).split(",").map(s=>"- "+s.trim()).join("   ");
+      body.push([{text:r.time},{text:tcell},{text:r.learner},{text:resText}]);
     });
-    body.push([{text:"Teacher Reflection: What would you keep the same / change?     Worked well: Yes / No     Did not work well: Yes / No",fill:"F6F3EC",span:5}]);
+    body.push([{text:"Teacher Reflection: What would you keep the same / change?     Worked well: Yes / No     Did not work well: Yes / No",fill:"F6F3EC",span:4}]);
     pb.table(body,cw,{size:8.5});
     // Mini-lecture
     if(p.minilec)mlPdf(pb,p.minilec);
@@ -1693,9 +1619,6 @@ function lessonPdf(plans){
   });
   return pb.blob();
 }
-function worksheetDocx(ws){const b=docBuilder({landscape:false});b.para([{text:"National Academy for Learning",bold:true,size:20,color:"13233F"}]);b.para([{text:"Worksheet — "+ws.topic,bold:true,size:26,color:"13233F"}]);b.para([{text:ws.subject+"  ·  "+ws.grade+"  ·  Total "+ws.total+" marks",size:18,color:"6a7384"}]);b.para([{text:"Name: ____________________     Class: "+ws.grade+"     Date: __________     Marks: ____ / "+ws.total,size:18}]);b.spacer();const L="ABCDEFGH";let si=0;ws.sections.forEach(s=>{b.heading("Section "+L[si++]+" — "+s.label+"   ("+s.marks+" mark"+(s.marks!==1?"s":"")+" each)",{size:20});s.items.forEach((it,i)=>{b.para([{text:(i+1)+".  "+it.q,size:18}]);if(it.opts)b.para([{text:"     "+it.opts.join("    "),size:18}]);if(it.a)b.para([{text:"     "+it.a,size:18,color:"6a7384"}]);if(it.code)b.para([{text:it.code,size:16}]);if(it.box||it.code)b.para([{text:"____________________________________________",size:18}]);});});if(ws.img){b.heading("Section "+L[si++]+" — Image / Diagram   ("+ws.img.marks+" marks)",{size:20});b.para([{text:ws.img.instr,size:18}]);b.para([{text:"[ Teacher inserts image / map / diagram in this space ]",size:18,color:"a89668"}]);for(let k=0;k<4;k++)b.para([{text:" ",size:18}]);}return b;}
-function worksheetPdf(ws){const pb=pdfBuilder({landscape:false});pb.text("National Academy for Learning",{size:11,bold:true,color:"13233F"});pb.gap(4);pb.text("Worksheet — "+ws.topic,{size:16,bold:true,color:"13233F"});pb.gap(4);pb.text(ws.subject+"   ·   "+ws.grade+"   ·   Total "+ws.total+" marks",{size:10,color:"6a7384"});pb.gap(2);pb.text("Name: ____________________   Class: "+ws.grade+"   Date: __________   Marks: ___ / "+ws.total,{size:10});pb.line();const L="ABCDEFGH";let si=0;ws.sections.forEach(s=>{pb.gap(3);pb.text("Section "+L[si++]+" — "+s.label+"   ("+s.marks+" mark"+(s.marks!==1?"s":"")+" each)",{size:12,bold:true});s.items.forEach((it,i)=>{pb.text((i+1)+".  "+it.q,{size:10});if(it.opts)pb.text("     "+it.opts.join("    "),{size:10});if(it.a)pb.text("     "+it.a,{size:10,color:"6a7384"});if(it.code)it.code.split("\n").forEach(l=>pb.text("    "+l,{size:9,color:"333333"}));if(it.box||it.code)pb.rect(40,pb.PW-80,46,{});});});if(ws.img){pb.gap(3);pb.text("Section "+L[si++]+" — Image / Diagram   ("+ws.img.marks+" marks)",{size:12,bold:true});pb.text(ws.img.instr,{size:10});pb.rect(40,pb.PW-80,150,{});pb.text("[ teacher inserts image / map / diagram here ]",{size:9,color:"a89668"});}return pb.blob();}
-
 /* ===================== reset ===================== */
 function resetBuild(){["f_teacher","f_topic","f_aim","f_obj"].forEach(id=>document.getElementById(id).value="");document.getElementById("f_grade").value="";document.getElementById("f_subject").value="";selected.clear();renderActs();renderSelBar();document.getElementById("buildStatus").textContent="";document.getElementById("previewWrap").style.display="none";lastOut=null;const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
 </script>
