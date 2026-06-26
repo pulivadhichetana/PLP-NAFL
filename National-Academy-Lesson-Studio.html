@@ -147,8 +147,9 @@ textarea{resize:vertical;min-height:74px}
 table.lp{border-collapse:collapse;width:100%;font-size:.8rem;min-width:760px}
 table.lp th,table.lp td{border:1px solid #c9d3e0;padding:7px 9px;vertical-align:top;text-align:left}
 table.lp .metarow td{background:#eef2f8}
-table.lp .aimrow td,table.lp .objrow td{background:var(--peach)}
-table.lp .colhdr th{background:var(--ink);color:#fff;font-size:.75rem}
+table.lp .aimrow td{background:var(--sky)}
+table.lp .objrow td{background:var(--peach)}
+table.lp .colhdr th{background:#fff;color:#111;font-size:.75rem;border-bottom:2px solid #111}
 table.lp ul{margin:4px 0;padding-left:18px}.reflrow td{background:#f6f3ec;font-style:italic}
 .extra{margin-top:14px;font-size:.82rem}.extra h4{margin:14px 0 5px;color:var(--ink);font-size:.86rem;font-family:"Fraunces",serif}.extra ul{margin:4px 0;padding-left:18px}
 .ws-section{margin-bottom:13px}.ws-section h4{margin:9px 0 5px;font-size:.88rem;color:var(--ink);font-family:"Fraunces",serif}
@@ -1726,9 +1727,9 @@ function mlPdf(pb,ml){
   (ml.questions||[]).forEach((q,i)=>pb.text((i+1)+".  "+q,{size:9,x:50}));
   if(ml.vocabulary&&ml.vocabulary.length)pb.text("Key vocabulary: "+ml.vocabulary.join(" · "),{size:9});
 }
-function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p,pi)=>{const m=p.meta;b.para([{text:(p.title||"In-session")+":  Lesson Plan",bold:true,size:24,color:"13233F"}]);b.table([[{runs:[{text:"Teacher: ",bold:true},{text:m.teacher||""}]},{runs:[{text:"Class: ",bold:true},{text:m.grade}]},{runs:[{text:"Subject: ",bold:true},{text:m.subject}]},{runs:[{text:"Content/Unit/Chapter: ",bold:true},{text:m.topic}]},{runs:[{text:"Date: ",bold:true},{text:m.date}]},{runs:[{text:"Lesson Duration: ",bold:true},{text:m.dur}]}],[{span:6,fill:"FBD4B4",runs:[{text:"Aim: ",bold:true},{text:p.aim}]}],[{span:6,fill:"FBD4B4",paras:[{runs:[{text:"Learning Objectives: ",bold:true},{text:"Learners will:"}]},...p.objs.map(o=>({bullet:true,runs:[{text:o}]}))]}]],[1560,1560,1560,1560,1560,1560]);b.spacer();
+function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p,pi)=>{const m=p.meta;b.para([{text:(p.title||"In-session")+":  Lesson Plan",bold:true,size:24,color:"13233F"}]);b.table([[{runs:[{text:"Teacher: ",bold:true},{text:m.teacher||""}]},{runs:[{text:"Class: ",bold:true},{text:m.grade}]},{runs:[{text:"Subject: ",bold:true},{text:m.subject}]},{runs:[{text:"Content/Unit/Chapter: ",bold:true},{text:m.topic}]},{runs:[{text:"Date: ",bold:true},{text:m.date}]},{runs:[{text:"Lesson Duration: ",bold:true},{text:m.dur}]}],[{span:6,fill:"B8CCE4",runs:[{text:"Aim: ",bold:true},{text:p.aim}]}],[{span:6,fill:"FBD4B4",paras:[{runs:[{text:"Learning Objectives: ",bold:true},{text:"Learners will:"}]},...p.objs.map(o=>({bullet:true,runs:[{text:o}]}))]}]],[1560,1560,1560,1560,1560,1560]);b.spacer();
   const cw=[800,4200,3500,1860];
-  const head=["Time","Teacher Activity","Learner Activity","Resources / IIP"].map(t=>({fill:"13233F",runs:[{text:t,bold:true,color:"FFFFFF"}]}));head._header=1;const rows=[head];
+  const head=["Time","Teacher Activity","Learner Activity","Resources / IIP"].map(t=>({fill:"FFFFFF",runs:[{text:t,bold:true,color:"000000"}]}));head._header=1;const rows=[head];
   p.rows.forEach(r=>{
     const teacherLines=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean);
     const tp=[{runs:[{text:r.name||"",bold:true}]},...(teacherLines.length?teacherLines:[r.teacher]).map(l=>({bullet:true,runs:[{text:l}]}))];
@@ -1761,15 +1762,15 @@ function lessonPdf(plans){
       {runs:[{text:"Duration: ",bold:true},{text:m.dur||""}]}
     ]],mc,{size:8.5});
     // AIM + OBJECTIVES (peach)
-    pb.table([[{text:"Aim: "+p.aim,fill:"FBD4B4"}]],[TW],{size:8.5});
+    pb.table([[{text:"Aim: "+p.aim,fill:"B8CCE4"}]],[TW],{size:8.5});
     pb.table([[{text:"Learning Objectives - Learners will:  -  "+p.objs.join("   -  "),fill:"FBD4B4"}]],[TW],{size:8.5});
     // ACTIVITY TABLE — 4 columns matching the real TTA In-session format
     const cw=[TW*0.08,TW*0.44,TW*0.28,TW*0.20];
     const head=[
-      {text:"Time",fill:"13233F",color:"FFFFFF",bold:true},
-      {text:"Teacher Activity",fill:"13233F",color:"FFFFFF",bold:true},
-      {text:"Learner Activity",fill:"13233F",color:"FFFFFF",bold:true},
-      {text:"Resources / IIP",fill:"13233F",color:"FFFFFF",bold:true}
+      {text:"Time",fill:"FFFFFF",color:"000000",bold:true},
+      {text:"Teacher Activity",fill:"FFFFFF",color:"000000",bold:true},
+      {text:"Learner Activity",fill:"FFFFFF",color:"000000",bold:true},
+      {text:"Resources / IIP",fill:"FFFFFF",color:"000000",bold:true}
     ];
     const body=[head];
     p.rows.forEach(r=>{
