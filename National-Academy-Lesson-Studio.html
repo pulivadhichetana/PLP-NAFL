@@ -284,7 +284,7 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
       <div class="actions" style="margin-top:0 0 14px"><button class="btn btn-primary" onclick="generatePowTable()">📅 Generate full Plan of Work</button></div>
       <div id="powChapters"></div>
     </div>
-    <div class="note">Reading the PDF works offline. With an AI key in ⚙ AI Settings, objectives are written specifically for each chapter; without one, clear editable placeholders are used so the table is still ready to fill in.</div>
+    <div class="note">For each chapter, choose how many lesson plans it should be split into, then click <b>Generate lesson plans</b> — the tool builds that many full sessions using real activities from the school's Goody Bag library, with objectives spread sensibly across them. With an AI key in ⚙ AI Settings, the session-by-session focus is planned specifically for the topic; without one, objectives are split evenly and a default activity rotation is used. Reading the syllabus PDF always works offline.</div>
     <div class="actions"><button class="btn btn-primary" id="powBtn" onclick="readPow()" disabled>Read syllabus</button><button class="btn btn-ghost" onclick="clearPow()">Clear</button><span class="status" id="powStatus"></span></div>
   </div>
 
@@ -1019,7 +1019,7 @@ const LIB_CATS=[{id:"all",label:"All"},{id:"starter",label:"Starters"},{id:"coll
 
 /* ===================== state ===================== */
 let mode="build",selected=new Set(),libFilter="all";
-let lastOut=null,uploadedText="",powText="",powChaptersData=[];
+let lastOut=null,uploadedText="",powText="",powChaptersData=[],uploadedDocxStructure=null;
 
 /* ===================== init ===================== */
 function fillSelect(id,arr){const s=document.getElementById(id);if(!s)return;arr.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;s.appendChild(o);});}
@@ -1295,15 +1295,20 @@ drop.onclick=()=>fileInput.click();
 ["dragleave","drop"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove("over");}));
 drop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handleFile(ev.dataTransfer.files[0]);});
 fileInput.onchange=e=>{if(e.target.files.length)handleFile(e.target.files[0]);};
-function clearFile(){uploadedText="";fileInput.value="";document.getElementById("fileMeta").classList.remove("show");document.getElementById("convBtn").disabled=true;document.getElementById("convStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";convSelected.clear();const cp=document.getElementById("convActPicker");if(cp){cp.classList.add("hide");cp.dataset.built="";}}
+function clearFile(){uploadedText="";uploadedDocxStructure=null;fileInput.value="";document.getElementById("fileMeta").classList.remove("show");document.getElementById("convBtn").disabled=true;document.getElementById("convStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";convSelected.clear();const cp=document.getElementById("convActPicker");if(cp){cp.classList.add("hide");cp.dataset.built="";}}
 async function handleFile(file){
   const cs=document.getElementById("convStatus");
   document.getElementById("fmName").textContent=file.name;document.getElementById("fmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("fileMeta").classList.add("show");
   cs.className="status";cs.textContent="Reading…";
+  uploadedDocxStructure=null;
   try{const ext=file.name.split(".").pop().toLowerCase();
-    if(ext==="pdf")uploadedText=await readPDFtext(file);else if(ext==="pptx")uploadedText=await readPPTX(file);else if(ext==="docx")uploadedText=await readDOCX(file);else throw new Error("Unsupported file type");
+    if(ext==="pdf")uploadedText=await readPDFtext(file);
+    else if(ext==="pptx")uploadedText=await readPPTX(file);
+    else if(ext==="docx"){const r=await readDOCX(file);uploadedDocxStructure=r;uploadedText=r.raw;}
+    else throw new Error("Unsupported file type");
     if(uploadedText.trim().length<20)throw new Error("No readable text (image-only file?).");
-    cs.className="status ok";cs.textContent="Read "+uploadedText.length.toLocaleString()+" characters.";document.getElementById("convBtn").disabled=false;
+    const tableNote=uploadedDocxStructure&&uploadedDocxStructure.hasTable?" (table structure detected — will map columns directly)":"";
+    cs.className="status ok";cs.textContent="Read "+uploadedText.length.toLocaleString()+" characters."+tableNote;document.getElementById("convBtn").disabled=false;
     const g=guessTopic(uploadedText);if(g&&!val("c_topic"))document.getElementById("c_topic").value=g;
   }catch(err){cs.className="status err";cs.textContent="Error: "+err.message;document.getElementById("convBtn").disabled=true;}
 }
@@ -1324,15 +1329,113 @@ function extractPdfText(s){let out="";const tjRe=/\[((?:[^\[\]\\]|\\.)*)\]\s*TJ|
   while((m=tjRe.exec(s))){const parts=(m[0].match(/\((?:[^()\\]|\\.)*\)/g)||[]);parts.forEach(p=>{out+=p.slice(1,-1).replace(/\\(\d{3})/g,(_,o)=>String.fromCharCode(parseInt(o,8))).replace(/\\([()\\])/g,"$1");});out+=" ";}
   return out;}
 async function readPPTX(file){const files=unzip(new Uint8Array(await file.arrayBuffer()));const slides=Object.keys(files).filter(n=>/ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a,b)=>parseInt(a.match(/slide(\d+)/)[1])-parseInt(b.match(/slide(\d+)/)[1]));let out=[];const dec=new TextDecoder();for(const n of slides){const xml=dec.decode(files[n]);const t=[...xml.matchAll(/<a:t>([\s\S]*?)<\/a:t>/g)].map(x=>x[1].replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">"));const j=t.join(" ").replace(/\s+/g," ").trim();if(j)out.push("[[SEG]] "+j);}return out.join("\n");}
-async function readDOCX(file){const files=unzip(new Uint8Array(await file.arrayBuffer()));const dec=new TextDecoder();const xml=dec.decode(files["word/document.xml"]);const paras=[...xml.matchAll(/<w:p[ >][\s\S]*?<\/w:p>/g)].map(p=>{const t=[...p[0].matchAll(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g)].map(x=>x[1]).join("");return t.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").trim();}).filter(Boolean);return paras.map(p=>"[[SEG]] "+p).join("\n");}
+/* Extract plain text from a run of <w:p> nodes (paragraph text, joined). */
+function pNodesText(xmlChunk){
+  return [...xmlChunk.matchAll(/<w:p[ >][\s\S]*?<\/w:p>/g)].map(p=>{
+    const t=[...p[0].matchAll(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g)].map(x=>x[1]).join("");
+    return t.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").trim();
+  }).filter(Boolean).join("\n");
+}
+/* Table-aware DOCX reader. Detects <w:tbl> tables and returns them as structured rows
+   (so a 4/5-column lesson-plan table maps onto Time/Teacher/Learner/Resources correctly)
+   instead of flattening every cell into one undifferentiated stream of text. */
+async function readDOCX(file){
+  const files=unzip(new Uint8Array(await file.arrayBuffer()));
+  const dec=new TextDecoder();
+  const xml=dec.decode(files["word/document.xml"]);
+
+  // Walk the body top-to-bottom, alternating between plain paragraphs and tables,
+  // so output order matches the document's reading order.
+  const blockRe=/<w:tbl>[\s\S]*?<\/w:tbl>|<w:p[ >][\s\S]*?<\/w:p>/g;
+  let m, out=[], tablesFound=0;
+  while((m=blockRe.exec(xml))){
+    const block=m[0];
+    if(block.startsWith("<w:tbl>")){
+      tablesFound++;
+      const rowsXml=[...block.matchAll(/<w:tr[ >][\s\S]*?<\/w:tr>/g)].map(r=>r[0]);
+      if(rowsXml.length===0)continue;
+      const rows=rowsXml.map(r=>[...r.matchAll(/<w:tc[ >][\s\S]*?<\/w:tc>/g)].map(c=>pNodesText(c[0])));
+      // Heading row detection: short cells, looks like column titles (Time/Teacher/Learner/Resources/etc.)
+      const head=rows[0]||[];
+      const looksLikeHeader=head.length>=2 && head.every(c=>c.length<40) && /time|teacher|learner|activity|resource|topic|objective|month/i.test(head.join(" "));
+      out.push({type:"table",header:looksLikeHeader?head:null,rows:looksLikeHeader?rows.slice(1):rows});
+    }else{
+      const t=pNodesText(block);
+      if(t)out.push({type:"para",text:t});
+    }
+  }
+  if(out.length===0){
+    // fallback: no recognisable blocks — try a flat paragraph scan
+    const t=pNodesText(xml);
+    return t?{blocks:[{type:"para",text:t}],hasTable:false,raw:t}:{blocks:[],hasTable:false,raw:""};
+  }
+  // Build a "raw" SEG stream for any code that still wants flat text (topic-guessing etc.),
+  // while keeping the structured blocks for table-aware conversion.
+  const rawParts=[];
+  out.forEach(b=>{
+    if(b.type==="para")rawParts.push(b.text);
+    else b.rows.forEach(row=>rawParts.push(row.filter(Boolean).map(c=>c.replace(/\n/g," ")).join(" — ")));
+  });
+  return {blocks:out,hasTable:tablesFound>0,raw:rawParts.filter(Boolean).map(s=>"[[SEG]] "+s).join("\n")};
+}
 function guessTopic(t){const f=t.replace(/\[\[SEG\]\]/g,"").trim().split(/[\n.]/)[0].trim();return f.length>3&&f.length<70?f:"";}
 function detectNamedActivities(segs){
   const text=segs.join(" ").toLowerCase();
   return ACTIVITIES.filter(a=>text.includes(a.name.toLowerCase()));
 }
 let convSegsCache=[];
+/* Map a detected table's columns onto Time/Teacher/Learner/Resources by header name. */
+function mapTableColumns(header){
+  const idx={time:-1,teacher:-1,learner:-1,res:-1};
+  header.forEach((h,i)=>{
+    const hl=h.toLowerCase();
+    if(idx.time<0 && /time/.test(hl))idx.time=i;
+    else if(idx.teacher<0 && /teacher/.test(hl))idx.teacher=i;
+    else if(idx.learner<0 && /learner|student/.test(hl))idx.learner=i;
+    else if(idx.res<0 && /resource|iip|material/.test(hl))idx.res=i;
+  });
+  return idx;
+}
+/* Build lesson rows directly from a structured docx table — the accurate, column-aware path. */
+function rowsFromDocxTable(tbl){
+  const idx=mapTableColumns(tbl.header||[]);
+  const hasMapping=idx.teacher>=0 || idx.time>=0;
+  if(!hasMapping)return null;
+  const rows=tbl.rows.map((cells,i)=>{
+    const time=idx.time>=0?(cells[idx.time]||"").trim():((i+1)*8)+" min";
+    const teacherRaw=idx.teacher>=0?(cells[idx.teacher]||"").trim():"";
+    const learner=idx.learner>=0?(cells[idx.learner]||"").trim():"";
+    const res=idx.res>=0?(cells[idx.res]||"").trim():"";
+    if(!teacherRaw && !learner)return null;
+    // First short line often doubles as the activity name (e.g. "Starter: 60 Second Challenge")
+    const lines=teacherRaw.split(/\n|(?<=[a-z])(?=[A-Z][a-z]+:)/).map(s=>s.trim()).filter(Boolean);
+    let name="",teacher=teacherRaw;
+    if(lines.length>1 && lines[0].length<60 && /^[A-Za-z][\w\s]*:?$/.test(lines[0].replace(/:$/,""))){
+      name=lines[0].replace(/:$/,"");teacher=lines.slice(1).join("\n");
+    }
+    return {time:time||"-",name,teacher:teacher||"(see source document)",learner:learner||"(see source document)",fa:"",res:res||"Whiteboard, Notebook, Textbook",pedagogy:""};
+  }).filter(Boolean);
+  return rows.length?rows:null;
+}
 function convertFile(){
   const cs=document.getElementById("convStatus");if(!uploadedText){cs.className="status err";cs.textContent="Upload a file first.";return;}
+  // Priority path: if the uploaded Word file has a recognisable Time/Teacher/Learner/Resources table,
+  // map it directly — far more accurate than splitting flat text into generic segments.
+  if(uploadedDocxStructure && uploadedDocxStructure.hasTable){
+    const tableBlock=uploadedDocxStructure.blocks.find(b=>b.type==="table" && b.header && mapTableColumns(b.header).teacher>=0);
+    if(tableBlock){
+      const rows=rowsFromDocxTable(tableBlock);
+      if(rows){
+        const teacher=val("c_teacher"),grade=val("c_grade"),subject=val("c_subject");
+        let topic=val("c_topic")||guessTopic(uploadedText)||"Lesson Topic";
+        const date=fmtDate(val("c_date")),dur=val("c_dur");
+        document.getElementById("convActPicker").classList.add("hide");
+        lastOut={kind:"lesson",plans:[{meta:{teacher,grade,subject,topic,date,dur},aim:autoAim(topic,subject),objs:autoObjectives(topic),rows,homework:autoHomework(topic),title:"In-session"}],name:"Lesson Plan - "+subject+" "+grade+" - "+topic};
+        renderPreview();cs.className="status ok";cs.textContent="Mapped "+rows.length+" rows directly from the Word table's columns. Preview below.";
+        return;
+      }
+    }
+  }
   let segs=uploadedText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(s=>s.length>2).filter(s=>!/^(list of contents|table of contents|thank you|learning with tta|tutorial links)/i.test(s));
   if(segs.length===0)segs=[uploadedText];
   convSegsCache=segs;
@@ -1397,8 +1500,72 @@ powDrop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handlePow(e
 powInput.onchange=e=>{if(e.target.files.length)handlePow(e.target.files[0]);};
 function clearPow(){powText="";powInput.value="";document.getElementById("powMeta").classList.remove("show");document.getElementById("powBtn").disabled=true;document.getElementById("powList").classList.add("hide");document.getElementById("powStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
 async function handlePow(file){const ps=document.getElementById("powStatus");document.getElementById("pmName").textContent=file.name;document.getElementById("pmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("powMeta").classList.add("show");ps.className="status";ps.textContent="Reading…";try{powText=await readPDFtext(file);if(powText.trim().length<20)throw new Error("No readable text in PDF.");ps.className="status ok";ps.textContent="Read. Click 'Read syllabus' to list chapters.";document.getElementById("powBtn").disabled=false;}catch(e){ps.className="status err";ps.textContent="Error: "+e.message;document.getElementById("powBtn").disabled=true;}}
-function readPow(){const ps=document.getElementById("powStatus");const segs=powText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(Boolean);const cands=segs.filter(s=>/(chapter|unit|lesson|week|ch\.?\s*\d|topic)\b/i.test(s)&&s.length<140);powChaptersData=[...new Set((cands.length?cands:segs.slice(0,15)).map(s=>s.replace(/^[\-•\d.\s]+/,"").trim()).filter(s=>s.length>3))].slice(0,30);const box=document.getElementById("powChapters");if(powChaptersData.length===0){ps.className="status err";ps.textContent="Couldn't detect chapters — the PDF may be image-only.";return;}box.innerHTML=powChaptersData.map((c,i)=>`<div class="qtype-row"><label>${esc(c)}</label><button class="btn btn-ghost btn-sm" onclick="powObjectives(${i})">→ Full lesson plan for this chapter</button></div>`).join("");document.getElementById("powList").classList.remove("hide");ps.className="status ok";ps.textContent="Found "+powChaptersData.length+" chapters/units.";}
-async function powObjectives(i){const chapter=powChaptersData[i],grade=val("p_grade"),subject=val("p_subject"),ps=document.getElementById("powStatus");ps.className="status";ps.textContent="Drafting objectives for: "+chapter+" …";let objs;try{objs=parseJSON(await callAI(`Write 4 measurable CBSE learning objectives for the ${grade} ${subject} chapter "${chapter}". Start each with an action verb. Return ONLY a JSON array of strings.`,500));}catch(e){objs=autoObjectives(chapter);}lastOut={kind:"lesson",plans:[{meta:{teacher:"",grade,subject,topic:chapter,date:"",dur:"40 min"},aim:autoAim(chapter,subject),objs,rows:[{time:"40 min",teacher:"Plan the activities for "+chapter+" using the Build tab (add starters, main activities and a plenary).",learner:"To be completed.",fa:"To be added",res:"Textbook, PPT, Notebook"}],homework:autoHomework(chapter),title:"Chapter LP — "+chapter}],name:"Chapter Objectives - "+subject+" "+grade+" - "+chapter};renderPreview();ps.className="status ok";ps.textContent="Objectives drafted for "+chapter+". Preview below.";}
+function readPow(){const ps=document.getElementById("powStatus");const segs=powText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(Boolean);const cands=segs.filter(s=>/(chapter|unit|lesson|week|ch\.?\s*\d|topic)\b/i.test(s)&&s.length<140);powChaptersData=[...new Set((cands.length?cands:segs.slice(0,15)).map(s=>s.replace(/^[\-•\d.\s]+/,"").trim()).filter(s=>s.length>3))].slice(0,30);const box=document.getElementById("powChapters");if(powChaptersData.length===0){ps.className="status err";ps.textContent="Couldn't detect chapters — the PDF may be image-only.";return;}box.innerHTML=powChaptersData.map((c,i)=>`<div class="qtype-row"><label>${esc(c)}</label><span style="color:var(--muted);font-size:.76rem">No. of lesson plans</span><input id="plp_${i}" type="number" min="1" max="10" value="3" style="width:56px"><button class="btn btn-ghost btn-sm" onclick="powChapterToLessons(${i})">→ Generate lesson plans</button></div>`).join("");document.getElementById("powList").classList.remove("hide");ps.className="status ok";ps.textContent="Found "+powChaptersData.length+" chapters/units.";}
+/* Split a topic into N coherent lesson-plan session foci. AI proposes a session-by-session
+   breakdown when available; otherwise objectives are divided evenly across sessions. */
+async function planSessions(chapter,grade,subject,count,objs){
+  if(hasAI()){
+    try{
+      const prompt=`You are an experienced ${subject} subject master sequencing the CBSE ${grade} topic "${chapter}" into exactly ${count} separate classroom sessions (lesson plans), each roughly 40 minutes, building logically from one to the next.
+Return ONLY a JSON array of exactly ${count} objects, no preamble:
+[{"focus":"short session focus, e.g. 'Introducing the concept and key vocabulary'","objectives":["2-3 objectives for THIS session only, Bloom-aligned"]}]`;
+      const arr=parseJSON(await callAI(prompt,1600));
+      if(Array.isArray(arr) && arr.length===count)return arr.map(s=>({focus:s.focus||chapter,objectives:s.objectives&&s.objectives.length?s.objectives:objs.slice(0,3)}));
+    }catch(e){/* fall through to even split */}
+  }
+  // Offline / fallback: distribute the chapter's objectives evenly across sessions.
+  const per=Math.max(1,Math.ceil(objs.length/count));
+  return Array.from({length:count},(_,i)=>({
+    focus:chapter+" — Session "+(i+1)+" of "+count,
+    objectives:objs.slice(i*per,(i+1)*per).length?objs.slice(i*per,(i+1)*per):objs.slice(0,2)
+  }));
+}
+/* Pick a balanced, non-repeating set of real Goody Bag activities for one session. */
+function pickSessionActivities(sessionIndex,usedIds){
+  const order=["starter","collaborative","formative","plenary"];
+  const picks=[];
+  order.forEach(cat=>{
+    const pool=ACTIVITIES.filter(a=>a.cat===cat && !usedIds.has(a.id));
+    const fallbackPool=ACTIVITIES.filter(a=>a.cat===cat);
+    const chosen=(pool.length?pool:fallbackPool)[sessionIndex % (pool.length?pool.length:fallbackPool.length)];
+    if(chosen){picks.push(chosen);usedIds.add(chosen.id);}
+  });
+  return picks;
+}
+/* Generate the teacher's chosen number of full lesson plans for one POW chapter,
+   using real activities from the school's Goody Bag library — not a stub row. */
+async function powChapterToLessons(i){
+  const chapter=powChaptersData[i],grade=val("p_grade"),subject=val("p_subject"),ps=document.getElementById("powStatus");
+  const count=Math.max(1,Math.min(10,parseInt(val("plp_"+i))||3));
+  if(!grade||!subject){ps.className="status err";ps.textContent="Select grade and subject first.";return;}
+  ps.className="status";ps.textContent="Planning "+count+" lesson plan(s) for: "+chapter+" …";
+  let baseObjs;
+  try{baseObjs=parseJSON(await callAI(`Write 6-8 measurable CBSE learning objectives for the ${grade} ${subject} chapter "${chapter}", spanning Bloom levels, grounded in ${sourceHint(subject)}. Return ONLY a JSON array of strings.`,800));}
+  catch(e){baseObjs=autoObjectives(chapter);}
+
+  const sessions=await planSessions(chapter,grade,subject,count,baseObjs);
+  const usedIds=new Set();
+  const dur="40 min";
+  const plans=[];
+  for(let s=0;s<sessions.length;s++){
+    ps.textContent="Building lesson plan "+(s+1)+" of "+count+" for "+chapter+" …";
+    const acts=pickSessionActivities(s,usedIds);
+    const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
+    const rows=acts.map((a,k)=>({time:times[k]+" min",act:a,name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,chapter),learner:a.learner.replace(/\btopic\b/g,chapter),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
+    plans.push({
+      meta:{teacher:"",grade,subject,topic:chapter+" — Session "+(s+1)+"/"+count,date:"",dur},
+      aim:sessions[s].focus||autoAim(chapter,subject),
+      objs:sessions[s].objectives&&sessions[s].objectives.length?sessions[s].objectives:baseObjs.slice(0,3),
+      rows,
+      homework:autoHomework(chapter),
+      title:"In-session "+(s+1)+"/"+count
+    });
+  }
+  lastOut={kind:"lesson",plans,name:"Lesson Plans - "+subject+" "+grade+" - "+chapter+" ("+count+" sessions)"};
+  renderPreview();
+  ps.className=hasAI()?"status ok":"status err";
+  ps.innerHTML=hasAI()?("Built "+count+" lesson plans for "+esc(chapter)+" using the school's activity library. Word/PDF below."):("Built "+count+" lesson plans with an even objective split (no AI key, so session focus is generic). <b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>Add a free Gemini key</b> for a smarter session-by-session sequence.");
+}
 
 const MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];
 function monthSequence(startIdx,count){const out=[];for(let i=0;i<count;i++)out.push(MONTH_NAMES[(startIdx+i)%12]);return out;}
@@ -1469,9 +1636,12 @@ function mlHTML(ml){
 function planHTML(p){
   const m=p.meta,objLis=p.objs.map(o=>`<li>${esc(o)}</li>`).join("");
   const rows=p.rows.map(r=>{
-    const resItems=String(r.res).split(",").map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join("");
-    const learnerItems=String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean).map(s=>`<li>${esc(s.trim())}</li>`).join("");
-    return `<tr><td>${esc(r.time)}</td><td>${r.name?`<b>${esc(r.name)}</b><br>`:""}${esc(r.teacher)}${r.fa?`<br><i style="color:#6a7384">Formative check: ${esc(r.fa)}</i>`:""}${r.pedagogy?`<br><b style="color:#1b4f82;font-size:.74rem">[${esc(r.pedagogy)}]</b>`:""}</td><td><ul style="margin:0;padding-left:16px">${learnerItems||esc(r.learner)}</ul></td><td><ul style="margin:0;padding-left:16px">${resItems||esc(r.res)}</ul></td></tr>`;
+    const resItems=String(r.res).split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join("");
+    const teacherLines=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean);
+    const teacherItems=(teacherLines.length>1?teacherLines:[r.teacher]).map(s=>`<li>${esc(s)}</li>`).join("");
+    const learnerLines=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean);
+    const learnerItems=(learnerLines.length>1?learnerLines:String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean)).map(s=>`<li>${esc(s.trim())}</li>`).join("");
+    return `<tr><td>${esc(r.time)}</td><td>${r.name?`<b>${esc(r.name)}</b>`:""}<ul style="margin:2px 0 0;padding-left:16px">${teacherItems}</ul>${r.fa?`<i style="color:#6a7384">Formative check: ${esc(r.fa)}</i><br>`:""}${r.pedagogy?`<b style="color:#1b4f82;font-size:.74rem">[${esc(r.pedagogy)}]</b>`:""}</td><td><ul style="margin:0;padding-left:16px">${learnerItems||esc(r.learner)}</ul></td><td><ul style="margin:0;padding-left:16px">${resItems||esc(r.res)}</ul></td></tr>`;
   }).join("");
   return `<div class="lp-preview"><div class="lp-head"><h3>${esc(p.title)} · Lesson Plan</h3><span style="font-size:.8rem;color:#dcc89a">${esc(m.subject)} · ${esc(m.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="metarow"><td><b>Teacher:</b> ${esc(m.teacher)}</td><td><b>Class:</b> ${esc(m.grade)}</td><td><b>Subject:</b> ${esc(m.subject)}</td><td><b>Content/Unit/Chapter:</b> ${esc(m.topic)}</td><td><b>Date:</b> ${esc(m.date)}</td><td><b>Duration:</b> ${esc(m.dur)}</td></tr><tr class="aimrow"><td colspan="6"><b>Aim:</b> ${esc(p.aim)}</td></tr><tr class="objrow"><td colspan="6"><b>Learning Objectives:</b> Learners will:<ul>${objLis}</ul></td></tr><tr class="colhdr"><th style="width:8%">Time</th><th style="width:42%">Teacher Activity</th><th style="width:30%">Learner Activity</th><th style="width:20%">Resources / IIP</th></tr>${rows}<tr class="reflrow"><td colspan="6"><b>Teacher Reflection:</b> What would you keep the same / change? &nbsp; <b>Worked well:</b> Yes/No &nbsp; <b>Did not work well:</b> Yes/No</td></tr></table>${mlHTML(p.minilec)}<div class="extra"><h4>Support for Struggling Learners</h4><ul><li>Guided notes and simplified instructions</li><li>Vocabulary support and visual aids</li><li>Peer support / buddy pairing</li></ul><h4>Extension for Advanced Learners</h4><ul><li>Higher-order thinking questions and research tasks</li><li>Additional challenge problems or an independent mini-project</li><li>Opportunity to present findings to the class</li></ul><h4>Homework</h4><ul><li>${esc(p.homework)}</li></ul></div></div></div>`;
 }
@@ -1511,6 +1681,7 @@ function powDocx(pow){
     ]);
   });
   b.table(rows,cw);
+  b.spacer();b.para([{text:licenseLine(),size:14,color:"9aa8b8",italics:true}]);
   return b;
 }
 function powPdf(pow){
@@ -1527,6 +1698,7 @@ function powPdf(pow){
     rows.push([{text:isMonth?pow.months[i]:r.chapter,bold:true},{text:r.objectives.join("; ")}]);
   });
   pb.table(rows,cw,{size:8.5});
+  pb.gap(6);pb.text(licenseLine(),{size:7.5,color:"9aa8b8"});
   return pb.blob();
 }
 function mlDocx(b,ml){
@@ -1558,15 +1730,18 @@ function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p
   const cw=[800,4200,3500,1860];
   const head=["Time","Teacher Activity","Learner Activity","Resources / IIP"].map(t=>({fill:"13233F",runs:[{text:t,bold:true,color:"FFFFFF"}]}));head._header=1;const rows=[head];
   p.rows.forEach(r=>{
-    const tp=[{runs:[{text:r.name||"",bold:true}]},{bullet:true,runs:[{text:r.teacher}]}];
+    const teacherLines=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean);
+    const tp=[{runs:[{text:r.name||"",bold:true}]},...(teacherLines.length?teacherLines:[r.teacher]).map(l=>({bullet:true,runs:[{text:l}]}))];
     if(r.fa)tp.push({bullet:true,runs:[{text:"Formative check: "+r.fa,italics:true}]});
     if(r.pedagogy)tp.push({runs:[{text:"["+r.pedagogy+"]",italics:true,color:"1b4f82"}]});
-    const lp=String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean).map(s=>({bullet:true,runs:[{text:s.trim()}]}));
-    const resItems=String(r.res).split(",").map(s=>s.trim()).filter(Boolean).map(s=>({bullet:true,runs:[{text:s}]}));
-    rows.push([{text:r.time},{paras:tp},{paras:lp.length?lp:[{runs:[{text:r.learner}]}]},{paras:resItems.length?resItems:[{runs:[{text:r.res}]}]}]);
+    const lp=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean);
+    const lpFinal=(lp.length>1?lp:String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean)).map(s=>({bullet:true,runs:[{text:s.trim()}]}));
+    const resItems=String(r.res).split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>({bullet:true,runs:[{text:s}]}));
+    rows.push([{text:r.time},{paras:tp},{paras:lpFinal.length?lpFinal:[{runs:[{text:r.learner}]}]},{paras:resItems.length?resItems:[{runs:[{text:r.res}]}]}]);
   });
   rows.push([{span:4,fill:"F6F3EC",runs:[{text:"Teacher Reflection: ",bold:true},{text:"What would you keep the same / change?     "},{text:"Worked well: ",bold:true},{text:"Yes / No     "},{text:"Did not work well: ",bold:true},{text:"Yes / No"}]}]);
-  b.table(rows,cw);if(p.minilec)mlDocx(b,p.minilec);b.heading("Support for Struggling Learners",{size:20});b.bullets(["Guided notes and simplified instructions","Vocabulary support and visual aids","Peer support / buddy pairing"]);b.heading("Extension for Advanced Learners",{size:20});b.bullets(["Higher-order thinking questions and research tasks","Additional challenge problems or an independent mini-project","Opportunity to present findings to the class"]);b.heading("Homework",{size:20});b.para([{text:p.homework}]);if(pi<plans.length-1)b.pageBreak();});return b;}
+  b.table(rows,cw);if(p.minilec)mlDocx(b,p.minilec);b.heading("Support for Struggling Learners",{size:20});b.bullets(["Guided notes and simplified instructions","Vocabulary support and visual aids","Peer support / buddy pairing"]);b.heading("Extension for Advanced Learners",{size:20});b.bullets(["Higher-order thinking questions and research tasks","Additional challenge problems or an independent mini-project","Opportunity to present findings to the class"]);b.heading("Homework",{size:20});b.para([{text:p.homework}]);b.spacer();b.para([{text:licenseLine(),size:14,color:"9aa8b8",italics:true}]);if(pi<plans.length-1)b.pageBreak();});return b;}
+function licenseLine(){return "© "+new Date().getFullYear()+" National Academy for Learning — for internal classroom use. Generated with the NAFL Teacher Studio.";}
 function lessonPdf(plans){
   const pb=pdfBuilder({landscape:true});
   const PW=pb.PW, M=pb.M, TW=PW-2*M;           // total usable width (landscape A4 ≈ 762pt)
@@ -1598,12 +1773,14 @@ function lessonPdf(plans){
     ];
     const body=[head];
     p.rows.forEach(r=>{
-      const namePart=r.name?r.name+": ":"";
-      let tcell=namePart+r.teacher;
-      if(r.fa)tcell+="  |  Formative check: "+r.fa;
+      const teacherFlat=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean).map(s=>"- "+s).join("   ");
+      const namePart=r.name?r.name+":  ":"";
+      let tcell=namePart+teacherFlat;
+      if(r.fa)tcell+="   |  Formative check: "+r.fa;
       if(r.pedagogy)tcell+="  ["+r.pedagogy+"]";
-      const resText=String(r.res).split(",").map(s=>"- "+s.trim()).join("   ");
-      body.push([{text:r.time},{text:tcell},{text:r.learner},{text:resText}]);
+      const learnerFlat=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean).join("   ");
+      const resText=String(r.res).split(/\n|,/).map(s=>"- "+s.trim()).join("   ");
+      body.push([{text:r.time},{text:tcell},{text:learnerFlat},{text:resText}]);
     });
     body.push([{text:"Teacher Reflection: What would you keep the same / change?     Worked well: Yes / No     Did not work well: Yes / No",fill:"F6F3EC",span:4}]);
     pb.table(body,cw,{size:8.5});
@@ -1616,6 +1793,7 @@ function lessonPdf(plans){
     pb.text("Higher-order thinking questions and research tasks; additional challenge problems or a mini-project; present findings to the class.",{size:8.5,x:M+8});
     pb.text("Homework:",{size:9,bold:true,color:"13233F"});
     pb.text(p.homework,{size:8.5,x:M+8});
+    pb.gap(6);pb.text(licenseLine(),{size:7.5,color:"9aa8b8"});
   });
   return pb.blob();
 }
