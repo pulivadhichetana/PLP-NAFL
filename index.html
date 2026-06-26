@@ -1501,7 +1501,24 @@ powDrop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handlePow(e
 powInput.onchange=e=>{if(e.target.files.length)handlePow(e.target.files[0]);};
 function clearPow(){powText="";powInput.value="";document.getElementById("powMeta").classList.remove("show");document.getElementById("powBtn").disabled=true;document.getElementById("powList").classList.add("hide");document.getElementById("powStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
 async function handlePow(file){const ps=document.getElementById("powStatus");document.getElementById("pmName").textContent=file.name;document.getElementById("pmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("powMeta").classList.add("show");ps.className="status";ps.textContent="Reading…";try{powText=await readPDFtext(file);if(powText.trim().length<20)throw new Error("No readable text in PDF.");ps.className="status ok";ps.textContent="Read. Click 'Read syllabus' to list chapters.";document.getElementById("powBtn").disabled=false;}catch(e){ps.className="status err";ps.textContent="Error: "+e.message;document.getElementById("powBtn").disabled=true;}}
-function readPow(){const ps=document.getElementById("powStatus");const segs=powText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(Boolean);const cands=segs.filter(s=>/(chapter|unit|lesson|week|ch\.?\s*\d|topic)\b/i.test(s)&&s.length<140);powChaptersData=[...new Set((cands.length?cands:segs.slice(0,15)).map(s=>s.replace(/^[\-•\d.\s]+/,"").trim()).filter(s=>s.length>3))].slice(0,30);const box=document.getElementById("powChapters");if(powChaptersData.length===0){ps.className="status err";ps.textContent="Couldn't detect chapters — the PDF may be image-only.";return;}box.innerHTML=powChaptersData.map((c,i)=>`<div class="qtype-row"><label>${esc(c)}</label><span style="color:var(--muted);font-size:.76rem">No. of lesson plans</span><input id="plp_${i}" type="number" min="1" max="10" value="3" style="width:56px"><button class="btn btn-ghost btn-sm" onclick="powChapterToLessons(${i})">→ Generate lesson plans</button></div>`).join("");document.getElementById("powList").classList.remove("hide");ps.className="status ok";ps.textContent="Found "+powChaptersData.length+" chapters/units.";}
+const SCHOOL_RESOURCES=["Whiteboard","Notebook","Textbook","PPT/Projector","Smart Board/Interactive Panel","Computer Lab","Worksheet/Handout","Chart paper","Stationery (pens, sticky notes)","Library","Lab equipment","Audio/Video clip","Internet access","Printed cards/flashcards"];
+function readPow(){const ps=document.getElementById("powStatus");const segs=powText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(Boolean);const cands=segs.filter(s=>/(chapter|unit|lesson|week|ch\.?\s*\d|topic)\b/i.test(s)&&s.length<140);powChaptersData=[...new Set((cands.length?cands:segs.slice(0,15)).map(s=>s.replace(/^[\-•\d.\s]+/,"").trim()).filter(s=>s.length>3))].slice(0,30);const box=document.getElementById("powChapters");if(powChaptersData.length===0){ps.className="status err";ps.textContent="Couldn't detect chapters — the PDF may be image-only.";return;}
+  box.innerHTML=powChaptersData.map((c,i)=>`
+    <div class="qtype-row" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <label style="flex:1">${esc(c)}</label>
+        <span style="color:var(--muted);font-size:.76rem">No. of lesson plans</span>
+        <input id="plp_${i}" type="number" min="1" max="10" value="3" style="width:56px">
+        <button class="btn btn-ghost btn-sm" onclick="powChapterToLessons(${i})">→ Generate lesson plans</button>
+      </div>
+      <div>
+        <span style="color:var(--muted);font-size:.76rem;display:block;margin-bottom:4px">Resources available for this topic (select what you'll use — leave blank to use each activity's default):</span>
+        <select id="pres_${i}" multiple size="3" style="width:100%;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:.82rem">
+          ${SCHOOL_RESOURCES.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join("")}
+        </select>
+      </div>
+    </div>`).join("");
+  document.getElementById("powList").classList.remove("hide");ps.className="status ok";ps.textContent="Found "+powChaptersData.length+" chapters/units.";}
 /* Split a topic into N coherent lesson-plan session foci. AI proposes a session-by-session
    breakdown when available; otherwise objectives are divided evenly across sessions. */
 async function planSessions(chapter,grade,subject,count,objs){
@@ -1539,6 +1556,8 @@ async function powChapterToLessons(i){
   const chapter=powChaptersData[i],grade=val("p_grade"),subject=val("p_subject"),ps=document.getElementById("powStatus");
   const count=Math.max(1,Math.min(10,parseInt(val("plp_"+i))||3));
   if(!grade||!subject){ps.className="status err";ps.textContent="Select grade and subject first.";return;}
+  const resSel=document.getElementById("pres_"+i);
+  const chosenResources=resSel?[...resSel.selectedOptions].map(o=>o.value):[];
   ps.className="status";ps.textContent="Planning "+count+" lesson plan(s) for: "+chapter+" …";
   let baseObjs;
   try{baseObjs=parseJSON(await callAI(`Write 6-8 measurable CBSE learning objectives for the ${grade} ${subject} chapter "${chapter}", spanning Bloom levels, grounded in ${sourceHint(subject)}. Return ONLY a JSON array of strings.`,800));}
@@ -1552,9 +1571,9 @@ async function powChapterToLessons(i){
     ps.textContent="Building lesson plan "+(s+1)+" of "+count+" for "+chapter+" …";
     const acts=pickSessionActivities(s,usedIds);
     const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
-    const rows=acts.map((a,k)=>({time:times[k]+" min",act:a,name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,chapter),learner:a.learner.replace(/\btopic\b/g,chapter),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
+    const rows=acts.map((a,k)=>({time:times[k]+" min",act:a,name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,chapter),learner:a.learner.replace(/\btopic\b/g,chapter),fa:a.assessment,res:chosenResources.length?chosenResources.join(", "):a.resources,pedagogy:pedagogyFor(a.cat)}));
     plans.push({
-      meta:{teacher:"",grade,subject,topic:chapter+" — Session "+(s+1)+"/"+count,date:"",dur},
+      meta:{teacher:"",grade,subject,topic:"",date:"",dur},
       aim:sessions[s].focus||autoAim(chapter,subject),
       objs:sessions[s].objectives&&sessions[s].objectives.length?sessions[s].objectives:baseObjs.slice(0,3),
       rows,
@@ -1638,13 +1657,15 @@ function planHTML(p){
   const m=p.meta,objLis=p.objs.map(o=>`<li>${esc(o)}</li>`).join("");
   const rows=p.rows.map(r=>{
     const resItems=String(r.res).split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join("");
+    const faItems=String(r.fa||"").split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join("");
     const teacherLines=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean);
     const teacherItems=(teacherLines.length>1?teacherLines:[r.teacher]).map(s=>`<li>${esc(s)}</li>`).join("");
     const learnerLines=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean);
     const learnerItems=(learnerLines.length>1?learnerLines:String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean)).map(s=>`<li>${esc(s.trim())}</li>`).join("");
-    return `<tr><td>${esc(r.time)}</td><td>${r.name?`<b>${esc(r.name)}</b>`:""}<ul style="margin:2px 0 0;padding-left:16px">${teacherItems}</ul>${r.fa?`<i style="color:#6a7384">Formative check: ${esc(r.fa)}</i><br>`:""}${r.pedagogy?`<b style="color:#1b4f82;font-size:.74rem">[${esc(r.pedagogy)}]</b>`:""}</td><td><ul style="margin:0;padding-left:16px">${learnerItems||esc(r.learner)}</ul></td><td><ul style="margin:0;padding-left:16px">${resItems||esc(r.res)}</ul></td></tr>`;
+    return `<tr><td>${esc(r.time)}</td><td>${r.name?`<b>${esc(r.name)}</b>`:""}<ul style="margin:2px 0 0;padding-left:16px">${teacherItems}</ul>${r.pedagogy?`<b style="color:#1b4f82;font-size:.74rem">[${esc(r.pedagogy)}]</b>`:""}</td><td><ul style="margin:0;padding-left:16px">${learnerItems||esc(r.learner)}</ul></td><td><ul style="margin:0;padding-left:16px">${faItems||esc(r.fa||"")}</ul></td><td><ul style="margin:0;padding-left:16px">${resItems||esc(r.res)}</ul></td></tr>`;
   }).join("");
-  return `<div class="lp-preview"><div class="lp-head"><h3>${esc(p.title)} · Lesson Plan</h3><span style="font-size:.8rem;color:#dcc89a">${esc(m.subject)} · ${esc(m.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="metarow"><td><b>Teacher:</b> ${esc(m.teacher)}</td><td><b>Class:</b> ${esc(m.grade)}</td><td><b>Subject:</b> ${esc(m.subject)}</td><td><b>Content/Unit/Chapter:</b> ${esc(m.topic)}</td><td><b>Date:</b> ${esc(m.date)}</td><td><b>Duration:</b> ${esc(m.dur)}</td></tr><tr class="aimrow"><td colspan="6"><b>Aim:</b> ${esc(p.aim)}</td></tr><tr class="objrow"><td colspan="6"><b>Learning Objectives:</b> Learners will:<ul>${objLis}</ul></td></tr><tr class="colhdr"><th style="width:8%">Time</th><th style="width:42%">Teacher Activity</th><th style="width:30%">Learner Activity</th><th style="width:20%">Resources / IIP</th></tr>${rows}<tr class="reflrow"><td colspan="6"><b>Teacher Reflection:</b> What would you keep the same / change? &nbsp; <b>Worked well:</b> Yes/No &nbsp; <b>Did not work well:</b> Yes/No</td></tr></table>${mlHTML(p.minilec)}<div class="extra"><h4>Support for Struggling Learners</h4><ul><li>Guided notes and simplified instructions</li><li>Vocabulary support and visual aids</li><li>Peer support / buddy pairing</li></ul><h4>Extension for Advanced Learners</h4><ul><li>Higher-order thinking questions and research tasks</li><li>Additional challenge problems or an independent mini-project</li><li>Opportunity to present findings to the class</li></ul><h4>Homework</h4><ul><li>${esc(p.homework)}</li></ul></div></div></div>`;
+  const sessionLabel=p.title&&p.title.includes("/")?p.title.replace(/^In-session\s*/,"Session ")+": In-session":"In-session";
+  return `<div class="lp-preview"><div class="lp-head"><h3>${esc(p.title)} · Lesson Plan</h3><span style="font-size:.8rem;color:#dcc89a">${esc(m.subject)} · ${esc(m.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="metarow"><td><b>Teacher:</b> ${esc(m.teacher)}</td><td><b>Class:</b> ${esc(m.grade)}</td><td><b>Subject:</b> ${esc(m.subject)}</td><td><b>Content/Unit/Chapter:</b> ${esc(m.topic)}</td><td><b>Date:</b> ${esc(m.date)}</td><td><b>Duration:</b> ${esc(m.dur)}</td></tr><tr class="aimrow"><td colspan="6"><b>Aim:</b> ${esc(p.aim)}</td></tr><tr class="objrow"><td colspan="6"><b>Learning Objectives:</b> The learner will<ul>${objLis}</ul></td></tr><tr class="colhdr"><th style="width:7%">Time</th><th style="width:36%">Teacher Activity</th><th style="width:25%">Learner Activity</th><th style="width:16%">Formative Assessments</th><th style="width:16%">Resources</th></tr>${rows}<tr class="reflrow"><td colspan="6"><b>Teacher Reflection:</b> What would you keep the same / change? &nbsp; <b>Worked well:</b> Yes/No &nbsp; <b>Did not work well:</b> Yes/No</td></tr></table><div style="font-size:.78rem;color:#2E6FB5;margin-top:6px;font-style:italic">Note: Add more rows if needed</div>${mlHTML(p.minilec)}<div class="extra"><h4>Support for Struggling Learners</h4><ul><li>Guided notes and simplified instructions</li><li>Vocabulary support and visual aids</li><li>Peer support / buddy pairing</li></ul><h4>Extension for Advanced Learners</h4><ul><li>Higher-order thinking questions and research tasks</li><li>Additional challenge problems or an independent mini-project</li><li>Opportunity to present findings to the class</li></ul><h4>Homework</h4><ul><li>${esc(p.homework)}</li></ul></div></div></div>`;
 }
 
 /* ===================== EXPORTS ===================== */
@@ -1727,21 +1748,27 @@ function mlPdf(pb,ml){
   (ml.questions||[]).forEach((q,i)=>pb.text((i+1)+".  "+q,{size:9,x:50}));
   if(ml.vocabulary&&ml.vocabulary.length)pb.text("Key vocabulary: "+ml.vocabulary.join(" · "),{size:9});
 }
-function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p,pi)=>{const m=p.meta;b.para([{text:(p.title||"In-session")+":  Lesson Plan",bold:true,size:24,color:"13233F"}]);b.table([[{runs:[{text:"Teacher: ",bold:true},{text:m.teacher||""}]},{runs:[{text:"Class: ",bold:true},{text:m.grade}]},{runs:[{text:"Subject: ",bold:true},{text:m.subject}]},{runs:[{text:"Content/Unit/Chapter: ",bold:true},{text:m.topic}]},{runs:[{text:"Date: ",bold:true},{text:m.date}]},{runs:[{text:"Lesson Duration: ",bold:true},{text:m.dur}]}],[{span:6,fill:"B8CCE4",runs:[{text:"Aim: ",bold:true},{text:p.aim}]}],[{span:6,fill:"FBD4B4",paras:[{runs:[{text:"Learning Objectives: ",bold:true},{text:"Learners will:"}]},...p.objs.map(o=>({bullet:true,runs:[{text:o}]}))]}]],[1560,1560,1560,1560,1560,1560]);b.spacer();
-  const cw=[800,4200,3500,1860];
-  const head=["Time","Teacher Activity","Learner Activity","Resources / IIP"].map(t=>({fill:"FFFFFF",runs:[{text:t,bold:true,color:"000000"}]}));head._header=1;const rows=[head];
+function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p,pi)=>{const m=p.meta;
+  const sessionLabel=plans.length>1?("Session "+(pi+1)+": In-session"):"In-session";
+  b.para([{text:sessionLabel,size:18,color:"6a7384"}],{after:20});
+  b.para([{text:"Lesson Plan",bold:true,size:24,color:"7c1f2e"}],{after:120});
+  b.table([[{runs:[{text:"Teacher: ",bold:true},{text:m.teacher||""}]},{runs:[{text:"Class: ",bold:true},{text:m.grade||""}]},{runs:[{text:"Subject: ",bold:true},{text:m.subject||""}]},{runs:[{text:"Content/Unit/Chapter: ",bold:true},{text:m.topic||""}]},{runs:[{text:"Date: ",bold:true},{text:m.date||""}]},{runs:[{text:"Lesson Duration: ",bold:true},{text:m.dur}]}],[{span:6,fill:"B8CCE4",runs:[{text:"Aim: ",bold:true},{text:p.aim}]}],[{span:6,fill:"FBD4B4",paras:[{runs:[{text:"Learning Objectives: ",bold:true},{text:"The learner will"}]},...p.objs.map(o=>({bullet:true,runs:[{text:o}]}))]}]],[1560,1560,1560,1560,1560,1560]);b.spacer();
+  const cw=[650,3200,2700,1620,1690];
+  const head=["Time","Teacher Activity","Learner Activity","Formative Assessments","Resources"].map(t=>({fill:"FFFFFF",runs:[{text:t,bold:true,color:"000000"}]}));head._header=1;const rows=[head];
   p.rows.forEach(r=>{
     const teacherLines=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean);
     const tp=[{runs:[{text:r.name||"",bold:true}]},...(teacherLines.length?teacherLines:[r.teacher]).map(l=>({bullet:true,runs:[{text:l}]}))];
-    if(r.fa)tp.push({bullet:true,runs:[{text:"Formative check: "+r.fa,italics:true}]});
     if(r.pedagogy)tp.push({runs:[{text:"["+r.pedagogy+"]",italics:true,color:"1b4f82"}]});
     const lp=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean);
     const lpFinal=(lp.length>1?lp:String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean)).map(s=>({bullet:true,runs:[{text:s.trim()}]}));
+    const faItems=String(r.fa||"").split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>({bullet:true,runs:[{text:s}]}));
     const resItems=String(r.res).split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>({bullet:true,runs:[{text:s}]}));
-    rows.push([{text:r.time},{paras:tp},{paras:lpFinal.length?lpFinal:[{runs:[{text:r.learner}]}]},{paras:resItems.length?resItems:[{runs:[{text:r.res}]}]}]);
+    rows.push([{text:r.time},{paras:tp},{paras:lpFinal.length?lpFinal:[{runs:[{text:r.learner}]}]},{paras:faItems.length?faItems:[{runs:[{text:r.fa||""}]}]},{paras:resItems.length?resItems:[{runs:[{text:r.res}]}]}]);
   });
-  rows.push([{span:4,fill:"F6F3EC",runs:[{text:"Teacher Reflection: ",bold:true},{text:"What would you keep the same / change?     "},{text:"Worked well: ",bold:true},{text:"Yes / No     "},{text:"Did not work well: ",bold:true},{text:"Yes / No"}]}]);
-  b.table(rows,cw);if(p.minilec)mlDocx(b,p.minilec);b.heading("Support for Struggling Learners",{size:20});b.bullets(["Guided notes and simplified instructions","Vocabulary support and visual aids","Peer support / buddy pairing"]);b.heading("Extension for Advanced Learners",{size:20});b.bullets(["Higher-order thinking questions and research tasks","Additional challenge problems or an independent mini-project","Opportunity to present findings to the class"]);b.heading("Homework",{size:20});b.para([{text:p.homework}]);b.spacer();b.para([{text:licenseLine(),size:14,color:"9aa8b8",italics:true}]);if(pi<plans.length-1)b.pageBreak();});return b;}
+  rows.push([{span:5,fill:"F6F3EC",runs:[{text:"Teacher Reflection: ",bold:true},{text:"What would you keep the same / change?     "},{text:"Worked well: ",bold:true},{text:"Yes / No     "},{text:"Did not work well: ",bold:true},{text:"Yes / No"}]}]);
+  b.table(rows,cw);
+  b.para([{text:"Note: Add more rows if needed",italics:true,color:"2E6FB5",size:16}],{after:40});
+  if(p.minilec)mlDocx(b,p.minilec);b.heading("Support for Struggling Learners",{size:20});b.bullets(["Guided notes and simplified instructions","Vocabulary support and visual aids","Peer support / buddy pairing"]);b.heading("Extension for Advanced Learners",{size:20});b.bullets(["Higher-order thinking questions and research tasks","Additional challenge problems or an independent mini-project","Opportunity to present findings to the class"]);b.heading("Homework",{size:20});b.para([{text:p.homework}]);b.spacer();b.para([{text:licenseLine(),size:14,color:"9aa8b8",italics:true}]);if(pi<plans.length-1)b.pageBreak();});return b;}
 function licenseLine(){return "© "+new Date().getFullYear()+" National Academy for Learning — for internal classroom use. Generated with the NAFL Teacher Studio.";}
 function lessonPdf(plans){
   const pb=pdfBuilder({landscape:true});
@@ -1749,7 +1776,9 @@ function lessonPdf(plans){
   plans.forEach((p,pi)=>{
     if(pi>0){pb.gap(2);}                          // new content; pages auto-advance
     const m=p.meta;
-    pb.text((p.title||"In-session")+":  Lesson Plan",{size:14,bold:true,color:"13233F"});
+    const sessionLabel=plans.length>1?("Session "+(pi+1)+": In-session"):"In-session";
+    pb.text(sessionLabel,{size:10,color:"6a7384"});
+    pb.text("Lesson Plan",{size:15,bold:true,color:"7c1f2e"});
     pb.gap(3);
     // META TABLE — 6 columns
     const mc=[TW*0.16,TW*0.12,TW*0.16,TW*0.22,TW*0.16,TW*0.18];
@@ -1761,30 +1790,32 @@ function lessonPdf(plans){
       {runs:[{text:"Date: ",bold:true},{text:m.date||""}]},
       {runs:[{text:"Duration: ",bold:true},{text:m.dur||""}]}
     ]],mc,{size:8.5});
-    // AIM + OBJECTIVES (peach)
+    // AIM + OBJECTIVES
     pb.table([[{text:"Aim: "+p.aim,fill:"B8CCE4"}]],[TW],{size:8.5});
-    pb.table([[{text:"Learning Objectives - Learners will:  -  "+p.objs.join("   -  "),fill:"FBD4B4"}]],[TW],{size:8.5});
-    // ACTIVITY TABLE — 4 columns matching the real TTA In-session format
-    const cw=[TW*0.08,TW*0.44,TW*0.28,TW*0.20];
+    pb.table([[{text:"Learning Objectives - The learner will:  -  "+p.objs.join("   -  "),fill:"FBD4B4"}]],[TW],{size:8.5});
+    // ACTIVITY TABLE — 5 columns matching the school's In-session format
+    const cw=[TW*0.07,TW*0.36,TW*0.25,TW*0.16,TW*0.16];
     const head=[
       {text:"Time",fill:"FFFFFF",color:"000000",bold:true},
       {text:"Teacher Activity",fill:"FFFFFF",color:"000000",bold:true},
       {text:"Learner Activity",fill:"FFFFFF",color:"000000",bold:true},
-      {text:"Resources / IIP",fill:"FFFFFF",color:"000000",bold:true}
+      {text:"Formative Assessments",fill:"FFFFFF",color:"000000",bold:true},
+      {text:"Resources",fill:"FFFFFF",color:"000000",bold:true}
     ];
     const body=[head];
     p.rows.forEach(r=>{
       const teacherFlat=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean).map(s=>"- "+s).join("   ");
       const namePart=r.name?r.name+":  ":"";
       let tcell=namePart+teacherFlat;
-      if(r.fa)tcell+="   |  Formative check: "+r.fa;
       if(r.pedagogy)tcell+="  ["+r.pedagogy+"]";
       const learnerFlat=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean).join("   ");
+      const faText=String(r.fa||"").split(/\n|,/).map(s=>"- "+s.trim()).join("   ");
       const resText=String(r.res).split(/\n|,/).map(s=>"- "+s.trim()).join("   ");
-      body.push([{text:r.time},{text:tcell},{text:learnerFlat},{text:resText}]);
+      body.push([{text:r.time},{text:tcell},{text:learnerFlat},{text:faText},{text:resText}]);
     });
-    body.push([{text:"Teacher Reflection: What would you keep the same / change?     Worked well: Yes / No     Did not work well: Yes / No",fill:"F6F3EC",span:4}]);
+    body.push([{text:"Teacher Reflection: What would you keep the same / change?     Worked well: Yes / No     Did not work well: Yes / No",fill:"F6F3EC",span:5}]);
     pb.table(body,cw,{size:8.5});
+    pb.gap(2);pb.text("Note: Add more rows if needed",{size:8,color:"2E6FB5"});
     // Mini-lecture
     if(p.minilec)mlPdf(pb,p.minilec);
     // Differentiation + homework
