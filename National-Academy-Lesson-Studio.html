@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>National Academy for Learning · Lesson Plan & Worksheet Studio</title>
@@ -256,7 +259,8 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
       <div class="field"><label>Date</label><input id="c_date" type="date"></div>
       <div class="field"><label>Lesson duration</label><select id="c_dur"><option>30 min</option><option>35 min</option><option selected>40 min</option><option>45 min</option><option>60 min</option><option>80 min</option></select></div>
     </div>
-    <div class="note">Keeps the file's activities &amp; sequence, splits content into timed rows, and adds Formative Assessment + Resources columns. Long decks auto-split into multiple lesson plans.</div>
+    <div class="note">Keeps the file's activities &amp; sequence, splits content into timed rows, and adds Formative Assessment + Resources columns. Long decks auto-split into multiple lesson plans. If no named activities are found, you'll be offered the same activity library used in Build.</div>
+    <div id="convActPicker" class="hide" style="margin-top:14px"></div>
     <div class="actions"><button class="btn btn-primary" id="convBtn" onclick="convertFile()" disabled>Convert to lesson plan</button><button class="btn btn-ghost" onclick="clearFile()">Clear</button><span class="status" id="convStatus"></span></div>
   </div>
 
@@ -290,19 +294,23 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
 
   <!-- POW -->
   <div class="panel hide" id="powPanel">
-    <h2 class="serif">Plan of Work (syllabus)</h2><p class="sub">Upload the year / term Plan of Work PDF. Get a full Month → Objectives table as an editable Word and matching PDF (landscape), or drill into one chapter for a full lesson plan.</p>
+    <h2 class="serif">Plan of Work (syllabus)</h2><p class="sub">Upload the year / term Plan of Work PDF. Get a Topics → Objectives (or Month → Objectives) table as an editable Word and matching PDF (landscape), or drill into one chapter for a full lesson plan.</p>
     <div class="drop" id="powDrop"><div class="big">▦</div><h3>Drop the POW PDF or click to browse</h3><p>.pdf syllabus breakdown</p><input type="file" id="powInput" class="hide" accept=".pdf"></div>
     <div class="filemeta" id="powMeta"><span id="pmName"></span><span id="pmSize" style="color:var(--muted)"></span><b style="margin-left:auto;cursor:pointer;color:var(--warn)" onclick="clearPow()">remove</b></div>
     <div class="grid" style="margin-top:18px">
       <div class="field"><label>Class / Grade</label><select id="p_grade"><option value="">Select grade</option></select></div>
       <div class="field"><label>Subject</label><select id="p_subject"><option value="">Select subject</option></select></div>
-      <div class="field"><label>Academic year starts</label><select id="p_startmonth">
-        <option value="3">April</option><option value="5">June</option><option value="6">July</option><option value="0">January</option>
+      <div class="field"><label>Table layout</label><select id="p_layout">
+        <option value="topics">Topics → Objectives (school template)</option>
+        <option value="month">Month → Objectives (year planner)</option>
       </select></div>
     </div>
+    <div class="field" id="p_startmonth_wrap" style="max-width:260px;margin-top:10px"><label>Academic year starts</label><select id="p_startmonth">
+        <option value="3">April</option><option value="5">June</option><option value="6">July</option><option value="0">January</option>
+    </select></div>
     <div id="powList" class="hide">
       <div class="section-h"><div class="bar"></div><h3>Detected chapters / units</h3><span class="hint">Generate the full table, or pick one for a detailed lesson plan</span></div>
-      <div class="actions" style="margin-top:0 0 14px"><button class="btn btn-primary" onclick="generatePowTable()">📅 Generate full Plan of Work (Month → Objectives)</button></div>
+      <div class="actions" style="margin-top:0 0 14px"><button class="btn btn-primary" onclick="generatePowTable()">📅 Generate full Plan of Work</button></div>
       <div id="powChapters"></div>
     </div>
     <div class="note">Reading the PDF works offline. With an AI key in ⚙ AI Settings, objectives are written specifically for each chapter; without one, clear editable placeholders are used so the table is still ready to fill in.</div>
@@ -320,7 +328,7 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
     <div id="previewBody"></div>
   </div>
 
-  <footer><span class="seal">National Academy for Learning</span> · Teacher Studio · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF, no internet required.</footer>
+  <footer><span class="seal">National Academy for Learning</span> · Teacher Studio · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF, no internet required.<br><span style="opacity:.6">build 2026-06-26.2 — if this date looks old after updating the file, hard-refresh (Ctrl/Cmd+Shift+R)</span></footer>
 </div>
 
 <script>
@@ -1342,7 +1350,7 @@ drop.onclick=()=>fileInput.click();
 ["dragleave","drop"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove("over");}));
 drop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handleFile(ev.dataTransfer.files[0]);});
 fileInput.onchange=e=>{if(e.target.files.length)handleFile(e.target.files[0]);};
-function clearFile(){uploadedText="";fileInput.value="";document.getElementById("fileMeta").classList.remove("show");document.getElementById("convBtn").disabled=true;document.getElementById("convStatus").textContent="";}
+function clearFile(){uploadedText="";fileInput.value="";document.getElementById("fileMeta").classList.remove("show");document.getElementById("convBtn").disabled=true;document.getElementById("convStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";convSelected.clear();const cp=document.getElementById("convActPicker");if(cp){cp.classList.add("hide");cp.dataset.built="";}}
 async function handleFile(file){
   const cs=document.getElementById("convStatus");
   document.getElementById("fmName").textContent=file.name;document.getElementById("fmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("fileMeta").classList.add("show");
@@ -1373,17 +1381,66 @@ function extractPdfText(s){let out="";const tjRe=/\[((?:[^\[\]\\]|\\.)*)\]\s*TJ|
 async function readPPTX(file){const files=unzip(new Uint8Array(await file.arrayBuffer()));const slides=Object.keys(files).filter(n=>/ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a,b)=>parseInt(a.match(/slide(\d+)/)[1])-parseInt(b.match(/slide(\d+)/)[1]));let out=[];const dec=new TextDecoder();for(const n of slides){const xml=dec.decode(files[n]);const t=[...xml.matchAll(/<a:t>([\s\S]*?)<\/a:t>/g)].map(x=>x[1].replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">"));const j=t.join(" ").replace(/\s+/g," ").trim();if(j)out.push("[[SEG]] "+j);}return out.join("\n");}
 async function readDOCX(file){const files=unzip(new Uint8Array(await file.arrayBuffer()));const dec=new TextDecoder();const xml=dec.decode(files["word/document.xml"]);const paras=[...xml.matchAll(/<w:p[ >][\s\S]*?<\/w:p>/g)].map(p=>{const t=[...p[0].matchAll(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g)].map(x=>x[1]).join("");return t.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").trim();}).filter(Boolean);return paras.map(p=>"[[SEG]] "+p).join("\n");}
 function guessTopic(t){const f=t.replace(/\[\[SEG\]\]/g,"").trim().split(/[\n.]/)[0].trim();return f.length>3&&f.length<70?f:"";}
+function detectNamedActivities(segs){
+  const text=segs.join(" ").toLowerCase();
+  return ACTIVITIES.filter(a=>text.includes(a.name.toLowerCase()));
+}
+let convSegsCache=[];
 function convertFile(){
   const cs=document.getElementById("convStatus");if(!uploadedText){cs.className="status err";cs.textContent="Upload a file first.";return;}
-  const teacher=val("c_teacher"),grade=val("c_grade"),subject=val("c_subject");let topic=val("c_topic")||guessTopic(uploadedText)||"Lesson Topic";const date=fmtDate(val("c_date")),dur=val("c_dur");
   let segs=uploadedText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(s=>s.length>2).filter(s=>!/^(list of contents|table of contents|thank you|learning with tta|tutorial links)/i.test(s));
   if(segs.length===0)segs=[uploadedText];
-  const ROWS=6,chunks=[];for(let i=0;i<segs.length;i+=ROWS)chunks.push(segs.slice(i,i+ROWS));const multi=chunks.length>1;
-  const plans=chunks.map((chunk,ci)=>{const times=distribute(dur,chunk.length);const rows=chunk.map((seg,i)=>{const e=expandSegment(seg,i,chunk.length);return {time:times[i]+" min",...e,pedagogy:""};});return {meta:{teacher,grade,subject,topic:multi?topic+" — Part "+(ci+1):topic,date,dur},aim:autoAim(topic,subject),objs:autoObjectives(topic),rows,homework:autoHomework(topic),title:multi?"In-session — Lesson Plan "+(ci+1):"In-session"};});
+  convSegsCache=segs;
+  const named=detectNamedActivities(segs);
+  if(named.length===0 && convSelected.size===0){
+    // No recognisable activities in the source, and the teacher hasn't picked any yet.
+    cs.className="status";cs.innerHTML="No named activities found in this file. Pick activities below, then click <b>Convert to lesson plan</b> again.";
+    showConvertActivityPicker();
+    return;
+  }
+  document.getElementById("convActPicker").classList.add("hide");
+  runConvert(segs);
+}
+function showConvertActivityPicker(){
+  const box=document.getElementById("convActPicker");
+  box.classList.remove("hide");
+  if(!box.dataset.built){
+    box.innerHTML=`<div class="section-h"><div class="bar"></div><h3>Choose activities</h3><span class="hint">No activities were named in the file — pick from the library</span></div>
+      <div class="lib-tabs" id="convLibTabs"></div><div class="acts" id="convActGrid"></div><div class="selbar" id="convSelBar"></div>`;
+    box.dataset.built="1";
+    renderConvLibTabs();renderConvActs();renderConvSelBar();
+  }
+}
+let convLibFilter="all",convSelected=new Set();
+function renderConvLibTabs(){const w=document.getElementById("convLibTabs");w.innerHTML="";LIB_CATS.forEach(c=>{const b=document.createElement("button");b.className="lib-tab"+(convLibFilter===c.id?" active":"");b.textContent=c.label;b.onclick=()=>{convLibFilter=c.id;renderConvLibTabs();renderConvActs();};w.appendChild(b);});}
+function renderConvActs(){const g=document.getElementById("convActGrid");g.innerHTML="";ACTIVITIES.filter(a=>convLibFilter==="all"||a.cat===convLibFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(convSelected.has(a.id)?" sel":"");d.onclick=()=>{convSelected.has(a.id)?convSelected.delete(a.id):convSelected.add(a.id);renderConvActs();renderConvSelBar();};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${convSelected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
+function renderConvSelBar(){const bar=document.getElementById("convSelBar");if(convSelected.size===0){bar.innerHTML="<span>No activities selected yet.</span>";return;}const order=["starter","collaborative","formative","plenary"];const items=[...convSelected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));bar.innerHTML="<span>Selected ("+items.length+"):</span>"+items.map(a=>`<span class="chip">${a.name}<b onclick="event.stopPropagation();convSelected.delete('${a.id}');renderConvActs();renderConvSelBar();">✕</b></span>`).join("");}
+function runConvert(segs){
+  const cs=document.getElementById("convStatus");
+  const teacher=val("c_teacher"),grade=val("c_grade"),subject=val("c_subject");let topic=val("c_topic")||guessTopic(uploadedText)||"Lesson Topic";const date=fmtDate(val("c_date")),dur=val("c_dur");
+  let rows;
+  if(convSelected.size>0){
+    // Teacher picked activities from the library — use those, with the file's content as topic context.
+    const order=["starter","collaborative","formative","plenary"];
+    const acts=[...convSelected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));
+    const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
+    rows=acts.map((a,i)=>({time:times[i]+" min",teacher:stageLabel(a)+a.teacher.replace(/\btopic\b/g,topic),learner:a.learner.replace(/\btopic\b/g,topic),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
+  }else{
+    const ROWS=6,chunk=segs.slice(0,ROWS);const times=distribute(dur,chunk.length);
+    rows=chunk.map((seg,i)=>{const e=expandSegment(seg,i,chunk.length);return {time:times[i]+" min",...e,pedagogy:""};});
+  }
+  const multi=convSelected.size===0 && segs.length>6;
+  const chunks=multi?(()=>{const ROWS=6,cks=[];for(let i=0;i<segs.length;i+=ROWS)cks.push(segs.slice(i,i+ROWS));return cks;})():null;
+  let plans;
+  if(multi){
+    plans=chunks.map((chunk,ci)=>{const times=distribute(dur,chunk.length);const r=chunk.map((seg,i)=>{const e=expandSegment(seg,i,chunk.length);return {time:times[i]+" min",...e,pedagogy:""};});return {meta:{teacher,grade,subject,topic:topic+" — Part "+(ci+1),date,dur},aim:autoAim(topic,subject),objs:autoObjectives(topic),rows:r,homework:autoHomework(topic),title:"In-session — Lesson Plan "+(ci+1)};});
+  }else{
+    plans=[{meta:{teacher,grade,subject,topic,date,dur},aim:autoAim(topic,subject),objs:autoObjectives(topic),rows,homework:autoHomework(topic),title:"In-session"}];
+  }
   lastOut={kind:"lesson",plans,name:"Lesson Plan - "+subject+" "+grade+" - "+topic};
   renderPreview();cs.className="status ok";cs.textContent=multi?("Done — "+chunks.length+" lesson plans."):"Done. Preview below.";
 }
-function expandSegment(seg,i,n){const clean=seg.replace(/\s+/g," ").trim(),lower=clean.toLowerCase();let stage=i===0?"Introduction":(i===n-1?"Consolidation":"Development");let ped=/group|team|pair|collaborat|discuss/.test(lower)?" Organise learners into groups/pairs to discuss and work collaboratively.":"";if(/question|quiz|poll|exit|reflect/.test(lower))ped+=" Use the responses to check understanding before moving on.";const teacher=`${stage}: Present and explain the following content from the source: “${clip(clean,260)}”. Display any related image/diagram, ask probing questions to connect prior knowledge, and give clear task instructions.`+ped;const learner=`Observe and listen, discuss key points with a partner or group, record important points in the notebook, answer the teacher's questions, and participate actively.`;const fa=/quiz|question|poll|exit/.test(lower)?"Oral questioning / quick quiz":/reflect/.test(lower)?"Reflection review":"Oral questioning; notebook review";const res=/video|image|picture|diagram|ppt|slide/.test(lower)?"PPT/Interactive panel, Notebook, Whiteboard":"Whiteboard, Notebook, Textbook";return {teacher,learner,fa,res};}
+function expandSegment(seg,i,n){const clean=seg.replace(/\s+/g," ").trim(),lower=clean.toLowerCase();let stage=i===0?"Introduction":(i===n-1?"Consolidation":"Development");let ped=/group|team|pair|collaborat|discuss/.test(lower)?" Organise learners into groups/pairs to discuss and work collaboratively.":"";if(/question|quiz|poll|exit|reflect/.test(lower))ped+=" Use the responses to check understanding before moving on.";const teacher=`${stage}: Present and explain the following content from the source: "${clip(clean,260)}". Display any related image/diagram, ask probing questions to connect prior knowledge, and give clear task instructions.`+ped;const learner=`Observe and listen, discuss key points with a partner or group, record important points in the notebook, answer the teacher's questions, and participate actively.`;const fa=/quiz|question|poll|exit/.test(lower)?"Oral questioning / quick quiz":/reflect/.test(lower)?"Reflection review":"Oral questioning; notebook review";const res=/video|image|picture|diagram|ppt|slide/.test(lower)?"PPT/Interactive panel, Notebook, Whiteboard":"Whiteboard, Notebook, Textbook";return {teacher,learner,fa,res};}
 function clip(s,n){return s.length>n?s.slice(0,n).trim()+"…":s;}
 
 /* ===================== WORKSHEET ===================== */
@@ -1434,7 +1491,7 @@ powDrop.onclick=()=>powInput.click();
 ["dragleave","drop"].forEach(e=>powDrop.addEventListener(e,ev=>{ev.preventDefault();powDrop.classList.remove("over");}));
 powDrop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handlePow(ev.dataTransfer.files[0]);});
 powInput.onchange=e=>{if(e.target.files.length)handlePow(e.target.files[0]);};
-function clearPow(){powText="";powInput.value="";document.getElementById("powMeta").classList.remove("show");document.getElementById("powBtn").disabled=true;document.getElementById("powList").classList.add("hide");document.getElementById("powStatus").textContent="";}
+function clearPow(){powText="";powInput.value="";document.getElementById("powMeta").classList.remove("show");document.getElementById("powBtn").disabled=true;document.getElementById("powList").classList.add("hide");document.getElementById("powStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
 async function handlePow(file){const ps=document.getElementById("powStatus");document.getElementById("pmName").textContent=file.name;document.getElementById("pmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("powMeta").classList.add("show");ps.className="status";ps.textContent="Reading…";try{powText=await readPDFtext(file);if(powText.trim().length<20)throw new Error("No readable text in PDF.");ps.className="status ok";ps.textContent="Read. Click 'Read syllabus' to list chapters.";document.getElementById("powBtn").disabled=false;}catch(e){ps.className="status err";ps.textContent="Error: "+e.message;document.getElementById("powBtn").disabled=true;}}
 function readPow(){const ps=document.getElementById("powStatus");const segs=powText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(Boolean);const cands=segs.filter(s=>/(chapter|unit|lesson|week|ch\.?\s*\d|topic)\b/i.test(s)&&s.length<140);powChaptersData=[...new Set((cands.length?cands:segs.slice(0,15)).map(s=>s.replace(/^[\-•\d.\s]+/,"").trim()).filter(s=>s.length>3))].slice(0,30);const box=document.getElementById("powChapters");if(powChaptersData.length===0){ps.className="status err";ps.textContent="Couldn't detect chapters — the PDF may be image-only.";return;}box.innerHTML=powChaptersData.map((c,i)=>`<div class="qtype-row"><label>${esc(c)}</label><button class="btn btn-ghost btn-sm" onclick="powObjectives(${i})">→ Full lesson plan for this chapter</button></div>`).join("");document.getElementById("powList").classList.remove("hide");ps.className="status ok";ps.textContent="Found "+powChaptersData.length+" chapters/units.";}
 async function powObjectives(i){const chapter=powChaptersData[i],grade=val("p_grade"),subject=val("p_subject"),ps=document.getElementById("powStatus");ps.className="status";ps.textContent="Drafting objectives for: "+chapter+" …";let objs;try{objs=parseJSON(await callAI(`Write 4 measurable CBSE learning objectives for the ${grade} ${subject} chapter "${chapter}". Start each with an action verb. Return ONLY a JSON array of strings.`,500));}catch(e){objs=autoObjectives(chapter);}lastOut={kind:"lesson",plans:[{meta:{teacher:"",grade,subject,topic:chapter,date:"",dur:"40 min"},aim:autoAim(chapter,subject),objs,rows:[{time:"40 min",teacher:"Plan the activities for "+chapter+" using the Build tab (add starters, main activities and a plenary).",learner:"To be completed.",fa:"To be added",res:"Textbook, PPT, Notebook"}],homework:autoHomework(chapter),title:"Chapter LP — "+chapter}],name:"Chapter Objectives - "+subject+" "+grade+" - "+chapter};renderPreview();ps.className="status ok";ps.textContent="Objectives drafted for "+chapter+". Preview below.";}
@@ -1446,8 +1503,9 @@ async function generatePowTable(){
   const grade=val("p_grade"),subject=val("p_subject"),ps=document.getElementById("powStatus");
   if(!grade||!subject){ps.className="status err";ps.textContent="Select grade and subject first.";return;}
   if(!powChaptersData.length){ps.className="status err";ps.textContent="Read the syllabus first.";return;}
+  const layout=val("p_layout")||"topics";
   const startIdx=parseInt(val("p_startmonth"))||3;
-  const months=monthSequence(startIdx,powChaptersData.length);
+  const months=layout==="month"?monthSequence(startIdx,powChaptersData.length):null;
   ps.className="status";ps.textContent="Writing objectives for "+powChaptersData.length+" chapters…";
   const rows=[];
   if(hasAI()){
@@ -1470,17 +1528,23 @@ Return ONLY a JSON array, same order, one string per chapter (semicolon-separate
   }else{
     powChaptersData.forEach(c=>rows.push({chapter:c,objectives:autoObjectives(c).slice(0,3)}));
   }
-  lastOut={kind:"pow",pow:{grade,subject,months,rows},name:"Plan of Work - "+subject+" "+grade};
+  lastOut={kind:"pow",pow:{grade,subject,layout,months,rows},name:"Plan of Work - "+subject+" "+grade};
   renderPreview();
   ps.className=hasAI()?"status ok":"status err";
   ps.innerHTML=hasAI()?"Plan of Work ready — Word/PDF download below.":"Built with editable placeholders (no AI key). <b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>Add a free Gemini key</b> for chapter-specific objectives, then regenerate.";
 }
+document.addEventListener("DOMContentLoaded",()=>{
+  const sel=document.getElementById("p_layout"),wrap=document.getElementById("p_startmonth_wrap");
+  if(sel&&wrap){const sync=()=>{wrap.style.display=sel.value==="month"?"block":"none";};sync();sel.addEventListener("change",sync);}
+});
 
 /* ===================== PREVIEW ===================== */
 function renderPreview(){const wrap=document.getElementById("previewWrap"),body=document.getElementById("previewBody"),title=document.getElementById("prevTitle");if(lastOut.kind==="lesson"){title.textContent="Lesson plan preview";body.innerHTML=lastOut.plans.map(planHTML).join("<div style='height:18px'></div>");}else if(lastOut.kind==="pow"){title.textContent="Plan of Work preview";body.innerHTML=powHTML(lastOut.pow);}else{title.textContent="Worksheet preview";body.innerHTML=worksheetHTML(lastOut.ws);}wrap.style.display="block";wrap.scrollIntoView({behavior:"smooth",block:"start"});}
 function powHTML(pow){
-  const rows=pow.rows.map((r,i)=>`<tr><td style="font-weight:600;white-space:nowrap">${esc(pow.months[i])}</td><td><ul style="margin:0;padding-left:18px">${r.objectives.map(o=>`<li>${esc(o)}</li>`).join("")}</ul></td></tr>`).join("");
-  return `<div class="lp-preview"><div class="lp-head"><h3>Plan of Work</h3><span style="font-size:.8rem;color:#dcc89a">${esc(pow.subject)} · ${esc(pow.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="colhdr"><th style="width:18%">Month</th><th>Objectives</th></tr>${rows}</table></div></div>`;
+  const isMonth=pow.layout==="month";
+  const colHead=isMonth?"Month":"Topics";
+  const rows=pow.rows.map((r,i)=>`<tr><td style="font-weight:600;${isMonth?"white-space:nowrap":""}">${esc(isMonth?pow.months[i]:r.chapter)}</td><td><ul style="margin:0;padding-left:18px">${r.objectives.map(o=>`<li>${esc(o)}</li>`).join("")}</ul></td></tr>`).join("");
+  return `<div class="lp-preview"><div class="lp-head"><h3>Plan of Work</h3><span style="font-size:.8rem;color:#dcc89a">${esc(pow.subject)} · ${esc(pow.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="colhdr"><th style="width:22%">${colHead}</th><th>Objectives</th></tr>${rows}</table></div></div>`;
 }
 function mlHTML(ml){
   if(!ml)return"";
@@ -1518,18 +1582,20 @@ function downloadPdfOut(){
   }catch(e){alert("Could not build the PDF: "+e.message);}
 }
 function safe(s){return (s||"output").replace(/[\\/:*?"<>|]+/g,"").slice(0,80);}
-/* ---- Plan of Work: Month | Objectives table, landscape, identical layout in Word + PDF ---- */
+/* ---- Plan of Work: Topics|Objectives (school template) or Month|Objectives, landscape, identical layout in Word + PDF ---- */
 function powDocx(pow){
+  const isMonth=pow.layout==="month";
+  const colHead=isMonth?"Month":"Topics";
   const b=docBuilder({landscape:true});
   b.para([{text:"Plan of Work",bold:true,size:26,color:"13233F"}]);
   b.para([{text:pow.subject+"   ·   "+pow.grade,size:18,color:"6a7384"}]);
   b.spacer();
   const cw=[1500,7860];
-  const head=[{text:"Month",bold:true,runs:[{text:"Month",bold:true,size:22}]},{text:"Objectives",bold:true,runs:[{text:"Objectives",bold:true,size:22}]}];
+  const head=[{text:colHead,bold:true,runs:[{text:colHead,bold:true,size:22}]},{text:"Objectives",bold:true,runs:[{text:"Objectives",bold:true,size:22}]}];
   const rows=[head];
   pow.rows.forEach((r,i)=>{
     rows.push([
-      {runs:[{text:pow.months[i],bold:true}]},
+      {runs:[{text:isMonth?pow.months[i]:r.chapter,bold:true}]},
       {paras:r.objectives.map(o=>({bullet:true,runs:[{text:o}]}))}
     ]);
   });
@@ -1537,15 +1603,17 @@ function powDocx(pow){
   return b;
 }
 function powPdf(pow){
+  const isMonth=pow.layout==="month";
+  const colHead=isMonth?"Month":"Topics";
   const pb=pdfBuilder({landscape:true});
   const TW=pb.PW-2*pb.M;
   pb.text("Plan of Work",{size:16,bold:true,color:"13233F"});
   pb.text(pow.subject+"   ·   "+pow.grade,{size:10,color:"6a7384"});
   pb.gap(4);
-  const cw=[TW*0.16,TW*0.84];
-  const rows=[[{text:"Month",bold:true},{text:"Objectives",bold:true}]];
+  const cw=[TW*0.20,TW*0.80];
+  const rows=[[{text:colHead,bold:true},{text:"Objectives",bold:true}]];
   pow.rows.forEach((r,i)=>{
-    rows.push([{text:pow.months[i],bold:true},{text:r.objectives.map(o=>"- "+o).join("   ")}]);
+    rows.push([{text:isMonth?pow.months[i]:r.chapter,bold:true},{text:r.objectives.map(o=>"- "+o).join("   ")}]);
   });
   pb.table(rows,cw,{size:9});
   return pb.blob();
@@ -1629,7 +1697,7 @@ function worksheetDocx(ws){const b=docBuilder({landscape:false});b.para([{text:"
 function worksheetPdf(ws){const pb=pdfBuilder({landscape:false});pb.text("National Academy for Learning",{size:11,bold:true,color:"13233F"});pb.gap(4);pb.text("Worksheet — "+ws.topic,{size:16,bold:true,color:"13233F"});pb.gap(4);pb.text(ws.subject+"   ·   "+ws.grade+"   ·   Total "+ws.total+" marks",{size:10,color:"6a7384"});pb.gap(2);pb.text("Name: ____________________   Class: "+ws.grade+"   Date: __________   Marks: ___ / "+ws.total,{size:10});pb.line();const L="ABCDEFGH";let si=0;ws.sections.forEach(s=>{pb.gap(3);pb.text("Section "+L[si++]+" — "+s.label+"   ("+s.marks+" mark"+(s.marks!==1?"s":"")+" each)",{size:12,bold:true});s.items.forEach((it,i)=>{pb.text((i+1)+".  "+it.q,{size:10});if(it.opts)pb.text("     "+it.opts.join("    "),{size:10});if(it.a)pb.text("     "+it.a,{size:10,color:"6a7384"});if(it.code)it.code.split("\n").forEach(l=>pb.text("    "+l,{size:9,color:"333333"}));if(it.box||it.code)pb.rect(40,pb.PW-80,46,{});});});if(ws.img){pb.gap(3);pb.text("Section "+L[si++]+" — Image / Diagram   ("+ws.img.marks+" marks)",{size:12,bold:true});pb.text(ws.img.instr,{size:10});pb.rect(40,pb.PW-80,150,{});pb.text("[ teacher inserts image / map / diagram here ]",{size:9,color:"a89668"});}return pb.blob();}
 
 /* ===================== reset ===================== */
-function resetBuild(){["f_teacher","f_topic","f_aim","f_obj"].forEach(id=>document.getElementById(id).value="");document.getElementById("f_grade").value="";document.getElementById("f_subject").value="";selected.clear();renderActs();renderSelBar();document.getElementById("buildStatus").textContent="";document.getElementById("previewWrap").style.display="none";}
+function resetBuild(){["f_teacher","f_topic","f_aim","f_obj"].forEach(id=>document.getElementById(id).value="");document.getElementById("f_grade").value="";document.getElementById("f_subject").value="";selected.clear();renderActs();renderSelBar();document.getElementById("buildStatus").textContent="";document.getElementById("previewWrap").style.display="none";lastOut=null;const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
 </script>
 </body>
 </html>
