@@ -277,6 +277,11 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
         <option value="month">Month → Objectives (year planner)</option>
       </select></div>
     </div>
+    <div class="grid" style="margin-top:10px">
+      <div class="field"><label>Teacher name</label><input id="p_teacher" placeholder="e.g. Ms. Chetana"></div>
+      <div class="field"><label>Date</label><input id="p_date" type="date"></div>
+      <div class="field"><label>Duration per lesson</label><input id="p_dur" placeholder="40 min" value="40 min"></div>
+    </div>
     <div class="field" id="p_startmonth_wrap" style="max-width:260px;margin-top:10px"><label>Academic year starts</label><select id="p_startmonth">
         <option value="3">April</option><option value="5">June</option><option value="6">July</option><option value="0">January</option>
     </select></div>
@@ -1029,7 +1034,7 @@ function fillSelect(id,arr){const s=document.getElementById(id);if(!s)return;arr
 ["f_date","c_date"].forEach(id=>{const e=document.getElementById(id);if(e)e.valueAsDate=new Date();});
 
 function renderLibTabs(){const w=document.getElementById("libTabs");w.innerHTML="";LIB_CATS.forEach(c=>{const b=document.createElement("button");b.className="lib-tab"+(libFilter===c.id?" active":"");b.textContent=c.label;b.onclick=()=>{libFilter=c.id;renderLibTabs();renderActs();};w.appendChild(b);});}
-function renderActs(){const g=document.getElementById("actGrid");g.innerHTML="";ACTIVITIES.filter(a=>libFilter==="all"||a.cat===libFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(selected.has(a.id)?" sel":"");d.onclick=()=>{selected.has(a.id)?selected.delete(a.id):selected.add(a.id);renderActs();renderSelBar();};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${selected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
+function renderActs(){const g=document.getElementById("actGrid");g.innerHTML="";ACTIVITIES.filter(a=>libFilter==="all"||a.cat===libFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(selected.has(a.id)?" sel":"");d.onclick=()=>{if(!selected.has(a.id)){selected.add(a.id);renderActs();renderSelBar();}};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${selected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
 function renderSelBar(){const bar=document.getElementById("selBar");if(selected.size===0){bar.innerHTML="<span>No activities selected yet.</span>";return;}const order=["starter","collaborative","formative","plenary"];const items=[...selected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));bar.innerHTML="<span>Selected ("+items.length+"):</span>"+items.map(a=>`<span class="chip">${a.name}<b onclick="event.stopPropagation();selected.delete('${a.id}');renderActs();renderSelBar();">✕</b></span>`).join("");}
 renderLibTabs();renderActs();renderSelBar();
 
@@ -1462,7 +1467,7 @@ function showConvertActivityPicker(){
 }
 let convLibFilter="all",convSelected=new Set();
 function renderConvLibTabs(){const w=document.getElementById("convLibTabs");w.innerHTML="";LIB_CATS.forEach(c=>{const b=document.createElement("button");b.className="lib-tab"+(convLibFilter===c.id?" active":"");b.textContent=c.label;b.onclick=()=>{convLibFilter=c.id;renderConvLibTabs();renderConvActs();};w.appendChild(b);});}
-function renderConvActs(){const g=document.getElementById("convActGrid");g.innerHTML="";ACTIVITIES.filter(a=>convLibFilter==="all"||a.cat===convLibFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(convSelected.has(a.id)?" sel":"");d.onclick=()=>{convSelected.has(a.id)?convSelected.delete(a.id):convSelected.add(a.id);renderConvActs();renderConvSelBar();};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${convSelected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
+function renderConvActs(){const g=document.getElementById("convActGrid");g.innerHTML="";ACTIVITIES.filter(a=>convLibFilter==="all"||a.cat===convLibFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(convSelected.has(a.id)?" sel":"");d.onclick=()=>{if(!convSelected.has(a.id)){convSelected.add(a.id);renderConvActs();renderConvSelBar();}};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${convSelected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
 function renderConvSelBar(){const bar=document.getElementById("convSelBar");if(convSelected.size===0){bar.innerHTML="<span>No activities selected yet.</span>";return;}const order=["starter","collaborative","formative","plenary"];const items=[...convSelected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));bar.innerHTML="<span>Selected ("+items.length+"):</span>"+items.map(a=>`<span class="chip">${a.name}<b onclick="event.stopPropagation();convSelected.delete('${a.id}');renderConvActs();renderConvSelBar();">✕</b></span>`).join("");}
 function runConvert(segs){
   const cs=document.getElementById("convStatus");
@@ -1499,26 +1504,32 @@ powDrop.onclick=()=>powInput.click();
 ["dragleave","drop"].forEach(e=>powDrop.addEventListener(e,ev=>{ev.preventDefault();powDrop.classList.remove("over");}));
 powDrop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handlePow(ev.dataTransfer.files[0]);});
 powInput.onchange=e=>{if(e.target.files.length)handlePow(e.target.files[0]);};
-function clearPow(){powText="";powInput.value="";document.getElementById("powMeta").classList.remove("show");document.getElementById("powBtn").disabled=true;document.getElementById("powList").classList.add("hide");document.getElementById("powStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
+function clearPow(){powText="";powInput.value="";document.getElementById("powMeta").classList.remove("show");document.getElementById("powBtn").disabled=true;document.getElementById("powList").classList.add("hide");document.getElementById("powStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";powSelected.clear();}
 async function handlePow(file){const ps=document.getElementById("powStatus");document.getElementById("pmName").textContent=file.name;document.getElementById("pmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("powMeta").classList.add("show");ps.className="status";ps.textContent="Reading…";try{powText=await readPDFtext(file);if(powText.trim().length<20)throw new Error("No readable text in PDF.");ps.className="status ok";ps.textContent="Read. Click 'Read syllabus' to list chapters.";document.getElementById("powBtn").disabled=false;}catch(e){ps.className="status err";ps.textContent="Error: "+e.message;document.getElementById("powBtn").disabled=true;}}
-const SCHOOL_RESOURCES=["Whiteboard","Notebook","Textbook","PPT/Projector","Smart Board/Interactive Panel","Computer Lab","Worksheet/Handout","Chart paper","Stationery (pens, sticky notes)","Library","Lab equipment","Audio/Video clip","Internet access","Printed cards/flashcards"];
+const SCHOOL_RESOURCES=[];  // retained for legacy compat, no longer shown
 function readPow(){const ps=document.getElementById("powStatus");const segs=powText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(Boolean);const cands=segs.filter(s=>/(chapter|unit|lesson|week|ch\.?\s*\d|topic)\b/i.test(s)&&s.length<140);powChaptersData=[...new Set((cands.length?cands:segs.slice(0,15)).map(s=>s.replace(/^[\-•\d.\s]+/,"").trim()).filter(s=>s.length>3))].slice(0,30);const box=document.getElementById("powChapters");if(powChaptersData.length===0){ps.className="status err";ps.textContent="Couldn't detect chapters — the PDF may be image-only.";return;}
-  box.innerHTML=powChaptersData.map((c,i)=>`
-    <div class="qtype-row" style="flex-direction:column;align-items:stretch;gap:8px">
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <label style="flex:1">${esc(c)}</label>
-        <span style="color:var(--muted);font-size:.76rem">No. of lesson plans</span>
-        <input id="plp_${i}" type="number" min="1" max="10" value="3" style="width:56px">
-        <button class="btn btn-ghost btn-sm" onclick="powChapterToLessons(${i})">→ Generate lesson plans</button>
-      </div>
-      <div>
-        <span style="color:var(--muted);font-size:.76rem;display:block;margin-bottom:4px">Resources available for this topic (select what you'll use — leave blank to use each activity's default):</span>
-        <select id="pres_${i}" multiple size="3" style="width:100%;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:.82rem">
-          ${SCHOOL_RESOURCES.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join("")}
-        </select>
-      </div>
-    </div>`).join("");
-  document.getElementById("powList").classList.remove("hide");ps.className="status ok";ps.textContent="Found "+powChaptersData.length+" chapters/units.";}
+  box.innerHTML=`
+    <div style="margin-bottom:14px">
+      ${powChaptersData.map((c,i)=>`
+        <div class="qtype-row" style="align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+          <span style="color:var(--muted);font-size:.78rem;white-space:nowrap">${i+1}.</span>
+          <input id="pch_${i}" value="${esc(c)}" style="flex:1;min-width:220px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:.88rem" placeholder="Chapter / topic name">
+          <span style="color:var(--muted);font-size:.76rem;white-space:nowrap">No. of lesson plans</span>
+          <input id="plp_${i}" type="number" min="1" max="10" value="3" style="width:56px">
+          <button class="btn btn-ghost btn-sm" onclick="powChapterToLessons(${i})">→ Generate lesson plans</button>
+        </div>`).join("")}
+    </div>
+    <div class="section-h" style="margin-top:6px"><div class="bar"></div><h3>Choose activities for lesson plans</h3><span class="hint">Click each activity once to select — stays selected. Remove from chip bar.</span></div>
+    <div class="lib-tabs" id="powLibTabs"></div>
+    <div class="acts" id="powActGrid"></div>
+    <div class="selbar" id="powSelBar"></div>`;
+  renderPowLibTabs();renderPowActs();renderPowSelBar();
+  document.getElementById("powList").classList.remove("hide");ps.className="status ok";ps.textContent="Found "+powChaptersData.length+" chapters/units. Edit names if needed, then pick activities and set how many lesson plans per topic.";}
+
+let powLibFilter="all",powSelected=new Set();
+function renderPowLibTabs(){const w=document.getElementById("powLibTabs");if(!w)return;w.innerHTML="";LIB_CATS.forEach(c=>{const b=document.createElement("button");b.className="lib-tab"+(powLibFilter===c.id?" active":"");b.textContent=c.label;b.onclick=()=>{powLibFilter=c.id;renderPowLibTabs();renderPowActs();};w.appendChild(b);});}
+function renderPowActs(){const g=document.getElementById("powActGrid");if(!g)return;g.innerHTML="";ACTIVITIES.filter(a=>powLibFilter==="all"||a.cat===powLibFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(powSelected.has(a.id)?" sel":"");d.onclick=()=>{if(!powSelected.has(a.id)){powSelected.add(a.id);renderPowActs();renderPowSelBar();}};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${powSelected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
+function renderPowSelBar(){const bar=document.getElementById("powSelBar");if(!bar)return;if(powSelected.size===0){bar.innerHTML="<span>No activities selected yet.</span>";return;}const order=["starter","collaborative","formative","plenary"];const items=[...powSelected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));bar.innerHTML="<span>Selected ("+items.length+"):</span>"+items.map(a=>`<span class="chip">${a.name}<b onclick="event.stopPropagation();powSelected.delete('${a.id}');renderPowActs();renderPowSelBar();">✕</b></span>`).join("");}
 /* Split a topic into N coherent lesson-plan session foci. AI proposes a session-by-session
    breakdown when available; otherwise objectives are divided evenly across sessions. */
 async function planSessions(chapter,grade,subject,count,objs){
@@ -1553,27 +1564,39 @@ function pickSessionActivities(sessionIndex,usedIds){
 /* Generate the teacher's chosen number of full lesson plans for one POW chapter,
    using real activities from the school's Goody Bag library — not a stub row. */
 async function powChapterToLessons(i){
-  const chapter=powChaptersData[i],grade=val("p_grade"),subject=val("p_subject"),ps=document.getElementById("powStatus");
+  const chInput=document.getElementById("pch_"+i);
+  const chapter=(chInput?chInput.value.trim():"")||powChaptersData[i];
+  const grade=val("p_grade"),subject=val("p_subject"),ps=document.getElementById("powStatus");
+  const teacher=val("p_teacher")||"",date=fmtDate(val("p_date")||""),dur=val("p_dur")||"40 min";
   const count=Math.max(1,Math.min(10,parseInt(val("plp_"+i))||3));
   if(!grade||!subject){ps.className="status err";ps.textContent="Select grade and subject first.";return;}
-  const resSel=document.getElementById("pres_"+i);
-  const chosenResources=resSel?[...resSel.selectedOptions].map(o=>o.value):[];
   ps.className="status";ps.textContent="Planning "+count+" lesson plan(s) for: "+chapter+" …";
   let baseObjs;
   try{baseObjs=parseJSON(await callAI(`Write 6-8 measurable CBSE learning objectives for the ${grade} ${subject} chapter "${chapter}", spanning Bloom levels, grounded in ${sourceHint(subject)}. Return ONLY a JSON array of strings.`,800));}
   catch(e){baseObjs=autoObjectives(chapter);}
 
   const sessions=await planSessions(chapter,grade,subject,count,baseObjs);
+  // Use the teacher's selected activities from the POW Goody Bag picker,
+  // falling back to the auto-rotation if none were picked.
   const usedIds=new Set();
-  const dur="40 min";
   const plans=[];
   for(let s=0;s<sessions.length;s++){
     ps.textContent="Building lesson plan "+(s+1)+" of "+count+" for "+chapter+" …";
-    const acts=pickSessionActivities(s,usedIds);
+    let acts;
+    if(powSelected.size>0){
+      // Use chosen activities in sequence (cycling through the selection)
+      const order=["starter","collaborative","formative","plenary"];
+      const selList=[...powSelected].map(id=>ACTIVITIES.find(a=>a.id===id)).filter(Boolean).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));
+      // For each session use a window of activities starting from offset s, so sessions vary
+      const start=(s*2)%selList.length;
+      acts=[...selList.slice(start),...selList.slice(0,start)].slice(0,4);
+    }else{
+      acts=pickSessionActivities(s,usedIds);
+    }
     const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
-    const rows=acts.map((a,k)=>({time:times[k]+" min",act:a,name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,chapter),learner:a.learner.replace(/\btopic\b/g,chapter),fa:a.assessment,res:chosenResources.length?chosenResources.join(", "):a.resources,pedagogy:pedagogyFor(a.cat)}));
+    const rows=acts.map((a,k)=>({time:times[k]+" min",act:a,name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,chapter),learner:a.learner.replace(/\btopic\b/g,chapter),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
     plans.push({
-      meta:{teacher:"",grade,subject,topic:"",date:"",dur},
+      meta:{teacher,grade,subject,topic:"",date,dur},
       aim:sessions[s].focus||autoAim(chapter,subject),
       objs:sessions[s].objectives&&sessions[s].objectives.length?sessions[s].objectives:baseObjs.slice(0,3),
       rows,
