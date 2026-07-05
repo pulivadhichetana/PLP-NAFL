@@ -186,19 +186,36 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
   <div id="settingsBar" class="hide">
     <div class="wrap" style="padding:0 22px 16px">
       <div class="settings-card">
-        <div style="font-weight:600;margin-bottom:6px">AI content generation — choose a provider and paste your key</div>
-        <p style="margin:0 0 10px;font-size:.82rem;color:#c4d2e8">Your key is stored only on this device (never uploaded or committed to the site). Each teacher uses their own key.</p>
-        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-          <label style="display:flex;gap:6px;align-items:center;font-size:.85rem;cursor:pointer"><input type="radio" name="prov" value="gemini" checked onchange="onProvChange()"> <b>Google Gemini</b> — <span style="color:#9fd9a8">free tier</span></label>
-          <label style="display:flex;gap:6px;align-items:center;font-size:.85rem;cursor:pointer;margin-left:14px"><input type="radio" name="prov" value="openai" onchange="onProvChange()"> OpenAI / ChatGPT — paid</label>
+        <div style="font-weight:600;margin-bottom:6px">AI content generation</div>
+        <p style="margin:0 0 10px;font-size:.82rem;color:#c4d2e8">Only needed for the AI buttons (Fetch AI content, mini-lecture, PPT→Word). Everything else in this app works with no AI at all.</p>
+        <div id="schoolAiRow" style="display:none;background:rgba(159,217,168,.12);border:1px solid rgba(159,217,168,.4);border-radius:10px;padding:12px;margin-bottom:12px">
+          <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer">
+            <input type="radio" name="prov" value="school" onchange="onProvChange()" style="margin-top:3px">
+            <span><b>✓ School AI</b> — <span style="color:#9fd9a8">already set up, nothing to do</span><br>
+            <span style="font-size:.78rem;color:#c4d2e8">Your tech coordinator has switched this on for the whole school. Just pick this and press Save — no login, no key, no account needed.</span></span>
+          </label>
         </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-          <input id="set_key" type="password" placeholder="Paste your API key" style="flex:1;min-width:240px;padding:9px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff">
-          <select id="set_model" style="padding:9px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.3);background:#1d3358;color:#fff"></select>
-          <button class="btn btn-gold btn-sm" onclick="saveSettings()">Save key</button>
+        <details style="margin-bottom:4px">
+          <summary style="cursor:pointer;font-size:.85rem;color:#c4d2e8">I want to use my own Google or OpenAI account instead ▾</summary>
+          <div style="margin-top:10px">
+            <p style="margin:0 0 10px;font-size:.8rem;color:#c4d2e8">There's no "log in with Google/ChatGPT" button here — Google and OpenAI don't allow that for outside apps. You create a free key yourself, once, and paste it below. It's stored only on this device, never uploaded anywhere.</p>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <label style="display:flex;gap:6px;align-items:center;font-size:.85rem;cursor:pointer"><input type="radio" name="prov" value="gemini" onchange="onProvChange()"> <b>Google Gemini</b> — <span style="color:#9fd9a8">free tier</span></label>
+              <label style="display:flex;gap:6px;align-items:center;font-size:.85rem;cursor:pointer;margin-left:14px"><input type="radio" name="prov" value="openai" onchange="onProvChange()"> OpenAI / ChatGPT — paid</label>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <input id="set_key" type="password" placeholder="Paste your API key" style="flex:1;min-width:240px;padding:9px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff">
+              <label style="display:flex;gap:5px;align-items:center;font-size:.78rem;color:#c4d2e8;cursor:pointer"><input type="checkbox" onchange="document.getElementById('set_key').type=this.checked?'text':'password'"> show</label>
+              <select id="set_model" style="padding:9px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.3);background:#1d3358;color:#fff"></select>
+            </div>
+            <p style="margin:6px 0 0;font-size:.76rem;color:#dba55a">⚠ On a shared/public computer, press Save key → Clear key when you're done, so the next person can't reuse yours.</p>
+            <ol id="set_help" style="margin:10px 0 0;padding-left:18px;font-size:.8rem;color:#c4d2e8;line-height:1.6"></ol>
+          </div>
+        </details>
+        <div style="display:flex;gap:10px;align-items:center;margin-top:12px">
+          <button class="btn btn-gold btn-sm" onclick="saveSettings()">Save</button>
           <span id="set_status" style="font-size:.82rem;color:#dcc89a"></span>
         </div>
-        <p id="set_help" style="margin:10px 0 0;font-size:.76rem;color:#9fb0cb"></p>
       </div>
     </div>
   </div>
@@ -209,14 +226,15 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
     <div style="font-size:1.5rem">🤖</div>
     <div style="flex:1;min-width:220px">
       <div style="font-weight:700;color:var(--ink)">Turn on AI for real, topic-specific content</div>
-      <div style="font-size:.85rem;color:var(--muted)">This tool writes lesson content and objectives for <i>your exact topic</i>. Switch on AI with a <b>free Google Gemini key</b> (1 minute, needs a Google account) or an OpenAI key. Without a key you get editable templates only.</div>
+      <div style="font-size:.85rem;color:var(--muted)">This tool writes lesson content and objectives for <i>your exact topic</i>. Ask your tech coordinator if <b>School AI</b> is already switched on for everyone (no login needed) — or set up your own free key in under a minute. Without AI you still get full editable templates.</div>
     </div>
     <button class="btn btn-gold btn-sm" onclick="toggleSettings()">⚙ Turn on AI (free)</button>
     <b style="cursor:pointer;color:var(--muted);font-size:.8rem" onclick="document.getElementById('aiBanner').style.display='none'">dismiss</b>
   </div>
-  <div class="modes" style="grid-template-columns:repeat(3,1fr)">
+  <div class="modes" style="grid-template-columns:repeat(4,1fr)">
     <div class="mode-btn active" id="m1" onclick="setMode('build')"><div class="ic">＋</div><div><h3>Build lesson plan</h3><p>Topic + activities → formatted plan.</p></div></div>
     <div class="mode-btn" id="m2" onclick="setMode('convert')"><div class="ic">↑</div><div><h3>Convert a file</h3><p>PPT / PDF / Word → school format.</p></div></div>
+    <div class="mode-btn" id="m3" onclick="setMode('pptai')"><div class="ic">🤖</div><div><h3>PPT → Word (AI)</h3><p>AI reads your PPT and writes the plan — no activity picker needed.</p></div></div>
     <div class="mode-btn" id="m4" onclick="setMode('pow')"><div class="ic">▦</div><div><h3>Plan of Work</h3><p>Upload syllabus → objectives.</p></div></div>
   </div>
 
@@ -227,12 +245,23 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
       <div class="field"><label>Teacher</label><input id="f_teacher" placeholder="Ms / Mr …"></div>
       <div class="field"><label>Class / Grade</label><select id="f_grade"><option value="">Select grade</option></select></div>
       <div class="field"><label>Subject</label><select id="f_subject"><option value="">Select subject</option></select></div>
-      <div class="field"><label>Content / Unit / Chapter</label><input id="f_topic" placeholder="e.g. Light – Reflection, Fractions"></div>
+      <div class="field"><label>Content / Unit / Chapter</label><input id="f_topic" placeholder="e.g. Light – Reflection, Fractions">
+        <div style="margin-top:7px"><button class="btn btn-ghost btn-sm" onclick="aiFetchContent()">✨ Fetch AI content (CBSE/NCERT)</button> <span class="status" id="aiContentStatus"></span></div>
+        <div style="margin-top:8px;font-size:.78rem;color:var(--muted)">
+          📎 Optional — upload the actual NCERT/textbook page (PDF) for this topic, so AI quotes real content instead of general knowledge:
+          <input type="file" id="f_refFile" accept=".pdf" onchange="handleRefFile(this.files[0])" style="font-size:.78rem">
+          <div id="refStatus" class="status"></div>
+        </div></div>
       <div class="field"><label>Date</label><input id="f_date" type="date"></div>
       <div class="field"><label>Lesson duration</label><select id="f_dur"><option>30 min</option><option>35 min</option><option selected>40 min</option><option>45 min</option><option>60 min</option><option>80 min</option></select></div>
       <div class="field full"><label>Aim (optional — auto-written if blank)</label><input id="f_aim" placeholder="One sentence describing the overall purpose"></div>
       <div class="field full"><label>Learning objectives (optional, one per line)</label><textarea id="f_obj" placeholder="describe …&#10;explain …&#10;apply …"></textarea>
         <div style="margin-top:7px"><button class="btn btn-ghost btn-sm" onclick="aiObjectives()">✨ Suggest objectives with AI</button> <span class="status" id="aiObjStatus"></span></div></div>
+      <div class="field full hide" id="keyConceptsBox" style="background:var(--panel-2,#f7f5f0);border:1px solid var(--border,#e4ddd0);border-radius:10px;padding:12px 14px">
+        <div style="font-weight:600;font-size:.85rem;margin-bottom:4px">Key concepts (from AI, grounded in NCERT/CBSE)</div>
+        <ul id="keyConceptsList" style="margin:0 0 6px 18px;padding:0;font-size:.85rem;line-height:1.5"></ul>
+        <div id="ncertRefLine" style="font-size:.8rem;color:var(--muted)"></div>
+      </div>
     </div>
     <div class="section-h"><div class="bar"></div><h3>Choose activities</h3><span class="hint">From the school's Goody Bag resources</span></div>
     <div class="lib-tabs" id="libTabs"></div>
@@ -240,8 +269,7 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
     <div class="selbar" id="selBar"></div>
     <div class="note">A balanced plan usually has one <b>Starter</b>, one or two <b>Collaborative / Formative</b> main activities, and one <b>Plenary</b>.</div>
     <div class="section-h"><div class="bar"></div><h3>Teacher mini-lecture</h3><span class="hint">Talking points for the teacher on this topic</span></div>
-    <label class="ml-toggle"><input type="checkbox" id="f_content" checked> Generate <b>real activity content from my objectives</b> (actual questions, prompts &amp; examples for this topic — needs AI).</label>
-    <label class="ml-toggle" style="margin-top:8px"><input type="checkbox" id="f_minilec" checked> Include a <b>Teacher Mini-Lecture</b> (subject-knowledge script + questioning prompts). Adds a substantial talking-points section to the plan.</label>
+    <label class="ml-toggle"><input type="checkbox" id="f_content" checked> Generate <b>real activity content from my objectives</b> — mini-lecture-quality explanations, worked examples, and 2-4 follow-up questions embedded in each row of the table (starter, main/collaborative, plenary — needs AI).</label>
     <div class="note" id="mlNote">When generating, the tool drafts the mini-lecture with AI for your exact topic (needs internet). If AI is unavailable, a structured template is added that the teacher can complete.</div>
     <div class="actions"><button class="btn btn-primary" onclick="buildPlan()">Generate lesson plan</button><button class="btn btn-ghost" onclick="resetBuild()">Clear</button><span class="status" id="buildStatus"></span></div>
   </div>
@@ -262,6 +290,23 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
     <div class="note">Keeps the file's activities &amp; sequence, splits content into timed rows, and adds Formative Assessment + Resources columns. Long decks auto-split into multiple lesson plans. If no named activities are found, you'll be offered the same activity library used in Build.</div>
     <div id="convActPicker" class="hide" style="margin-top:14px"></div>
     <div class="actions"><button class="btn btn-primary" id="convBtn" onclick="convertFile()" disabled>Convert to lesson plan</button><button class="btn btn-ghost" onclick="clearFile()">Clear</button><span class="status" id="convStatus"></span></div>
+  </div>
+
+  <!-- PPT -> WORD (AI, module 4) -->
+  <div class="panel hide" id="pptAiPanel">
+    <h2 class="serif">PPT → Word, AI-generated</h2><p class="sub">Upload a PowerPoint. AI reads and analyses the slide content and writes it straight into the school's Word lesson-plan format — no activities or resources need to be picked.</p>
+    <div class="drop" id="pwDrop"><div class="big">🤖</div><h3>Drop a .pptx or click to browse</h3><p>.pptx only — AI does the analysis</p><input type="file" id="pwFileInput" class="hide" accept=".pptx"></div>
+    <div class="filemeta" id="pwFileMeta"><span id="pwFmName"></span><span id="pwFmSize" style="color:var(--muted)"></span><b style="margin-left:auto;cursor:pointer;color:var(--warn)" onclick="clearPwFile()">remove</b></div>
+    <div class="grid" style="margin-top:18px">
+      <div class="field"><label>Teacher</label><input id="pw_teacher" placeholder="Ms / Mr …"></div>
+      <div class="field"><label>Class / Grade</label><select id="pw_grade"><option value="">Select grade</option></select></div>
+      <div class="field"><label>Subject</label><select id="pw_subject"><option value="">Select subject</option></select></div>
+      <div class="field"><label>Content / Unit / Chapter</label><input id="pw_topic" placeholder="auto-detected if blank"></div>
+      <div class="field"><label>Date</label><input id="pw_date" type="date"></div>
+      <div class="field"><label>Lesson duration</label><select id="pw_dur"><option>30 min</option><option>35 min</option><option selected>40 min</option><option>45 min</option><option>60 min</option><option>80 min</option></select></div>
+    </div>
+    <div class="note">This module requires an AI key (⚙ AI Settings). The AI reads every slide, decides how to break the deck into timed teacher/learner steps, and writes Formative Assessment + Resources itself — it does not draw on the Goody Bag activity library, so nothing needs to be selected first.</div>
+    <div class="actions"><button class="btn btn-primary" id="pwBtn" onclick="convertPptWithAI()" disabled>🤖 Convert with AI</button><button class="btn btn-ghost" onclick="clearPwFile()">Clear</button><span class="status" id="pwStatus"></span></div>
   </div>
 
   <!-- POW -->
@@ -305,7 +350,7 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
     <div id="previewBody"></div>
   </div>
 
-  <footer><span class="seal">National Academy for Learning</span> · PLP-NAFL-SPARK Portal · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF, no internet required.<br><span style="opacity:.6">build 2026-06-26.3 — if this date looks old after updating the file, hard-refresh (Ctrl/Cmd+Shift+R)</span></footer>
+  <footer><span class="seal">National Academy for Learning</span> · PLP-NAFL-SPARK Portal · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF · Build/Convert/Plan of Work work without AI; PPT→Word (AI) always needs internet + a key.<br><span style="opacity:.6">build 2026-07-05.1 — if this date looks old after updating the file, hard-refresh (Ctrl/Cmd+Shift+R)</span></footer>
 </div>
 
 <script>
@@ -660,7 +705,7 @@ function showDownloadFallback(dlUrl,viewUrl,filename,blob,diag){
   tip.style.cssText="margin-top:8px;font-size:.78rem;color:var(--muted)";
   tip.innerHTML="On a phone or if download is blocked, tap <b>Open</b> then use your browser's <b>Save</b> / <b>Print → Save as PDF</b>. &nbsp;<span style='cursor:pointer;text-decoration:underline' onclick=\"this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'\">diagnostics</span><span style='display:none;color:#999'> — "+diag+"</span>";
   box.appendChild(tip);
-  box.scrollIntoView({behavior:"smooth",block:"nearest"});
+  try{box.scrollIntoView({behavior:"smooth",block:"nearest"});}catch(e){}
 }
 
 /* ============================================================
@@ -1029,9 +1074,9 @@ let lastOut=null,uploadedText="",powText="",powChaptersData=[],uploadedDocxStruc
 
 /* ===================== init ===================== */
 function fillSelect(id,arr){const s=document.getElementById(id);if(!s)return;arr.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;s.appendChild(o);});}
-["f_grade","c_grade","p_grade"].forEach(id=>fillSelect(id,GRADES));
-["f_subject","c_subject","p_subject"].forEach(id=>fillSelect(id,SUBJECTS));
-["f_date","c_date"].forEach(id=>{const e=document.getElementById(id);if(e)e.valueAsDate=new Date();});
+["f_grade","c_grade","p_grade","pw_grade"].forEach(id=>fillSelect(id,GRADES));
+["f_subject","c_subject","p_subject","pw_subject"].forEach(id=>fillSelect(id,SUBJECTS));
+["f_date","c_date","pw_date"].forEach(id=>{const e=document.getElementById(id);if(e)e.valueAsDate=new Date();});
 
 function renderLibTabs(){const w=document.getElementById("libTabs");w.innerHTML="";LIB_CATS.forEach(c=>{const b=document.createElement("button");b.className="lib-tab"+(libFilter===c.id?" active":"");b.textContent=c.label;b.onclick=()=>{libFilter=c.id;renderLibTabs();renderActs();};w.appendChild(b);});}
 function renderActs(){const g=document.getElementById("actGrid");g.innerHTML="";ACTIVITIES.filter(a=>libFilter==="all"||a.cat===libFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(selected.has(a.id)?" sel":"");d.onclick=()=>{if(!selected.has(a.id)){selected.add(a.id);renderActs();renderSelBar();}};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${selected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
@@ -1039,7 +1084,7 @@ function renderSelBar(){const bar=document.getElementById("selBar");if(selected.
 renderLibTabs();renderActs();renderSelBar();
 
 /* ===================== mode switch ===================== */
-function setMode(m){mode=m;[["m1","build","buildPanel"],["m2","convert","convertPanel"],["m4","pow","powPanel"]].forEach(([btn,name,panel])=>{document.getElementById(btn).classList.toggle("active",m===name);document.getElementById(panel).classList.toggle("hide",m!==name);});document.getElementById("previewWrap").style.display="none";}
+function setMode(m){mode=m;[["m1","build","buildPanel"],["m2","convert","convertPanel"],["m3","pptai","pptAiPanel"],["m4","pow","powPanel"]].forEach(([btn,name,panel])=>{document.getElementById(btn).classList.toggle("active",m===name);document.getElementById(panel).classList.toggle("hide",m!==name);});document.getElementById("previewWrap").style.display="none";}
 
 /* ===================== helpers ===================== */
 function val(id){const e=document.getElementById(id);return e?(e.value||"").trim():"";}
@@ -1052,36 +1097,60 @@ function distribute(total,n,weights){const mins=parseInt(total)||40;weights=weig
 
 /* ===================== AI (in-artifact Claude API) ===================== */
 /* ---------- AI providers: Google Gemini (free tier) or OpenAI — teacher's own key ---------- */
-let AI_PROVIDER="gemini";    // 'gemini' (free tier) or 'openai'
+/* ---------- SCHOOL-WIDE AI (recommended for non-technical staff) ----------
+   If your tech coordinator has deployed the companion Google Apps Script proxy (see Code.gs),
+   paste its Web App URL below. Once set, EVERY teacher gets AI features with zero setup —
+   no login, no key, nothing to paste. Leave blank to disable this option. */
+const SCHOOL_PROXY_URL="";  // e.g. "https://script.google.com/macros/s/AKfycb.../exec"
+const SCHOOL_PASSPHRASE="";  // must match APP_PASSPHRASE in the Apps Script's Script Properties (optional but recommended)
+let AI_PROVIDER=SCHOOL_PROXY_URL?"school":"gemini";    // 'school' (no key needed), 'gemini' (free tier, own key), or 'openai'
 let OPENAI_KEY="";           // set via Settings; kept only on this device
 let OPENAI_MODEL="gpt-4o-mini";
 let GEMINI_KEY="";
 let GEMINI_MODEL="gemini-2.0-flash";
-function hasAI(){return (AI_PROVIDER==="gemini"&&GEMINI_KEY)||(AI_PROVIDER==="openai"&&OPENAI_KEY);}
+function hasAI(){return (AI_PROVIDER==="school"&&!!SCHOOL_PROXY_URL)||(AI_PROVIDER==="gemini"&&GEMINI_KEY)||(AI_PROVIDER==="openai"&&OPENAI_KEY);}
 async function callAI(prompt,maxTokens){
-  // Google Gemini — has a genuinely free tier
-  if(AI_PROVIDER==="gemini" && GEMINI_KEY){
-    const url="https://generativelanguage.googleapis.com/v1beta/models/"+GEMINI_MODEL+":generateContent?key="+encodeURIComponent(GEMINI_KEY);
-    const res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.5,maxOutputTokens:maxTokens||1400}})});
-    if(!res.ok){let msg="";try{msg=(await res.json()).error?.message||"";}catch(e){}throw new Error("Gemini error "+res.status+(msg?": "+msg:""));}
-    const data=await res.json();
-    const txt=(data.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("").trim();
-    if(!txt)throw new Error("Gemini returned no text (check the key/model).");
-    return txt;
+  if(!hasAI())throw new Error("AI isn't set up yet. Ask your tech coordinator, or add a free Google Gemini key in ⚙ AI Settings.");
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),45000);
+  try{
+    // School-wide AI — zero setup for teachers, calls the school's own Apps Script proxy
+    if(AI_PROVIDER==="school" && SCHOOL_PROXY_URL){
+      const res=await fetch(SCHOOL_PROXY_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+        body:JSON.stringify({prompt,maxTokens:maxTokens||1400,passphrase:SCHOOL_PASSPHRASE}),signal:controller.signal});
+      if(!res.ok)throw new Error("School AI proxy error "+res.status+" — ask your tech coordinator to check the Apps Script deployment.");
+      const data=await res.json();
+      if(!data.ok)throw new Error(data.error||"School AI proxy returned an error.");
+      if(!data.text)throw new Error("School AI returned no text.");
+      return data.text;
+    }
+    // Google Gemini — has a genuinely free tier
+    if(AI_PROVIDER==="gemini" && GEMINI_KEY){
+      const url="https://generativelanguage.googleapis.com/v1beta/models/"+GEMINI_MODEL+":generateContent?key="+encodeURIComponent(GEMINI_KEY);
+      const res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.5,maxOutputTokens:maxTokens||1400}}),signal:controller.signal});
+      if(!res.ok){let msg="";try{msg=(await res.json()).error?.message||"";}catch(e){}throw new Error("Gemini error "+res.status+(msg?": "+msg:""));}
+      const data=await res.json();
+      const txt=(data.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("").trim();
+      if(!txt)throw new Error("Gemini returned no text (check the key/model).");
+      return txt;
+    }
+    // OpenAI — teacher's own key (paid usage)
+    if(AI_PROVIDER==="openai" && OPENAI_KEY){
+      const res=await fetch("https://api.openai.com/v1/chat/completions",{
+        method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+OPENAI_KEY},
+        body:JSON.stringify({model:OPENAI_MODEL,messages:[{role:"user",content:prompt}],max_tokens:maxTokens||1400,temperature:0.5}),signal:controller.signal});
+      if(!res.ok){let msg="";try{msg=(await res.json()).error?.message||"";}catch(e){}throw new Error("OpenAI error "+res.status+(msg?": "+msg:""));}
+      const data=await res.json();return (data.choices?.[0]?.message?.content||"").trim();
+    }
+    throw new Error("AI isn't set up yet. Ask your tech coordinator, or add a free Google Gemini key in ⚙ AI Settings.");
+  }catch(err){
+    if(err.name==="AbortError")throw new Error("Request timed out after 45s — check your internet connection and try again.");
+    if(err instanceof TypeError)throw new Error("Couldn't reach "+(AI_PROVIDER==="school"?"the school AI":AI_PROVIDER==="gemini"?"Gemini":"OpenAI")+" — check your internet connection."+(AI_PROVIDER==="openai"?" Some networks/accounts block direct browser calls to OpenAI; Gemini is the more reliable option for this portal.":""));
+    throw err;
+  }finally{
+    clearTimeout(timer);
   }
-  // OpenAI — works from any site with the teacher's key (paid usage)
-  if(AI_PROVIDER==="openai" && OPENAI_KEY){
-    const res=await fetch("https://api.openai.com/v1/chat/completions",{
-      method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+OPENAI_KEY},
-      body:JSON.stringify({model:OPENAI_MODEL,messages:[{role:"user",content:prompt}],max_tokens:maxTokens||1400,temperature:0.5})});
-    if(!res.ok){let msg="";try{msg=(await res.json()).error?.message||"";}catch(e){}throw new Error("OpenAI error "+res.status+(msg?": "+msg:""));}
-    const data=await res.json();return (data.choices?.[0]?.message?.content||"").trim();
-  }
-  // Last resort: Claude (only works inside the Claude.ai artifact runtime; blocked from plain sites)
-  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:maxTokens||1400,messages:[{role:"user",content:prompt}]})});
-  if(!res.ok)throw new Error("No AI key set. Add a free Google Gemini key (or OpenAI key) in ⚙ AI Settings.");
-  const data=await res.json();return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();
 }
 function parseJSON(t){
   let s=t.replace(/```json|```/g,"").trim();
@@ -1096,22 +1165,32 @@ const MODELS={
   openai:[["gpt-4o-mini","gpt-4o-mini (low cost)"],["gpt-4o","gpt-4o (higher quality)"]]
 };
 const HELP={
-  gemini:'Free key: go to <b>aistudio.google.com/apikey</b> → Create API key (needs a Google account). Free tier is enough for classroom use.',
-  openai:'Key: <b>platform.openai.com</b> → API keys. OpenAI charges per use (a ChatGPT subscription is separate and will not work here).'
+  gemini:['Go to <b>aistudio.google.com/apikey</b> in a new tab (sign in with any Google account).','Click <b>Create API key</b> — it appears instantly, free, no card needed.','Copy it and paste it in the box above, then press <b>Save</b>.'],
+  openai:['Go to <b>platform.openai.com</b> → API keys (a ChatGPT subscription is separate and won\'t work here).','Click <b>Create new secret key</b> and copy it — OpenAI only shows it once.','Paste it in the box above, then press <b>Save</b>. Usage is billed to your OpenAI account.']
 };
 function onProvChange(){
-  const prov=document.querySelector('input[name="prov"]:checked').value;
+  const checked=document.querySelector('input[name="prov"]:checked');
+  const prov=checked?checked.value:"gemini";
+  if(prov==="school"){document.getElementById("set_help").innerHTML="";return;}
   const sel=document.getElementById("set_model");sel.innerHTML="";
   MODELS[prov].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;sel.appendChild(o);});
-  document.getElementById("set_help").innerHTML=HELP[prov];
+  document.getElementById("set_help").innerHTML=HELP[prov].map(s=>"<li>"+s+"</li>").join("");
   document.getElementById("set_key").placeholder=prov==="gemini"?"Paste your Google Gemini API key":"Paste your OpenAI key (sk-…)";
 }
 function saveSettings(){
-  const prov=document.querySelector('input[name="prov"]:checked').value;
+  const checked=document.querySelector('input[name="prov"]:checked');
+  const prov=checked?checked.value:"gemini";
+  const st=document.getElementById("set_status"),pill=document.getElementById("aiPill"),banner=document.getElementById("aiBanner");
+  AI_PROVIDER=prov;
+  if(prov==="school"){
+    st.textContent="✓ Saved. AI is ON — using the school's shared AI, nothing else needed.";pill.classList.add("aiPill-on");pill.textContent="⚙ AI: ON";
+    if(banner)banner.style.display="none";
+    try{localStorage.setItem("nafl_ai_provider","school");localStorage.removeItem("nafl_ai_key");}catch(e){}
+    setTimeout(()=>toggleSettings(),1000);
+    return;
+  }
   const key=(document.getElementById("set_key").value||"").trim();
   const model=document.getElementById("set_model").value;
-  AI_PROVIDER=prov;
-  const st=document.getElementById("set_status"),pill=document.getElementById("aiPill"),banner=document.getElementById("aiBanner");
   if(prov==="gemini"){GEMINI_KEY=key;GEMINI_MODEL=model||"gemini-2.0-flash";}
   else{OPENAI_KEY=key;OPENAI_MODEL=model||"gpt-4o-mini";}
   if(key){
@@ -1124,26 +1203,33 @@ function saveSettings(){
   }
   setTimeout(()=>toggleSettings(),1000);
 }
-/* Restore a previously saved key on this device. */
+/* Restore a previously saved provider/key on this device, and show the School AI option if it's configured. */
 (function restoreKey(){
-  try{
-    const prov=localStorage.getItem("nafl_ai_provider"),key=localStorage.getItem("nafl_ai_key"),model=localStorage.getItem("nafl_ai_model");
-    if(prov&&key){
+  window.addEventListener("DOMContentLoaded",()=>{
+    if(SCHOOL_PROXY_URL){const row=document.getElementById("schoolAiRow");if(row)row.style.display="block";}
+    const pill=document.getElementById("aiPill"),banner=document.getElementById("aiBanner");
+    let prov="",key="",model="";
+    try{prov=localStorage.getItem("nafl_ai_provider")||"";key=localStorage.getItem("nafl_ai_key")||"";model=localStorage.getItem("nafl_ai_model")||"";}catch(e){}
+    if(prov==="school" && SCHOOL_PROXY_URL){
+      AI_PROVIDER="school";
+      const radio=document.querySelector('input[name="prov"][value="school"]');if(radio)radio.checked=true;
+      if(pill){pill.classList.add("aiPill-on");pill.textContent="⚙ AI: ON";}
+      if(banner)banner.style.display="none";
+    }else if(prov&&key&&(prov==="gemini"||prov==="openai")){
       AI_PROVIDER=prov;
       if(prov==="gemini"){GEMINI_KEY=key;GEMINI_MODEL=model||"gemini-2.0-flash";}else{OPENAI_KEY=key;OPENAI_MODEL=model||"gpt-4o-mini";}
-      window.addEventListener("DOMContentLoaded",()=>{
-        const pill=document.getElementById("aiPill"),banner=document.getElementById("aiBanner");
-        const radio=document.querySelector('input[name="prov"][value="'+prov+'"]');if(radio)radio.checked=true;
-        onProvChange();
-        const ks=document.getElementById("set_key"),ms=document.getElementById("set_model");
-        if(ks)ks.value=key;if(ms)ms.value=model||"";
-        if(pill){pill.classList.add("aiPill-on");pill.textContent="⚙ AI: ON";}
-        if(banner)banner.style.display="none";
-      });
+      const radio=document.querySelector('input[name="prov"][value="'+prov+'"]');if(radio)radio.checked=true;
+      try{onProvChange();}catch(e){}
+      const ks=document.getElementById("set_key"),ms=document.getElementById("set_model");
+      if(ks)ks.value=key;if(ms)ms.value=model||"";
+      if(pill){pill.classList.add("aiPill-on");pill.textContent="⚙ AI: ON";}
+      if(banner)banner.style.display="none";
     }else{
-      window.addEventListener("DOMContentLoaded",()=>{try{onProvChange();}catch(e){}});
+      // Nothing saved yet — default to School AI if it's configured, else Gemini.
+      const radio=document.querySelector('input[name="prov"][value="'+AI_PROVIDER+'"]');if(radio)radio.checked=true;
+      try{onProvChange();}catch(e){}
     }
-  }catch(e){}
+  });
 })();
 /* Bloom's taxonomy action verbs by cognitive level (used to guide objective writing) */
 const BLOOM={
@@ -1161,6 +1247,63 @@ function sourceHint(subject){
   if(/computer|information tech|coding|python/i.test(subject))src.push("standard CS teaching resources such as opencs.com and 'Happy Coder' style textbook content");
   return src.join(", and ");
 }
+let lastFetchedContent=null; // {aim, objectives, keyConcepts, ncertRef} — set by aiFetchContent(), read by buildPlan()
+let buildReferenceText="";   // real textbook/NCERT page text, if the teacher uploaded one — takes priority over AI general knowledge
+let buildReferenceUsed=false;
+async function handleRefFile(file){
+  const rs=document.getElementById("refStatus");
+  if(!file)return;
+  rs.className="status";rs.textContent="Reading reference PDF…";
+  try{
+    const raw=await readPDFtext(file);
+    buildReferenceText=raw.replace(/\[\[SEG\]\]/g," ").replace(/\s+/g," ").trim();
+    if(buildReferenceText.length<20)throw new Error("No readable text found (scanned/image-only PDF?).");
+    rs.className="status ok";rs.textContent="Loaded "+buildReferenceText.length.toLocaleString()+" characters — AI will ground content directly in this text.";
+  }catch(e){
+    buildReferenceText="";
+    rs.className="status err";rs.textContent="Couldn't read reference: "+(e.message||e);
+  }
+}
+/* Returns a prompt block instructing the AI to use the teacher's uploaded reference as the primary
+   source (real grounding) instead of relying only on its own training-knowledge approximation of NCERT. */
+function groundingBlock(){
+  if(!buildReferenceText)return "";
+  return `\n\nPRIMARY SOURCE — the teacher uploaded this real textbook page. Base your content directly on it: quote/paraphrase the actual facts, definitions, examples and terminology it contains, rather than relying on general knowledge. Only supplement from standard CBSE knowledge where this text doesn't cover something needed:\n"""${clip(buildReferenceText,6000)}"""`;
+}
+function groundingLabel(){return buildReferenceText?"Grounded in your uploaded textbook page.":"Grounded in AI's general NCERT/CBSE knowledge — please verify against the actual textbook before use.";}
+async function aiFetchContent(){
+  const t=val("f_topic"),g=val("f_grade"),s=val("f_subject"),st=document.getElementById("aiContentStatus");
+  if(!t||!g||!s){st.className="status err";st.textContent="Fill Grade, Subject and Content/Unit/Chapter first.";return;}
+  if(!hasAI()){st.className="status err";st.innerHTML="No AI key set. Add a free Gemini key in <b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>⚙ AI Settings</b>.";return;}
+  st.className="status";st.textContent="Fetching NCERT/CBSE-aligned content…";
+  try{
+    const prompt=`You are an experienced ${s} subject master preparing a ${g} CBSE lesson on "${t}".
+Ground everything in ${sourceHint(s)}, matching what is actually prescribed for "${t}" at this grade.${groundingBlock()}
+Return ONLY valid JSON, no preamble, in this exact shape:
+{
+ "aim":"one sentence describing the overall purpose of this lesson on ${t}",
+ "objectives":["4-5 measurable learning objectives, each starting with a Bloom's taxonomy action verb, specific to ${t}"],
+ "keyConcepts":["5-7 core concepts/terms/facts a ${g} learner must know for ${t}, each as a short phrase"],
+ "ncertRef":"the NCERT/CBSE chapter or unit name this topic maps to for ${g} ${s} (best estimate; say 'not certain' if unsure rather than inventing a chapter number)"
+}`;
+    const data=parseJSON(await callAI(prompt,1200));
+    lastFetchedContent=data;
+    buildReferenceUsed=!!buildReferenceText;
+    if(data.aim)document.getElementById("f_aim").value=data.aim;
+    if(data.objectives&&data.objectives.length)document.getElementById("f_obj").value=data.objectives.join("\n");
+    const box=document.getElementById("keyConceptsBox"),list=document.getElementById("keyConceptsList"),ref=document.getElementById("ncertRefLine");
+    list.innerHTML=(data.keyConcepts||[]).map(k=>"<li>"+esc(k)+"</li>").join("");
+    ref.innerHTML=(data.ncertRef?("NCERT/CBSE reference: "+esc(data.ncertRef)+"<br>"):"")+"<b style='color:"+(buildReferenceUsed?"#2e7d32":"#a05a00")+"'>"+esc(groundingLabel())+"</b>";
+    box.classList.remove("hide");
+    st.className="status ok";st.textContent="Fetched. Aim, objectives and key concepts filled in below.";
+  }catch(e){
+    // Graceful fallback — same pattern as the other AI buttons: never leave the teacher with empty fields.
+    lastFetchedContent=null;
+    if(!val("f_aim"))document.getElementById("f_aim").value=autoAim(t,s);
+    if(!val("f_obj"))document.getElementById("f_obj").value=autoObjectives(t).join("\n");
+    st.className="status err";st.innerHTML="Couldn't fetch AI content: "+esc(e.message||String(e))+" — filled Aim/objectives with a generic template instead. <b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>Check ⚙ AI Settings</b> and try again for real NCERT-grounded content.";
+  }
+}
 async function aiObjectives(){
   const t=val("f_topic"),g=val("f_grade"),s=val("f_subject"),st=document.getElementById("aiObjStatus");
   if(!t){st.className="status err";st.textContent="Enter a topic first.";return;}
@@ -1170,11 +1313,11 @@ async function aiObjectives(){
 `You are an experienced ${s} subject master writing CBSE lesson objectives for ${g} on "${t}".
 Write 4-5 measurable learning objectives, each starting with a Bloom's taxonomy action verb, and spanning a range of cognitive levels (lower to higher order) appropriate for ${g}.
 Use Bloom verbs from these levels — ${bloomGuide()}.
-Ground the objectives in ${sourceHint(s)} so they match what is actually taught for "${t}".
+Ground the objectives in ${sourceHint(s)} so they match what is actually taught for "${t}".${groundingBlock()}
 Each objective must be specific to "${t}" (not generic). Return ONLY a JSON array of strings, no preamble.`,700);
     const arr=parseJSON(out);
     document.getElementById("f_obj").value=arr.join("\n");
-    st.className="status ok";st.textContent="Added "+arr.length+" Bloom-aligned objectives.";
+    st.className="status ok";st.textContent="Added "+arr.length+" Bloom-aligned objectives"+(buildReferenceText?" (grounded in your uploaded reference).":".");
   }
   catch(e){
     // offline Bloom-based fallback
@@ -1202,94 +1345,50 @@ async function buildPlan(){
   const acts=[...selected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));
   const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
   const rows=acts.map((a,i)=>({time:times[i]+" min",act:a,name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,topic),learner:a.learner.replace(/\btopic\b/g,topic),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
-  // Objective-driven activity CONTENT (AI). Fills each activity with real topic content.
+  // Objective-driven activity CONTENT (AI). Fills each activity with real topic content, stage-appropriate
+  // mini-lecture-depth explanations, and follow-up questions — all embedded directly in the row.
   const wantContent=document.getElementById("f_content").checked;
-  const wantML=document.getElementById("f_minilec").checked;
   let aiWarn="";
-  if((wantContent||wantML) && !hasAI()){
-    aiWarn="No AI key set, so activities/mini-lecture use templates. Add a free Gemini key in ⚙ AI Settings for real topic content.";
+  if(wantContent && !hasAI()){
+    aiWarn="No AI key set, so activity content uses templates only (no rich explanations/questions). Add a free Gemini key in ⚙ AI Settings for real topic content.";
   }
   if(wantContent){
-    st.className="status";st.textContent="Generating activity content from your objectives…";
+    st.className="status";st.textContent="Generating rich activity content and questions from your objectives…";
     try{
       await fillActivityContent(rows,topic,subject,grade,objs);
     }catch(e){aiWarn="Activity content needs AI: "+(e.message||e)+" — used standard steps. Add a free Gemini key in ⚙ AI Settings.";}
   }
-  let minilec=null;
-  if(wantML){
-    st.className="status";st.textContent="Writing the teacher mini-lecture…";
-    minilec=await makeMiniLecture(topic,subject,grade);
-    if(minilec && minilec.ai===false && !aiWarn)aiWarn="Mini-lecture used a template (AI not available). Add a free Gemini key in ⚙ AI Settings for a topic-specific script.";
-  }
-  lastOut={kind:"lesson",plans:[{meta:{teacher,grade,subject,topic,date,dur},aim,objs,rows,minilec,homework:autoHomework(topic),title:"In-session"}],name:"Lesson Plan - "+subject+" "+grade+" - "+topic};
+  lastOut={kind:"lesson",plans:[{meta:{teacher,grade,subject,topic,date,dur},aim,objs,rows,homework:autoHomework(topic),title:"In-session"}],name:"Lesson Plan - "+subject+" "+grade+" - "+topic};
   renderPreview();
   if(aiWarn){st.className="status err";st.innerHTML=esc(aiWarn).replace("⚙ AI Settings","<b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>⚙ AI Settings</b>");}
-  else{st.className="status ok";st.textContent="Done. Preview below — Word/PDF download ready.";}
+  else{st.className="status ok";st.textContent="Done. Preview below — Word/PDF download ready. "+(buildReferenceText?"Content grounded in your uploaded reference.":"Content grounded in AI's general NCERT/CBSE knowledge — spot-check against the textbook.");}
 }
-/* Generate concrete, objective-linked content for each chosen activity and merge into the row. */
+/* Generate rich, mini-lecture-quality content for each chosen activity, matched to its stage
+   (starter/collaborative/plenary), and 2-4 follow-up questions embedded directly in that row —
+   so there's no separate "mini-lecture" section; everything lives in the table itself. */
 async function fillActivityContent(rows,topic,subject,grade,objs){
-  const list=rows.map((r,i)=>`${i+1}. ${r.act.name} (${r.act.cat}) — method: ${r.act.purpose}`).join("\n");
+  const list=rows.map((r,i)=>`${i+1}. ${r.act.name} — stage: ${r.act.cat} — method: ${r.act.purpose}`).join("\n");
+  const kc=(lastFetchedContent&&lastFetchedContent.keyConcepts&&lastFetchedContent.keyConcepts.length)?`\nKey concepts to draw on: ${lastFetchedContent.keyConcepts.join("; ")}.`:"";
   const prompt=`You are an experienced ${subject} subject master planning a ${grade} CBSE lesson on "${topic}".
-Learning objectives (Bloom-aligned):\n- ${objs.join("\n- ")}
-Ground all content in ${sourceHint(subject)} so it matches the actual prescribed syllabus and examples for "${topic}".
-For EACH activity below, write the ACTUAL content the teacher will use — specific to "${topic}" and mapped to the objectives above — NOT generic instructions. Include the real questions/prompts/worked examples the teacher poses, using correct subject terminology, and exactly what learners produce. For coding/CS topics, include real code snippets or expected outputs where relevant.
+Learning objectives (Bloom-aligned):\n- ${objs.join("\n- ")}${kc}
+Ground all content in ${sourceHint(subject)} so it matches the actual prescribed syllabus and examples for "${topic}".${groundingBlock()}
+For EACH activity below, write the REAL, mini-lecture-quality subject content the teacher will actually deliver during that activity — not generic instructions. Match the depth to its stage:
+- stage "starter": a short engaging hook connecting "${topic}" to something learners already know or have seen, plus a quick recall of any prior concept needed today.
+- stage "collaborative" or any main-teaching activity: the real explanation of the concept, at least one worked example or demonstration specific to "${topic}" (include real code and expected output if this is a coding/CS topic), and one common misconception to watch for and correct.
+- stage "plenary": a summary of the key learning points from today and the core vocabulary/definitions to reinforce.
+Whatever the stage, use correct subject terminology throughout, and ALWAYS include 2-4 concrete follow-up questions specific to "${topic}" and matched to that stage (simple recall for starter, higher-order for main/collaborative, reflective for plenary).
 Activities:\n${list}
 Return ONLY valid JSON: an array with one object per activity in the same order:
-[{"teacher":"what the teacher does AND the specific topic content/questions to use (3-5 sentences)","learner":"what learners actually do and produce (1-3 sentences)","questions":["2-4 concrete questions/prompts for THIS activity on ${topic}"]}]`;
-  const data=parseJSON(await callAI(prompt,2000));
+[{"teacher":"the rich, stage-appropriate content the teacher delivers for THIS activity — 4-7 sentences of real subject content, not generic instructions","learner":"what learners actually do and produce (1-3 sentences)","questions":["2-4 concrete follow-up questions for THIS stage on ${topic}"]}]`;
+  const data=parseJSON(await callAI(prompt,2800));
   data.forEach((d,i)=>{
     if(!rows[i])return;
-    const a=rows[i].act;
-    let t=(d.teacher||"");
-    if(d.questions&&d.questions.length)t+=" Key prompts: "+d.questions.map(q=>'"'+q+'"').join("; ")+".";
-    rows[i].teacher=t;
+    if(d.teacher)rows[i].teacher=d.teacher;
     if(d.learner)rows[i].learner=d.learner;
+    rows[i].questions=(d.questions&&d.questions.length)?d.questions:[];
   });
 }
 /* ---- Teacher mini-lecture: AI with offline fallback ---- */
-async function makeMiniLecture(topic,subject,grade){
-  const prompt=`You are a highly experienced ${subject} subject master preparing to teach "${topic}" to a ${grade} CBSE class. You know the NCERT/CBSE syllabus thoroughly.
-Write a TEACHER MINI-LECTURE: a rich script of talking points the teacher will actually say, in clear teacher voice, accurate and detailed enough to teach the lesson directly from it. Ground everything in ${sourceHint(subject)}. Use correct terminology and, for coding/CS topics, include real code with expected output.
-Return ONLY valid JSON, no preamble, in this exact shape:
-{
- "hook":"1-2 sentence engaging opening the teacher says to grab attention, tied to ${topic}",
- "explanation":["5 to 7 substantial talking-point sentences explaining the core concepts of ${topic} step by step, in the teacher's own words, building from simple to deeper, with concrete facts/definitions/examples"],
- "example":"a fully worked example, demonstration or strong real-life analogy for ${topic} that the teacher walks through (include code & output if CS), 2-4 sentences",
- "misconceptions":["2 to 3 SPECIFIC common student misconceptions about ${topic} and exactly how the teacher should correct each"],
- "questions":["5 to 6 questioning prompts about ${topic}, spanning Bloom levels from recall to higher-order"],
- "vocabulary":["5 to 7 key terms for ${topic} with correct subject usage"]
-}
-Make the explanation substantial — this should be a meaningful share of the lesson. Age-appropriate for ${grade}.`;
-  try{
-    const data=parseJSON(await callAI(prompt,1800));
-    data.ai=true;return data;
-  }catch(e){
-    // offline structured fallback
-    return {ai:false,
-      hook:`Open by connecting ${topic} to something the learners already know or have seen, and pose a curiosity question about it.`,
-      explanation:[
-        `Introduce what ${topic} means in simple language, then give the formal idea/definition.`,
-        `Explain the key parts or steps of ${topic} one at a time, checking understanding after each.`,
-        `Show how the parts of ${topic} fit together, using the board or a diagram.`,
-        `Link ${topic} to prior learning so learners see how it builds on what they know.`,
-        `Highlight why ${topic} matters and where it is used in real life or later chapters.`
-      ],
-      example:`Work through one clear example or demonstration of ${topic} on the board, thinking aloud so learners hear the reasoning, then do a second one with the class contributing.`,
-      misconceptions:[
-        `Anticipate the most common mistake learners make with ${topic} and address it directly with a counter-example.`,
-        `Clarify any term in ${topic} that learners often confuse with a similar term.`
-      ],
-      questions:[
-        `What do you already know about ${topic}?`,
-        `Can you explain ${topic} in your own words?`,
-        `What would happen if we changed one part of this?`,
-        `Where have you seen ${topic} outside the classroom?`,
-        `How is ${topic} similar to or different from what we learned earlier?`
-      ],
-      vocabulary:[`key term 1 for ${topic}`,`key term 2 for ${topic}`,`key term 3 for ${topic}`,`key term 4 for ${topic}`]
-    };
-  }
-}
 function stageLabel(a){return a.cat==="starter"?"Starter — "+a.name+": ":a.cat==="plenary"?"Plenary — "+a.name+": ":"Main activity — "+a.name+": ";}
 function stageName(a){return a.cat==="starter"?"Starter: "+a.name:a.cat==="plenary"?"Plenary: "+a.name:"Main Activity: "+a.name;}
 function pedagogyFor(c){return c==="collaborative"?"Collaborative Learning":c==="formative"?"Formative Assessment / AfL":c==="starter"?"Activity-Based Learning":"Reflective Learning";}
@@ -1302,6 +1401,68 @@ drop.onclick=()=>fileInput.click();
 drop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handleFile(ev.dataTransfer.files[0]);});
 fileInput.onchange=e=>{if(e.target.files.length)handleFile(e.target.files[0]);};
 function clearFile(){uploadedText="";uploadedDocxStructure=null;fileInput.value="";document.getElementById("fileMeta").classList.remove("show");document.getElementById("convBtn").disabled=true;document.getElementById("convStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";convSelected.clear();const cp=document.getElementById("convActPicker");if(cp){cp.classList.add("hide");cp.dataset.built="";}}
+
+/* ===================== PPT -> WORD, AI only (module 4) ===================== */
+let pwUploadedText="";
+const pwDrop=document.getElementById("pwDrop"),pwFileInput=document.getElementById("pwFileInput");
+pwDrop.onclick=()=>pwFileInput.click();
+["dragover","dragenter"].forEach(e=>pwDrop.addEventListener(e,ev=>{ev.preventDefault();pwDrop.classList.add("over");}));
+["dragleave","drop"].forEach(e=>pwDrop.addEventListener(e,ev=>{ev.preventDefault();pwDrop.classList.remove("over");}));
+pwDrop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handlePwFile(ev.dataTransfer.files[0]);});
+pwFileInput.onchange=e=>{if(e.target.files.length)handlePwFile(e.target.files[0]);};
+function clearPwFile(){pwUploadedText="";pwFileInput.value="";document.getElementById("pwFileMeta").classList.remove("show");document.getElementById("pwBtn").disabled=true;document.getElementById("pwStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
+async function handlePwFile(file){
+  const ps=document.getElementById("pwStatus");
+  if(!/\.pptx$/i.test(file.name)){ps.className="status err";ps.textContent="Please upload a .pptx file.";return;}
+  document.getElementById("pwFmName").textContent=file.name;document.getElementById("pwFmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("pwFileMeta").classList.add("show");
+  ps.className="status";ps.textContent="Reading slides…";
+  try{
+    pwUploadedText=await readPPTX(file);
+    if(pwUploadedText.trim().length<20)throw new Error("No readable text in this PPT (image-only slides?).");
+    const n=pwUploadedText.split("[[SEG]]").map(s=>s.trim()).filter(Boolean).length;
+    ps.className="status ok";ps.textContent="Read "+n+" slide(s) of text.";
+    document.getElementById("pwBtn").disabled=!hasAI();
+    if(!hasAI())ps.innerHTML+=" — <b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>add an AI key</b> to convert.";
+    const g=guessTopic(pwUploadedText);if(g&&!val("pw_topic"))document.getElementById("pw_topic").value=g;
+  }catch(err){ps.className="status err";ps.textContent="Error: "+err.message;document.getElementById("pwBtn").disabled=true;}
+}
+async function convertPptWithAI(){
+  const ps=document.getElementById("pwStatus");
+  if(!pwUploadedText){ps.className="status err";ps.textContent="Upload a PPT first.";return;}
+  if(!hasAI()){ps.className="status err";ps.innerHTML="This module needs an AI key. Add a free Gemini key in <b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>⚙ AI Settings</b>.";return;}
+  const teacher=val("pw_teacher"),grade=val("pw_grade"),subject=val("pw_subject");
+  let topic=val("pw_topic")||guessTopic(pwUploadedText)||"Lesson Topic";
+  const date=fmtDate(val("pw_date")),dur=val("pw_dur");
+  ps.className="status";ps.textContent="AI is analysing the slides…";
+  try{
+    const slides=pwUploadedText.split("[[SEG]]").map(s=>s.trim()).filter(Boolean);
+    const slideText=clip(slides.map((s,i)=>(i+1)+". "+s).join("\n"),9000);
+    const prompt=`You are an experienced ${subject||"subject"} master. Below is the raw slide-by-slide text extracted from a PowerPoint deck for a ${grade||"CBSE"} lesson${topic?(' on "'+topic+'"'):""}. Analyse it and restructure it into the school's In-session lesson-plan format for a ${dur} lesson.
+Slide text:
+${slideText}
+Return ONLY valid JSON, no preamble, in this exact shape:
+{
+ "topic":"a short topic name for this deck (only if not already obvious, else repeat it)",
+ "aim":"one sentence describing the overall purpose of this lesson",
+ "objectives":["4-5 measurable learning objectives, Bloom-aligned, specific to this content"],
+ "rows":[
+   {"name":"short stage name e.g. Starter: Recap, Main Activity: ..., Plenary: ...","time_weight":1,"teacher":"what the teacher does AND the specific content/questions to use, grounded in the slide content (3-5 sentences)","learner":"what learners actually do and produce (1-3 sentences)","fa":"how the teacher checks understanding for this stage","res":"resources/materials used for this stage (comma-separated)"}
+ ]
+}
+Break the deck into 4-7 sensible timed stages (starter, 1-3 main teaching/activity stages that walk through the actual slide content in order, a formative check, and a plenary). "time_weight" is a relative weight (1 = short, 2 = double length) used to split the ${dur} lesson — weights don't need to sum to anything specific.`;
+    const data=parseJSON(await callAI(prompt,2200));
+    if(!data.rows||!data.rows.length)throw new Error("AI returned no rows.");
+    const weights=data.rows.map(r=>Number(r.time_weight)||1);
+    const times=distribute(dur,data.rows.length,weights);
+    const rows=data.rows.map((r,i)=>({time:times[i]+" min",name:r.name||"",teacher:r.teacher||"",learner:r.learner||"",fa:r.fa||"",res:r.res||"Whiteboard, Notebook, Textbook",pedagogy:""}));
+    const finalTopic=topic||data.topic||"Lesson Topic";
+    lastOut={kind:"lesson",plans:[{meta:{teacher,grade,subject,topic:finalTopic,date,dur},aim:data.aim||autoAim(finalTopic,subject),objs:(data.objectives&&data.objectives.length)?data.objectives:autoObjectives(finalTopic),rows,homework:autoHomework(finalTopic),title:"In-session"}],name:"Lesson Plan - "+subject+" "+grade+" - "+finalTopic};
+    renderPreview();
+    ps.className="status ok";ps.textContent="Done — AI restructured "+rows.length+" stages directly from your uploaded PPT's actual content. Preview below.";
+  }catch(e){
+    ps.className="status err";ps.textContent="AI conversion failed: "+(e.message||e);
+  }
+}
 async function handleFile(file){
   const cs=document.getElementById("convStatus");
   document.getElementById("fmName").textContent=file.name;document.getElementById("fmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("fileMeta").classList.add("show");
@@ -1653,28 +1814,12 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 
 /* ===================== PREVIEW ===================== */
-function renderPreview(){const wrap=document.getElementById("previewWrap"),body=document.getElementById("previewBody"),title=document.getElementById("prevTitle");if(lastOut.kind==="lesson"){title.textContent="Lesson plan preview";body.innerHTML=lastOut.plans.map(planHTML).join("<div style='height:18px'></div>");}else{title.textContent="Plan of Work preview";body.innerHTML=powHTML(lastOut.pow);}wrap.style.display="block";wrap.scrollIntoView({behavior:"smooth",block:"start"});}
+function renderPreview(){const wrap=document.getElementById("previewWrap"),body=document.getElementById("previewBody"),title=document.getElementById("prevTitle");if(lastOut.kind==="lesson"){title.textContent="Lesson plan preview";body.innerHTML=lastOut.plans.map(planHTML).join("<div style='height:18px'></div>");}else{title.textContent="Plan of Work preview";body.innerHTML=powHTML(lastOut.pow);}wrap.style.display="block";try{wrap.scrollIntoView({behavior:"smooth",block:"start"});}catch(e){}}
 function powHTML(pow){
   const isMonth=pow.layout==="month";
   const colHead=isMonth?"Month":"Topics";
   const rows=pow.rows.map((r,i)=>`<tr><td style="font-weight:600;${isMonth?"white-space:nowrap":""}">${esc(isMonth?pow.months[i]:r.chapter)}</td><td>${esc(r.objectives.join("; "))}</td></tr>`).join("");
   return `<div class="lp-preview"><div class="lp-head"><h3>Plan of Work</h3><span style="font-size:.8rem;color:#dcc89a">${esc(pow.subject)} · ${esc(pow.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="colhdr"><th style="width:22%">${colHead}</th><th>Objectives</th></tr>${rows}</table></div></div>`;
-}
-function mlHTML(ml){
-  if(!ml)return"";
-  const exp=(ml.explanation||[]).map(e=>`<li>${esc(e)}</li>`).join("");
-  const mis=(ml.misconceptions||[]).map(e=>`<li>${esc(e)}</li>`).join("");
-  const qs=(ml.questions||[]).map(q=>`<div class="ml-q">${esc(q)}</div>`).join("");
-  const voc=(ml.vocabulary||[]).map(esc).join(" · ");
-  return `<div class="ml-section" style="border-top:1px solid var(--line);padding-top:10px;margin-top:14px">
-    <h4 style="color:var(--crest)">Teacher Mini-Lecture — Talking Points${ml.ai?"":" (template)"}</h4>
-    <p><b>Hook:</b> ${esc(ml.hook||"")}</p>
-    <p><b>Explaining the concept (teacher says):</b></p><ul>${exp}</ul>
-    <p><b>Worked example / analogy:</b> ${esc(ml.example||"")}</p>
-    <p><b>Common misconceptions to address:</b></p><ul>${mis}</ul>
-    <p><b>Questions to ask the class:</b></p>${qs}
-    ${voc?`<p style="margin-top:8px"><b>Key vocabulary:</b> ${voc}</p>`:""}
-  </div>`;
 }
 function planHTML(p){
   const m=p.meta,objLis=p.objs.map(o=>`<li>${esc(o)}</li>`).join("");
@@ -1685,10 +1830,11 @@ function planHTML(p){
     const teacherItems=(teacherLines.length>1?teacherLines:[r.teacher]).map(s=>`<li>${esc(s)}</li>`).join("");
     const learnerLines=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean);
     const learnerItems=(learnerLines.length>1?learnerLines:String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean)).map(s=>`<li>${esc(s.trim())}</li>`).join("");
-    return `<tr><td>${esc(r.time)}</td><td>${r.name?`<b>${esc(r.name)}</b>`:""}<ul style="margin:2px 0 0;padding-left:16px">${teacherItems}</ul>${r.pedagogy?`<b style="color:#1b4f82;font-size:.74rem">[${esc(r.pedagogy)}]</b>`:""}</td><td><ul style="margin:0;padding-left:16px">${learnerItems||esc(r.learner)}</ul></td><td><ul style="margin:0;padding-left:16px">${faItems||esc(r.fa||"")}</ul></td><td><ul style="margin:0;padding-left:16px">${resItems||esc(r.res)}</ul></td></tr>`;
+    const qItems=(r.questions&&r.questions.length)?`<div style="margin-top:6px;padding-top:5px;border-top:1px dashed #c7b8d8"><b style="font-size:.74rem;color:#5b3d8c">Questions to ask:</b><ol style="margin:2px 0 0;padding-left:16px">${r.questions.map(q=>`<li style="font-size:.82rem">${esc(q)}</li>`).join("")}</ol></div>`:"";
+    return `<tr><td>${esc(r.time)}</td><td>${r.name?`<b>${esc(r.name)}</b>`:""}<ul style="margin:2px 0 0;padding-left:16px">${teacherItems}</ul>${r.pedagogy?`<b style="color:#1b4f82;font-size:.74rem">[${esc(r.pedagogy)}]</b>`:""}${qItems}</td><td><ul style="margin:0;padding-left:16px">${learnerItems||esc(r.learner)}</ul></td><td><ul style="margin:0;padding-left:16px">${faItems||esc(r.fa||"")}</ul></td><td><ul style="margin:0;padding-left:16px">${resItems||esc(r.res)}</ul></td></tr>`;
   }).join("");
   const sessionLabel=p.title&&p.title.includes("/")?p.title.replace(/^In-session\s*/,"Session ")+": In-session":"In-session";
-  return `<div class="lp-preview"><div class="lp-head"><h3>${esc(p.title)} · Lesson Plan</h3><span style="font-size:.8rem;color:#dcc89a">${esc(m.subject)} · ${esc(m.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="metarow"><td><b>Teacher:</b> ${esc(m.teacher)}</td><td><b>Class:</b> ${esc(m.grade)}</td><td><b>Subject:</b> ${esc(m.subject)}</td><td><b>Content/Unit/Chapter:</b> ${esc(m.topic)}</td><td><b>Date:</b> ${esc(m.date)}</td><td><b>Duration:</b> ${esc(m.dur)}</td></tr><tr class="aimrow"><td colspan="6"><b>Aim:</b> ${esc(p.aim)}</td></tr><tr class="objrow"><td colspan="6"><b>Learning Objectives:</b> The learner will<ul>${objLis}</ul></td></tr><tr class="colhdr"><th style="width:7%">Time</th><th style="width:36%">Teacher Activity</th><th style="width:25%">Learner Activity</th><th style="width:16%">Formative Assessments</th><th style="width:16%">Resources</th></tr>${rows}<tr class="reflrow"><td colspan="6"><b>Teacher Reflection:</b> What would you keep the same / change? &nbsp; <b>Worked well:</b> Yes/No &nbsp; <b>Did not work well:</b> Yes/No</td></tr></table><div style="font-size:.78rem;color:#2E6FB5;margin-top:6px;font-style:italic">Note: Add more rows if needed</div>${mlHTML(p.minilec)}<div class="extra"><h4>Support for Struggling Learners</h4><ul><li>Guided notes and simplified instructions</li><li>Vocabulary support and visual aids</li><li>Peer support / buddy pairing</li></ul><h4>Extension for Advanced Learners</h4><ul><li>Higher-order thinking questions and research tasks</li><li>Additional challenge problems or an independent mini-project</li><li>Opportunity to present findings to the class</li></ul><h4>Homework</h4><ul><li>${esc(p.homework)}</li></ul></div></div></div>`;
+  return `<div class="lp-preview"><div class="lp-head"><h3>${esc(p.title)} · Lesson Plan</h3><span style="font-size:.8rem;color:#dcc89a">${esc(m.subject)} · ${esc(m.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="metarow"><td><b>Teacher:</b> ${esc(m.teacher)}</td><td><b>Class:</b> ${esc(m.grade)}</td><td><b>Subject:</b> ${esc(m.subject)}</td><td><b>Content/Unit/Chapter:</b> ${esc(m.topic)}</td><td><b>Date:</b> ${esc(m.date)}</td><td><b>Duration:</b> ${esc(m.dur)}</td></tr><tr class="aimrow"><td colspan="6"><b>Aim:</b> ${esc(p.aim)}</td></tr><tr class="objrow"><td colspan="6"><b>Learning Objectives:</b> The learner will<ul>${objLis}</ul></td></tr><tr class="colhdr"><th style="width:7%">Time</th><th style="width:36%">Teacher Activity</th><th style="width:25%">Learner Activity</th><th style="width:16%">Formative Assessments</th><th style="width:16%">Resources</th></tr>${rows}<tr class="reflrow"><td colspan="6"><b>Teacher Reflection:</b> What would you keep the same / change? &nbsp; <b>Worked well:</b> Yes/No &nbsp; <b>Did not work well:</b> Yes/No</td></tr></table><div style="font-size:.78rem;color:#2E6FB5;margin-top:6px;font-style:italic">Note: Add more rows if needed</div><div class="extra"><h4>Support for Struggling Learners</h4><ul><li>Guided notes and simplified instructions</li><li>Vocabulary support and visual aids</li><li>Peer support / buddy pairing</li></ul><h4>Extension for Advanced Learners</h4><ul><li>Higher-order thinking questions and research tasks</li><li>Additional challenge problems or an independent mini-project</li><li>Opportunity to present findings to the class</li></ul><h4>Homework</h4><ul><li>${esc(p.homework)}</li></ul></div></div></div>`;
 }
 
 /* ===================== EXPORTS ===================== */
@@ -1746,31 +1892,6 @@ function powPdf(pow){
   pb.gap(6);pb.text(licenseLine(),{size:7.5,color:"9aa8b8"});
   return pb.blob();
 }
-function mlDocx(b,ml){
-  b.heading("Teacher Mini-Lecture — Talking Points"+(ml.ai?"":" (template)"),{size:20,color:"7c1f2e"});
-  b.para([{text:"Hook: ",bold:true},{text:ml.hook||""}]);
-  b.para([{text:"Explaining the concept (teacher says):",bold:true}]);
-  b.bullets(ml.explanation||[]);
-  b.para([{text:"Worked example / analogy: ",bold:true},{text:ml.example||""}]);
-  b.para([{text:"Common misconceptions to address:",bold:true}]);
-  b.bullets(ml.misconceptions||[]);
-  b.para([{text:"Questions to ask the class:",bold:true}]);
-  b.numbered(ml.questions||[]);
-  if(ml.vocabulary&&ml.vocabulary.length)b.para([{text:"Key vocabulary: ",bold:true},{text:ml.vocabulary.join(" · ")}]);
-  b.spacer();
-}
-function mlPdf(pb,ml){
-  pb.gap(4);pb.text("Teacher Mini-Lecture — Talking Points"+(ml.ai?"":" (template)"),{size:12,bold:true,color:"7c1f2e"});
-  pb.text("Hook: "+(ml.hook||""),{size:9});
-  pb.text("Explaining the concept (teacher says):",{size:9,bold:true});
-  (ml.explanation||[]).forEach(e=>pb.text("•  "+e,{size:9,x:50}));
-  pb.text("Worked example / analogy: "+(ml.example||""),{size:9});
-  pb.text("Common misconceptions:",{size:9,bold:true});
-  (ml.misconceptions||[]).forEach(e=>pb.text("•  "+e,{size:9,x:50}));
-  pb.text("Questions to ask the class:",{size:9,bold:true});
-  (ml.questions||[]).forEach((q,i)=>pb.text((i+1)+".  "+q,{size:9,x:50}));
-  if(ml.vocabulary&&ml.vocabulary.length)pb.text("Key vocabulary: "+ml.vocabulary.join(" · "),{size:9});
-}
 function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p,pi)=>{const m=p.meta;
   const sessionLabel=plans.length>1?("Session "+(pi+1)+": In-session"):"In-session";
   b.para([{text:sessionLabel,size:18,color:"6a7384"}],{after:20});
@@ -1782,6 +1903,10 @@ function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p
     const teacherLines=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean);
     const tp=[{runs:[{text:r.name||"",bold:true}]},...(teacherLines.length?teacherLines:[r.teacher]).map(l=>({bullet:true,runs:[{text:l}]}))];
     if(r.pedagogy)tp.push({runs:[{text:"["+r.pedagogy+"]",italics:true,color:"1b4f82"}]});
+    if(r.questions&&r.questions.length){
+      tp.push({runs:[{text:"Questions to ask:",bold:true,italics:true,color:"5b3d8c",size:16}]});
+      r.questions.forEach((q,qi)=>tp.push({runs:[{text:(qi+1)+". "+q,size:16}]}));
+    }
     const lp=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean);
     const lpFinal=(lp.length>1?lp:String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean)).map(s=>({bullet:true,runs:[{text:s.trim()}]}));
     const faItems=String(r.fa||"").split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>({bullet:true,runs:[{text:s}]}));
@@ -1791,7 +1916,7 @@ function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p
   rows.push([{span:5,fill:"F6F3EC",runs:[{text:"Teacher Reflection: ",bold:true},{text:"What would you keep the same / change?     "},{text:"Worked well: ",bold:true},{text:"Yes / No     "},{text:"Did not work well: ",bold:true},{text:"Yes / No"}]}]);
   b.table(rows,cw);
   b.para([{text:"Note: Add more rows if needed",italics:true,color:"2E6FB5",size:16}],{after:40});
-  if(p.minilec)mlDocx(b,p.minilec);b.heading("Support for Struggling Learners",{size:20});b.bullets(["Guided notes and simplified instructions","Vocabulary support and visual aids","Peer support / buddy pairing"]);b.heading("Extension for Advanced Learners",{size:20});b.bullets(["Higher-order thinking questions and research tasks","Additional challenge problems or an independent mini-project","Opportunity to present findings to the class"]);b.heading("Homework",{size:20});b.para([{text:p.homework}]);b.spacer();b.para([{text:licenseLine(),size:14,color:"9aa8b8",italics:true}]);if(pi<plans.length-1)b.pageBreak();});return b;}
+  b.heading("Support for Struggling Learners",{size:20});b.bullets(["Guided notes and simplified instructions","Vocabulary support and visual aids","Peer support / buddy pairing"]);b.heading("Extension for Advanced Learners",{size:20});b.bullets(["Higher-order thinking questions and research tasks","Additional challenge problems or an independent mini-project","Opportunity to present findings to the class"]);b.heading("Homework",{size:20});b.para([{text:p.homework}]);b.spacer();b.para([{text:licenseLine(),size:14,color:"9aa8b8",italics:true}]);if(pi<plans.length-1)b.pageBreak();});return b;}
 function licenseLine(){return "© "+new Date().getFullYear()+" National Academy for Learning — for internal classroom use. Generated with the PLP-NAFL-SPARK Portal.";}
 function lessonPdf(plans){
   const pb=pdfBuilder({landscape:true});
@@ -1831,6 +1956,7 @@ function lessonPdf(plans){
       const namePart=r.name?r.name+":  ":"";
       let tcell=namePart+teacherFlat;
       if(r.pedagogy)tcell+="  ["+r.pedagogy+"]";
+      if(r.questions&&r.questions.length)tcell+="   Questions to ask: "+r.questions.map((q,qi)=>(qi+1)+". "+q).join("   ");
       const learnerFlat=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean).join("   ");
       const faText=String(r.fa||"").split(/\n|,/).map(s=>"- "+s.trim()).join("   ");
       const resText=String(r.res).split(/\n|,/).map(s=>"- "+s.trim()).join("   ");
@@ -1839,8 +1965,6 @@ function lessonPdf(plans){
     body.push([{text:"Teacher Reflection: What would you keep the same / change?     Worked well: Yes / No     Did not work well: Yes / No",fill:"F6F3EC",span:5}]);
     pb.table(body,cw,{size:8.5});
     pb.gap(2);pb.text("Note: Add more rows if needed",{size:8,color:"2E6FB5"});
-    // Mini-lecture
-    if(p.minilec)mlPdf(pb,p.minilec);
     // Differentiation + homework
     pb.gap(4);pb.text("Support for Struggling Learners:",{size:9,bold:true,color:"13233F"});
     pb.text("Guided notes and simplified instructions; vocabulary support and visual aids; peer support / buddy pairing.",{size:8.5,x:M+8});
@@ -1853,7 +1977,7 @@ function lessonPdf(plans){
   return pb.blob();
 }
 /* ===================== reset ===================== */
-function resetBuild(){["f_teacher","f_topic","f_aim","f_obj"].forEach(id=>document.getElementById(id).value="");document.getElementById("f_grade").value="";document.getElementById("f_subject").value="";selected.clear();renderActs();renderSelBar();document.getElementById("buildStatus").textContent="";document.getElementById("previewWrap").style.display="none";lastOut=null;const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
+function resetBuild(){["f_teacher","f_topic","f_aim","f_obj"].forEach(id=>document.getElementById(id).value="");document.getElementById("f_grade").value="";document.getElementById("f_subject").value="";selected.clear();renderActs();renderSelBar();document.getElementById("buildStatus").textContent="";document.getElementById("previewWrap").style.display="none";lastOut=null;lastFetchedContent=null;buildReferenceText="";buildReferenceUsed=false;const refFile=document.getElementById("f_refFile");if(refFile)refFile.value="";const refSt=document.getElementById("refStatus");if(refSt)refSt.textContent="";const kcBox=document.getElementById("keyConceptsBox");if(kcBox)kcBox.classList.add("hide");const kcList=document.getElementById("keyConceptsList");if(kcList)kcList.innerHTML="";const ref=document.getElementById("ncertRefLine");if(ref)ref.textContent="";const ac=document.getElementById("aiContentStatus");if(ac)ac.textContent="";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
 </script>
 </body>
 </html>
