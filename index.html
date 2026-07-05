@@ -350,7 +350,7 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
     <div id="previewBody"></div>
   </div>
 
-  <footer><span class="seal">National Academy for Learning</span> · PLP-NAFL-SPARK Portal · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF · Build/Convert/Plan of Work work without AI; PPT→Word (AI) always needs internet + a key.<br><span style="opacity:.6">build 2026-07-05.1 — if this date looks old after updating the file, hard-refresh (Ctrl/Cmd+Shift+R)</span></footer>
+  <footer><span class="seal">National Academy for Learning</span> · PLP-NAFL-SPARK Portal · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF · Build/Convert/Plan of Work work without AI; PPT→Word (AI) always needs internet + a key.<br><span style="opacity:.6">build 2026-07-05.2 — if this date looks old after updating the file, hard-refresh (Ctrl/Cmd+Shift+R)</span></footer>
 </div>
 
 <script>
@@ -1186,6 +1186,7 @@ function saveSettings(){
     st.textContent="✓ Saved. AI is ON — using the school's shared AI, nothing else needed.";pill.classList.add("aiPill-on");pill.textContent="⚙ AI: ON";
     if(banner)banner.style.display="none";
     try{localStorage.setItem("nafl_ai_provider","school");localStorage.removeItem("nafl_ai_key");}catch(e){}
+    refreshPwButtonState();
     setTimeout(()=>toggleSettings(),1000);
     return;
   }
@@ -1201,7 +1202,21 @@ function saveSettings(){
     st.textContent="Key cleared.";pill.classList.remove("aiPill-on");pill.textContent="⚙ AI Settings";
     try{localStorage.removeItem("nafl_ai_key");}catch(e){}
   }
+  refreshPwButtonState();
   setTimeout(()=>toggleSettings(),1000);
+}
+/* Keep the PPT->Word "Convert with AI" button in sync with AI status even if a file was
+   already uploaded before the key was set — otherwise it stays stuck disabled forever. */
+function refreshPwButtonState(){
+  const btn=document.getElementById("pwBtn");
+  if(!btn)return;
+  if(typeof pwUploadedText!=="undefined" && pwUploadedText){
+    btn.disabled=!hasAI();
+    const ps=document.getElementById("pwStatus");
+    if(ps && hasAI() && /add an AI key/.test(ps.innerHTML)){
+      ps.className="status ok";ps.textContent="AI is ready — click Convert with AI.";
+    }
+  }
 }
 /* Restore a previously saved provider/key on this device, and show the School AI option if it's configured. */
 (function restoreKey(){
