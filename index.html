@@ -10,8 +10,2020 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+:root{a<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>National Academy for Learning · PLP-NAFL-SPARK Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
 :root{
   --ink:#13233f;          /* deep academic navy */
+  --ink2:#1d3358;
+  --gold:#c79a3e;         /* warm academic gold */
+  --gold-d:#a87f2c;
+  --parch:#f6f1e7;        /* parchment */
+  --parch2:#efe7d6;
+  --crest:#7c1f2e;        /* heraldic maroon accent */
+  --card:#ffffff;
+  --line:#e2dccd;
+  --line2:#d8e0ea;
+  --muted:#6a7384;
+  --text:#1c2433;
+  --sky:#B8CCE4;          /* TTA doc colours preserved for exports */
+  --peach:#FBD4B4;
+  --ok:#1f7a4d;--warn:#a4421c;
+  --shadow:0 1px 2px rgba(19,35,63,.06),0 8px 24px rgba(19,35,63,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Inter",system-ui,Arial,sans-serif;color:var(--text);line-height:1.55;
+  background:
+    radial-gradient(1200px 400px at 80% -120px,rgba(199,154,62,.10),transparent 60%),
+    linear-gradient(180deg,#faf7f0,#f4eee2 240px,#f4eee2);min-height:100vh}
+.wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+.serif{font-family:"Fraunces",Georgia,serif}
+
+/* ===== Masthead ===== */
+header.top{background:linear-gradient(115deg,var(--ink),var(--ink2));color:#fff;position:relative;overflow:hidden;
+  border-bottom:3px solid var(--gold)}
+header.top::after{content:"";position:absolute;inset:0;background:
+  repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 1px,transparent 1px 64px);pointer-events:none}
+.top .wrap{display:flex;align-items:center;gap:18px;padding:20px 22px 18px;position:relative;z-index:1;flex-wrap:wrap}
+.crest{width:62px;height:62px;flex:none;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:14px;border:2px solid var(--gold);box-shadow:0 3px 10px rgba(0,0,0,.28);overflow:hidden}
+.crest img{width:auto;height:50px;display:block}
+.identity h1{font-size:1.5rem;margin:0;letter-spacing:.3px;font-weight:600;line-height:1.1}
+.identity .estd{display:flex;align-items:center;gap:10px;margin-top:5px}
+.identity .estd .ln{height:1px;width:26px;background:var(--gold)}
+.identity .estd span{font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:#dcc89a;font-weight:600}
+.identity p{margin:6px 0 0;font-size:.84rem;color:#c4d2e8}
+.mast-right{margin-left:auto;text-align:right}
+.mast-right .pill{display:inline-block;font-size:.72rem;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.2);
+  padding:6px 13px;border-radius:30px;color:#f0e7d2}
+.mast-right .motto{margin-top:8px;font-family:"Fraunces",serif;font-style:italic;font-size:.86rem;color:#dcc89a}
+@media(max-width:620px){.mast-right{margin-left:0;width:100%;text-align:left}}
+
+/* ===== Mode tabs ===== */
+.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0 4px}
+@media(max-width:860px){.modes{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.modes{grid-template-columns:1fr}}
+.mode-btn{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;cursor:pointer;
+  transition:.16s;display:flex;gap:13px;align-items:flex-start;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.mode-btn::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:transparent;transition:.16s}
+.mode-btn:hover{transform:translateY(-2px);border-color:var(--gold)}
+.mode-btn.active{border-color:var(--gold)}
+.mode-btn.active::before{background:var(--gold)}
+.mode-btn .ic{width:40px;height:40px;border-radius:11px;background:var(--parch2);color:var(--ink);font-size:1.15rem;
+  display:flex;align-items:center;justify-content:center;flex:none;font-weight:700}
+.mode-btn.active .ic{background:var(--ink);color:var(--gold)}
+.mode-btn h3{margin:0 0 3px;font-size:.96rem;font-weight:600}
+.mode-btn p{margin:0;font-size:.78rem;color:var(--muted)}
+
+/* ===== Panels ===== */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin:16px 0 30px;box-shadow:var(--shadow)}
+.panel h2{margin:0 0 4px;font-size:1.2rem;font-weight:600}
+.panel .sub{margin:0 0 18px;color:var(--muted);font-size:.86rem}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+@media(max-width:820px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.grid{grid-template-columns:1fr}}
+.field label{display:block;font-size:.72rem;font-weight:600;color:var(--ink);margin-bottom:5px;text-transform:uppercase;letter-spacing:.6px}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font:inherit;background:#fdfcf9;color:var(--text)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(199,154,62,.16);background:#fff}
+.field.full{grid-column:1/-1}
+textarea{resize:vertical;min-height:74px}
+
+.section-h{display:flex;align-items:center;gap:11px;margin:26px 0 13px;flex-wrap:wrap}
+.section-h .bar{width:5px;height:20px;border-radius:3px;background:var(--gold)}
+.section-h h3{margin:0;font-size:1rem;font-weight:600;font-family:"Fraunces",serif}
+.section-h .hint{font-size:.78rem;color:var(--muted);margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.lib-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.lib-tab{font-size:.78rem;padding:6px 13px;border-radius:30px;border:1.5px solid var(--line);background:#fff;cursor:pointer;color:var(--muted);font-weight:500}
+.lib-tab.active{background:var(--ink);color:var(--gold);border-color:var(--ink)}
+.acts{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+@media(max-width:680px){.acts{grid-template-columns:1fr}}
+.act{border:1.5px solid var(--line);border-radius:13px;padding:13px;cursor:pointer;transition:.13s;background:#fff;position:relative}
+.act:hover{border-color:var(--gold)}
+.act.sel{border-color:var(--gold);background:#fffdf6;box-shadow:0 0 0 2px rgba(199,154,62,.15)}
+.act .catdot{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 8px;border-radius:30px;margin-bottom:7px}
+.act h4{margin:0 0 4px;font-size:.9rem;font-weight:600}
+.act p{margin:0;font-size:.78rem;color:var(--muted)}
+.act .check{position:absolute;top:12px;right:12px;width:21px;height:21px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.72rem;color:#fff}
+.act.sel .check{background:var(--gold);border-color:var(--gold)}
+.cat-starter{background:#f6ead0;color:#8a6516}.cat-collaborative{background:#dde9f5;color:#1b4f82}
+.cat-formative{background:#dcefe4;color:#176844}.cat-plenary{background:#ece3f3;color:#5a3a86}
+.selbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 4px;font-size:.82rem;color:var(--muted)}
+.chip{background:var(--parch2);color:var(--ink);padding:4px 11px;border-radius:30px;font-size:.76rem;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.chip b{cursor:pointer;color:var(--crest)}
+
+.drop{border:2px dashed var(--line);border-radius:16px;padding:28px 20px;text-align:center;background:#fdfbf6;cursor:pointer;transition:.15s}
+.drop:hover,.drop.over{border-color:var(--gold);background:#fffdf6}
+.drop .big{font-size:1.9rem}
+.drop h3{margin:8px 0 3px;font-size:1rem;font-weight:600}
+.drop p{margin:0;color:var(--muted);font-size:.84rem}
+.filemeta{margin-top:12px;font-size:.84rem;display:none;align-items:center;gap:10px;background:#fffdf6;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.filemeta.show{display:flex}
+
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;align-items:center}
+.btn{border:none;border-radius:11px;padding:11px 21px;font:inherit;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.14s}
+.btn-primary{background:var(--ink);color:#fff}.btn-primary:hover{background:var(--ink2)}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+.btn-gold{background:var(--gold);color:#2a2008}.btn-gold:hover{background:var(--gold-d)}
+.btn-ghost{background:#fff;border:1.5px solid var(--line);color:var(--text)}.btn-ghost:hover{border-color:var(--gold)}
+.btn-sm{padding:8px 15px;font-size:.82rem}
+.status{font-size:.84rem;color:var(--muted)}.status.ok{color:var(--ok)}.status.err{color:var(--warn)}
+.note{font-size:.8rem;background:#fbf4e3;border:1px solid #ecdcb4;color:#76591f;border-radius:11px;padding:10px 13px;margin-top:11px}
+.hide{display:none}
+
+/* qtypes */
+.qtypes{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px;margin-bottom:8px}
+.qt{border:1.5px solid var(--line);border-radius:11px;padding:9px 12px;cursor:pointer;font-size:.84rem;display:flex;align-items:center;gap:9px;background:#fff}
+.qt.sel{border-color:var(--gold);background:#fffdf6}
+.qt .cb{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;flex:none}
+.qt.sel .cb{background:var(--gold);border-color:var(--gold)}
+.qt small{display:block;color:var(--muted);font-size:.7rem}
+.qtype-rows{display:flex;flex-direction:column;gap:7px;margin-top:7px}
+.qtype-row{display:flex;gap:9px;align-items:center;font-size:.82rem;background:#fdfbf6;border:1px solid var(--line);border-radius:9px;padding:7px 11px;flex-wrap:wrap}
+.qtype-row label{flex:1;min-width:120px;font-weight:600}.qtype-row input{width:66px;padding:5px 7px;border:1.5px solid var(--line);border-radius:7px;font:inherit}
+
+/* preview */
+#previewWrap{display:none;margin-top:8px}
+.lp-preview,.ws-preview{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;margin-bottom:18px;box-shadow:var(--shadow)}
+.lp-head{background:linear-gradient(115deg,var(--ink),var(--ink2));color:#fff;padding:13px 17px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;border-bottom:2px solid var(--gold)}
+.lp-head h3{margin:0;font-size:1rem;font-weight:600;font-family:"Fraunces",serif}
+.lp-body{padding:17px;overflow-x:auto}
+table.lp{border-collapse:collapse;width:100%;font-size:.8rem;min-width:760px}
+table.lp th,table.lp td{border:1px solid #c9d3e0;padding:7px 9px;vertical-align:top;text-align:left}
+table.lp .metarow td{background:#eef2f8}
+table.lp .aimrow td{background:var(--sky)}
+table.lp .objrow td{background:var(--peach)}
+table.lp .colhdr th{background:#fff;color:#111;font-size:.75rem;border-bottom:2px solid #111}
+table.lp ul{margin:4px 0;padding-left:18px}.reflrow td{background:#f6f3ec;font-style:italic}
+.extra{margin-top:14px;font-size:.82rem}.extra h4{margin:14px 0 5px;color:var(--ink);font-size:.86rem;font-family:"Fraunces",serif}.extra ul{margin:4px 0;padding-left:18px}
+.ws-section{margin-bottom:13px}.ws-section h4{margin:9px 0 5px;font-size:.88rem;color:var(--ink);font-family:"Fraunces",serif}
+.ws-q{font-size:.82rem;padding:5px 0;border-bottom:1px dashed #ece6d8}.ws-q .opts{color:var(--muted);margin-top:2px}
+.imgbox{border:1.5px dashed #cdbf9c;border-radius:9px;height:120px;display:flex;align-items:center;justify-content:center;color:#a89668;font-size:.8rem;margin:6px 0;background:repeating-linear-gradient(45deg,#fdfbf6,#fdfbf6 10px,#f6f1e6 10px,#f6f1e6 20px)}
+.ws-q pre{background:#f6f3ec;border:1px solid var(--line);border-radius:7px;padding:8px;font-size:.78rem;overflow:auto;margin:5px 0}
+
+footer{color:var(--muted);font-size:.76rem;text-align:center;padding:26px 0 42px}
+.ml-toggle{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;background:#fffdf6;border:1.5px solid var(--line);border-radius:11px;padding:12px 14px;cursor:pointer;line-height:1.5}
+.ml-toggle input{margin-top:3px;width:17px;height:17px;flex:none;accent-color:var(--gold)}
+.ml-section{margin-top:14px}.ml-section h4{margin:12px 0 5px;color:var(--ink);font-family:"Fraunces",serif;font-size:.9rem}
+.ml-section p{margin:5px 0;font-size:.84rem}.ml-section ul{margin:5px 0;padding-left:20px}.ml-section li{margin:3px 0;font-size:.84rem}
+.ml-q{background:#fdfbf6;border-left:3px solid var(--gold);padding:6px 12px;margin:4px 0;font-size:.83rem;border-radius:0 7px 7px 0}
+#settingsBar{background:#0e1b30;border-bottom:2px solid var(--gold)}
+.settings-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 16px;color:#fff}
+.aiPill-on{background:var(--gold)!important;color:#2a2008!important;border-color:var(--gold)!important}
+footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;letter-spacing:.4px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="crest"><img src="data:image/png;base64,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" alt="National Academy for Learning logo"></div>
+    <div class="identity">
+      <h1 class="serif">National Academy for Learning</h1>
+      <div class="estd"><span class="ln"></span><span>PLP-NAFL-SPARK Portal</span><span class="ln"></span></div>
+      <p>Lesson plans &amp; chapter objectives · CBSE · Grades 1–12 · Every subject</p>
+    </div>
+    <div class="mast-right">
+      <span class="pill" id="aiPill" onclick="toggleSettings()" style="cursor:pointer">⚙ AI Settings</span>
+      <div class="motto">Learn · Teach · Engage</div>
+    </div>
+  </div>
+  <div id="settingsBar" class="hide">
+    <div class="wrap" style="padding:0 22px 16px">
+      <div class="settings-card">
+        <div style="font-weight:600;margin-bottom:6px">AI content generation</div>
+        <p style="margin:0 0 10px;font-size:.82rem;color:#c4d2e8">Only needed for the AI buttons (Fetch AI content, mini-lecture, PPT→Word). Everything else in this app works with no AI at all.</p>
+        <div id="schoolAiRow" style="display:none;background:rgba(159,217,168,.12);border:1px solid rgba(159,217,168,.4);border-radius:10px;padding:12px;margin-bottom:12px">
+          <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer">
+            <input type="radio" name="prov" value="school" onchange="onProvChange()" style="margin-top:3px">
+            <span><b>✓ School AI</b> — <span style="color:#9fd9a8">already set up, nothing to do</span><br>
+            <span style="font-size:.78rem;color:#c4d2e8">Your tech coordinator has switched this on for the whole school. Just pick this and press Save — no login, no key, no account needed.</span></span>
+          </label>
+        </div>
+        <details style="margin-bottom:4px">
+          <summary style="cursor:pointer;font-size:.85rem;color:#c4d2e8">I want to use my own Google or OpenAI account instead ▾</summary>
+          <div style="margin-top:10px">
+            <p style="margin:0 0 10px;font-size:.8rem;color:#c4d2e8">There's no "log in with Google/ChatGPT" button here — Google and OpenAI don't allow that for outside apps. You create a free key yourself, once, and paste it below. It's stored only on this device, never uploaded anywhere.</p>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <label style="display:flex;gap:6px;align-items:center;font-size:.85rem;cursor:pointer"><input type="radio" name="prov" value="gemini" onchange="onProvChange()"> <b>Google Gemini</b> — <span style="color:#9fd9a8">free tier</span></label>
+              <label style="display:flex;gap:6px;align-items:center;font-size:.85rem;cursor:pointer;margin-left:14px"><input type="radio" name="prov" value="openai" onchange="onProvChange()"> OpenAI / ChatGPT — paid</label>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <input id="set_key" type="password" placeholder="Paste your API key" style="flex:1;min-width:240px;padding:9px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff">
+              <label style="display:flex;gap:5px;align-items:center;font-size:.78rem;color:#c4d2e8;cursor:pointer"><input type="checkbox" onchange="document.getElementById('set_key').type=this.checked?'text':'password'"> show</label>
+              <select id="set_model" style="padding:9px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.3);background:#1d3358;color:#fff"></select>
+            </div>
+            <p style="margin:6px 0 0;font-size:.76rem;color:#dba55a">⚠ On a shared/public computer, press Save key → Clear key when you're done, so the next person can't reuse yours.</p>
+            <ol id="set_help" style="margin:10px 0 0;padding-left:18px;font-size:.8rem;color:#c4d2e8;line-height:1.6"></ol>
+          </div>
+        </details>
+        <div style="display:flex;gap:10px;align-items:center;margin-top:12px">
+          <button class="btn btn-gold btn-sm" onclick="saveSettings()">Save</button>
+          <span id="set_status" style="font-size:.82rem;color:#dcc89a"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="aiBanner" style="margin:18px 0 0;padding:14px 18px;border:1.5px solid var(--gold);background:#fffaf0;border-radius:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+    <div style="font-size:1.5rem">🤖</div>
+    <div style="flex:1;min-width:220px">
+      <div style="font-weight:700;color:var(--ink)">Turn on AI for real, topic-specific content</div>
+      <div style="font-size:.85rem;color:var(--muted)">This tool writes lesson content and objectives for <i>your exact topic</i>. Ask your tech coordinator if <b>School AI</b> is already switched on for everyone (no login needed) — or set up your own free key in under a minute. Without AI you still get full editable templates.</div>
+    </div>
+    <button class="btn btn-gold btn-sm" onclick="toggleSettings()">⚙ Turn on AI (free)</button>
+    <b style="cursor:pointer;color:var(--muted);font-size:.8rem" onclick="document.getElementById('aiBanner').style.display='none'">dismiss</b>
+  </div>
+  <div class="modes" style="grid-template-columns:repeat(4,1fr)">
+    <div class="mode-btn active" id="m1" onclick="setMode('build')"><div class="ic">＋</div><div><h3>Build lesson plan</h3><p>Topic + activities → formatted plan.</p></div></div>
+    <div class="mode-btn" id="m2" onclick="setMode('convert')"><div class="ic">↑</div><div><h3>Convert a file</h3><p>PPT / PDF / Word → school format.</p></div></div>
+    <div class="mode-btn" id="m3" onclick="setMode('pptai')"><div class="ic">🤖</div><div><h3>PPT → Word</h3><p>Converts every slide into the plan — smarter with AI, works without it too.</p></div></div>
+    <div class="mode-btn" id="m4" onclick="setMode('pow')"><div class="ic">▦</div><div><h3>Plan of Work</h3><p>Upload syllabus → objectives.</p></div></div>
+  </div>
+
+  <!-- BUILD -->
+  <div class="panel" id="buildPanel">
+    <h2 class="serif">Lesson details</h2><p class="sub">Fills the header row of the plan exactly as in the school's In-session format.</p>
+    <div class="grid">
+      <div class="field"><label>Teacher</label><input id="f_teacher" placeholder="Ms / Mr …"></div>
+      <div class="field"><label>Class / Grade</label><select id="f_grade"><option value="">Select grade</option></select></div>
+      <div class="field"><label>Subject</label><select id="f_subject"><option value="">Select subject</option></select></div>
+      <div class="field"><label>Content / Unit / Chapter</label><input id="f_topic" placeholder="e.g. Light – Reflection, Fractions">
+        <div style="margin-top:7px"><button class="btn btn-ghost btn-sm" onclick="aiFetchContent()">✨ Fetch AI content (CBSE/NCERT)</button> <span class="status" id="aiContentStatus"></span></div>
+        <div style="margin-top:8px;font-size:.78rem;color:var(--muted)">
+          📎 Optional — upload the actual NCERT/textbook page (PDF) for this topic, so AI quotes real content instead of general knowledge:
+          <input type="file" id="f_refFile" accept=".pdf" onchange="handleRefFile(this.files[0])" style="font-size:.78rem">
+          <div id="refStatus" class="status"></div>
+        </div></div>
+      <div class="field"><label>Date</label><input id="f_date" type="date"></div>
+      <div class="field"><label>Lesson duration</label><select id="f_dur"><option>30 min</option><option>35 min</option><option selected>40 min</option><option>45 min</option><option>60 min</option><option>80 min</option></select></div>
+      <div class="field full"><label>Aim (optional — auto-written if blank)</label><input id="f_aim" placeholder="One sentence describing the overall purpose"></div>
+      <div class="field full"><label>Learning objectives (optional, one per line)</label><textarea id="f_obj" placeholder="describe …&#10;explain …&#10;apply …"></textarea>
+        <div style="margin-top:7px"><button class="btn btn-ghost btn-sm" onclick="aiObjectives()">✨ Suggest objectives with AI</button> <span class="status" id="aiObjStatus"></span></div></div>
+      <div class="field full hide" id="keyConceptsBox" style="background:var(--panel-2,#f7f5f0);border:1px solid var(--border,#e4ddd0);border-radius:10px;padding:12px 14px">
+        <div style="font-weight:600;font-size:.85rem;margin-bottom:4px">Key concepts (from AI, grounded in NCERT/CBSE)</div>
+        <ul id="keyConceptsList" style="margin:0 0 6px 18px;padding:0;font-size:.85rem;line-height:1.5"></ul>
+        <div id="ncertRefLine" style="font-size:.8rem;color:var(--muted)"></div>
+      </div>
+    </div>
+    <div class="section-h"><div class="bar"></div><h3>Choose activities</h3><span class="hint">From the school's Goody Bag resources</span></div>
+    <div class="lib-tabs" id="libTabs"></div>
+    <div class="acts" id="actGrid"></div>
+    <div class="selbar" id="selBar"></div>
+    <div class="note">A balanced plan usually has one <b>Starter</b>, one or two <b>Collaborative / Formative</b> main activities, and one <b>Plenary</b>.</div>
+    <div class="section-h"><div class="bar"></div><h3>Teacher mini-lecture</h3><span class="hint">Talking points for the teacher on this topic</span></div>
+    <label class="ml-toggle"><input type="checkbox" id="f_content" checked> Generate <b>real activity content from my objectives</b> — mini-lecture-quality explanations, worked examples, and 2-4 follow-up questions embedded in each row of the table (starter, main/collaborative, plenary — needs AI).</label>
+    <div class="note" id="mlNote">When generating, the tool drafts the mini-lecture with AI for your exact topic (needs internet). If AI is unavailable, a structured template is added that the teacher can complete.</div>
+    <div class="actions"><button class="btn btn-primary" onclick="buildPlan()">Generate lesson plan</button><button class="btn btn-ghost" onclick="resetBuild()">Clear</button><span class="status" id="buildStatus"></span></div>
+  </div>
+
+  <!-- CONVERT -->
+  <div class="panel hide" id="convertPanel">
+    <h2 class="serif">Convert an existing lesson</h2><p class="sub">Upload a PowerPoint, PDF or Word file. It is restructured into the school's In-session format.</p>
+    <div class="drop" id="drop"><div class="big">⬆</div><h3>Drop a file or click to browse</h3><p>.pptx · .pdf · .docx</p><input type="file" id="fileInput" class="hide" accept=".pptx,.pdf,.docx"></div>
+    <div class="filemeta" id="fileMeta"><span id="fmName"></span><span id="fmSize" style="color:var(--muted)"></span><b style="margin-left:auto;cursor:pointer;color:var(--warn)" onclick="clearFile()">remove</b></div>
+    <div class="grid" style="margin-top:18px">
+      <div class="field"><label>Teacher</label><input id="c_teacher" placeholder="Ms / Mr …"></div>
+      <div class="field"><label>Class / Grade</label><select id="c_grade"><option value="">Select grade</option></select></div>
+      <div class="field"><label>Subject</label><select id="c_subject"><option value="">Select subject</option></select></div>
+      <div class="field"><label>Content / Unit / Chapter</label><input id="c_topic" placeholder="auto-detected if blank"></div>
+      <div class="field"><label>Date</label><input id="c_date" type="date"></div>
+      <div class="field"><label>Lesson duration</label><select id="c_dur"><option>30 min</option><option>35 min</option><option selected>40 min</option><option>45 min</option><option>60 min</option><option>80 min</option></select></div>
+    </div>
+    <div class="note">Keeps the file's activities &amp; sequence, splits content into timed rows, and adds Formative Assessment + Resources columns. Long decks auto-split into multiple lesson plans. If no named activities are found, you'll be offered the same activity library used in Build.</div>
+    <div id="convActPicker" class="hide" style="margin-top:14px"></div>
+    <div class="actions"><button class="btn btn-primary" id="convBtn" onclick="convertFile()" disabled>Convert to lesson plan</button><button class="btn btn-ghost" onclick="clearFile()">Clear</button><span class="status" id="convStatus"></span></div>
+  </div>
+
+  <!-- PPT -> WORD (AI, module 4) -->
+  <div class="panel hide" id="pptAiPanel">
+    <h2 class="serif">PPT → Word</h2><p class="sub">Upload a PowerPoint — it converts straight into the school's Word lesson-plan format, slide by slide. If AI is available it restructures the content into proper timed stages; if not, it still converts every slide directly, no AI needed. Either way, no activities or resources need to be picked.</p>
+    <div class="drop" id="pwDrop"><div class="big">🤖</div><h3>Drop a .pptx or click to browse</h3><p>.pptx only</p><input type="file" id="pwFileInput" class="hide" accept=".pptx"></div>
+    <div class="filemeta" id="pwFileMeta"><span id="pwFmName"></span><span id="pwFmSize" style="color:var(--muted)"></span><b style="margin-left:auto;cursor:pointer;color:var(--warn)" onclick="clearPwFile()">remove</b></div>
+    <div class="grid" style="margin-top:18px">
+      <div class="field"><label>Teacher</label><input id="pw_teacher" placeholder="Ms / Mr …"></div>
+      <div class="field"><label>Class / Grade</label><select id="pw_grade"><option value="">Select grade</option></select></div>
+      <div class="field"><label>Subject</label><select id="pw_subject"><option value="">Select subject</option></select></div>
+      <div class="field"><label>Content / Unit / Chapter</label><input id="pw_topic" placeholder="auto-detected if blank"></div>
+      <div class="field"><label>Date</label><input id="pw_date" type="date"></div>
+      <div class="field"><label>Lesson duration</label><select id="pw_dur"><option>30 min</option><option>35 min</option><option selected>40 min</option><option>45 min</option><option>60 min</option><option>80 min</option></select></div>
+    </div>
+    <div class="note">This module works with or without an AI key. With AI (⚙ AI Settings) it reads every slide and restructures the deck into proper timed teacher/learner stages. Without AI, it converts each slide directly into a row — still a complete Word/PDF lesson plan, just less restructured. It never draws on the Goody Bag activity library, so nothing needs to be selected first.</div>
+    <div class="actions"><button class="btn btn-primary" id="pwBtn" onclick="convertPptWithAI()" disabled>Convert to lesson plan</button><button class="btn btn-ghost" onclick="clearPwFile()">Clear</button><span class="status" id="pwStatus"></span></div>
+  </div>
+
+  <!-- POW -->
+  <div class="panel hide" id="powPanel">
+    <h2 class="serif">Plan of Work (syllabus)</h2><p class="sub">Upload the year / term Plan of Work PDF. Get a Topics → Objectives (or Month → Objectives) table as an editable Word and matching PDF (landscape), or drill into one chapter for a full lesson plan.</p>
+    <div class="drop" id="powDrop"><div class="big">▦</div><h3>Drop the POW PDF or click to browse</h3><p>.pdf syllabus breakdown</p><input type="file" id="powInput" class="hide" accept=".pdf"></div>
+    <div class="filemeta" id="powMeta"><span id="pmName"></span><span id="pmSize" style="color:var(--muted)"></span><b style="margin-left:auto;cursor:pointer;color:var(--warn)" onclick="clearPow()">remove</b></div>
+    <div class="grid" style="margin-top:18px">
+      <div class="field"><label>Class / Grade</label><select id="p_grade"><option value="">Select grade</option></select></div>
+      <div class="field"><label>Subject</label><select id="p_subject"><option value="">Select subject</option></select></div>
+      <div class="field"><label>Table layout</label><select id="p_layout">
+        <option value="topics">Topics → Objectives (school template)</option>
+        <option value="month">Month → Objectives (year planner)</option>
+      </select></div>
+    </div>
+    <div class="grid" style="margin-top:10px">
+      <div class="field"><label>Teacher name</label><input id="p_teacher" placeholder="e.g. Ms. Chetana"></div>
+      <div class="field"><label>Date</label><input id="p_date" type="date"></div>
+      <div class="field"><label>Duration per lesson</label><input id="p_dur" placeholder="40 min" value="40 min"></div>
+    </div>
+    <div class="field" id="p_startmonth_wrap" style="max-width:260px;margin-top:10px"><label>Academic year starts</label><select id="p_startmonth">
+        <option value="3">April</option><option value="5">June</option><option value="6">July</option><option value="0">January</option>
+    </select></div>
+    <div id="powList" class="hide">
+      <div class="section-h"><div class="bar"></div><h3>Detected chapters / units</h3><span class="hint">Generate the full table, or pick one for a detailed lesson plan</span></div>
+      <div class="actions" style="margin-top:0 0 14px"><button class="btn btn-primary" onclick="generatePowTable()">📅 Generate full Plan of Work</button></div>
+      <div id="powChapters"></div>
+    </div>
+    <div class="note">For each chapter, choose how many lesson plans it should be split into, then click <b>Generate lesson plans</b> — the tool builds that many full sessions using real activities from the school's Goody Bag library, with objectives spread sensibly across them. With an AI key in ⚙ AI Settings, the session-by-session focus is planned specifically for the topic; without one, objectives are split evenly and a default activity rotation is used. Reading the syllabus PDF always works offline.</div>
+    <div class="actions"><button class="btn btn-primary" id="powBtn" onclick="readPow()" disabled>Read syllabus</button><button class="btn btn-ghost" onclick="clearPow()">Clear</button><span class="status" id="powStatus"></span></div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div id="previewWrap">
+    <div class="section-h"><div class="bar"></div><h3 id="prevTitle">Preview</h3>
+      <span class="hint">
+        <button class="btn btn-primary btn-sm" onclick="downloadDocxOut()">⬇ Word (.docx)</button>
+        <button class="btn btn-gold btn-sm" onclick="downloadPdfOut()">⬇ PDF</button>
+      </span>
+    </div>
+    <div id="previewBody"></div>
+  </div>
+
+  <footer><span class="seal">National Academy for Learning</span> · PLP-NAFL-SPARK Portal · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF · all 4 modules work without AI (AI enhances results when available); loading this page always needs internet.<br><span style="opacity:.6">build 2026-07-05.3 — if this date looks old after updating the file, hard-refresh (Ctrl/Cmd+Shift+R)</span></footer>
+</div>
+
+<script>
+/* ===== engines (zip/docx/pdf/inflate) ===== */
+/* ============================================================
+   engines.js — zero-dependency DOCX + PDF + ZIP, browser-native
+   ============================================================ */
+
+/* ---------- CRC32 (for ZIP) ---------- */
+const _crcTable=(()=>{let c,t=[];for(let n=0;n<256;n++){c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(bytes){let c=0xFFFFFFFF;for(let i=0;i<bytes.length;i++)c=_crcTable[(c^bytes[i])&0xFF]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+
+/* ---------- minimal STORE-only ZIP (valid .docx container) ---------- */
+function makeZip(files){
+  // files: [{name, data(Uint8Array)}]
+  const enc=new TextEncoder();
+  let chunks=[],central=[],offset=0;
+  function u16(n){return [n&0xff,(n>>8)&0xff];}
+  function u32(n){return [n&0xff,(n>>8)&0xff,(n>>16)&0xff,(n>>24)&0xff];}
+  for(const f of files){
+    const nameB=enc.encode(f.name);
+    const data=f.data;
+    const crc=crc32(data);
+    const local=[].concat(
+      u32(0x04034b50),u16(20),u16(0),u16(0),u16(0),u16(0),
+      u32(crc),u32(data.length),u32(data.length),
+      u16(nameB.length),u16(0)
+    );
+    chunks.push(new Uint8Array(local));chunks.push(nameB);chunks.push(data);
+    const central_rec=[].concat(
+      u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),
+      u32(crc),u32(data.length),u32(data.length),
+      u16(nameB.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset)
+    );
+    central.push({rec:new Uint8Array(central_rec),name:nameB});
+    offset+=local.length+nameB.length+data.length;
+  }
+  let centralStart=offset,centralSize=0,centralChunks=[];
+  for(const c of central){centralChunks.push(c.rec);centralChunks.push(c.name);centralSize+=c.rec.length+c.name.length;}
+  const end=[].concat(
+    u32(0x06054b50),u16(0),u16(0),u16(central.length),u16(central.length),
+    u32(centralSize),u32(centralStart),u16(0)
+  );
+  const all=[...chunks,...centralChunks,new Uint8Array(end)];
+  let total=all.reduce((a,b)=>a+b.length,0),out=new Uint8Array(total),p=0;
+  for(const a of all){out.set(a,p);p+=a.length;}
+  return out;
+}
+
+/* ---------- XML escape ---------- */
+function xescape(s){return (s==null?"":String(s))
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;").replace(/'/g,"&apos;");}
+
+/* ============================================================
+   DOCX builder — tables, shading, bullets, page breaks
+   API: docBuilder() -> b; b.para(), b.table(), b.pageBreak(); b.toBlob()
+   Block model is a simple JSON tree we serialize to OOXML.
+   ============================================================ */
+function docBuilder(opts={}){
+  const blocks=[];
+  const landscape=opts.landscape!==false;
+  return {
+    para(runs,o={}){blocks.push({t:"p",runs:Array.isArray(runs)?runs:[{text:runs,...o}],o});return this;},
+    heading(text,o={}){blocks.push({t:"p",runs:[{text,bold:true,size:o.size||24,color:o.color||"0F2A52"}],o:{spacingBefore:o.before||160,spacingAfter:o.after||60}});return this;},
+    bullets(items,o={}){items.forEach(it=>blocks.push({t:"p",bullet:true,runs:[{text:it,size:o.size||18}]}));return this;},
+    numbered(items,o={}){items.forEach((it,i)=>blocks.push({t:"p",num:i+1,runs:[{text:it,size:o.size||18}]}));return this;},
+    table(rows,cols){blocks.push({t:"tbl",rows,cols});return this;},
+    spacer(){blocks.push({t:"p",runs:[{text:""}]});return this;},
+    pageBreak(){blocks.push({t:"pb"});return this;},
+    blob(){return docxBlob(blocks,landscape);}
+  };
+}
+
+function runXml(r){
+  const rpr=[];
+  if(r.bold)rpr.push("<w:b/>");
+  if(r.italics)rpr.push("<w:i/>");
+  rpr.push(`<w:sz w:val="${r.size||18}"/>`);
+  rpr.push(`<w:szCs w:val="${r.size||18}"/>`);
+  if(r.color)rpr.push(`<w:color w:val="${r.color}"/>`);
+  rpr.push(`<w:rFonts w:ascii="Arial" w:hAnsi="Arial"/>`);
+  const txt=xescape(r.text||"");
+  const space=(/^\s|\s$/.test(r.text||""))?' xml:space="preserve"':"";
+  return `<w:r><w:rPr>${rpr.join("")}</w:rPr><w:t${space}>${txt}</w:t></w:r>`;
+}
+function paraXml(b){
+  const ppr=[];
+  if(b.bullet)ppr.push(`<w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr>`);
+  if(b.num)ppr.push(`<w:numPr><w:ilvl w:val="0"/><w:numId w:val="2"/></w:numPr>`);
+  const o=b.o||{};
+  const sp=[];if(o.spacingBefore)sp.push(`w:before="${o.spacingBefore}"`);if(o.spacingAfter!=null)sp.push(`w:after="${o.spacingAfter}"`);else sp.push(`w:after="40"`);
+  ppr.push(`<w:spacing ${sp.join(" ")}/>`);
+  if(o.align)ppr.push(`<w:jc w:val="${o.align}"/>`);
+  const runs=(b.runs||[]).map(runXml).join("");
+  return `<w:p><w:pPr>${ppr.join("")}</w:pPr>${runs}</w:p>`;
+}
+function cellXml(c,colW){
+  // c: {runs:[...] | blocks:[paraXml...], fill, span, w, valign}
+  const tcpr=[`<w:tcW w:w="${c.w||colW}" w:type="dxa"/>`];
+  if(c.span&&c.span>1)tcpr.push(`<w:gridSpan w:val="${c.span}"/>`);
+  if(c.fill)tcpr.push(`<w:shd w:val="clear" w:color="auto" w:fill="${c.fill}"/>`);
+  tcpr.push(`<w:tcMar><w:top w:w="60" w:type="dxa"/><w:left w:w="90" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:right w:w="90" w:type="dxa"/></w:tcMar>`);
+  if(c.valign)tcpr.push(`<w:vAlign w:val="${c.valign}"/>`);
+  let inner;
+  if(c.paras)inner=c.paras.map(p=>paraXml(p)).join("");
+  else inner=paraXml({runs:c.runs||[{text:c.text||""}],o:c.o||{}});
+  return `<w:tc><w:tcPr>${tcpr.join("")}</w:tcPr>${inner}</w:tc>`;
+}
+function tableXml(b){
+  const cols=b.cols;
+  const grid=cols.map(w=>`<w:gridCol w:w="${w}"/>`).join("");
+  const border=`<w:tblBorders><w:top w:val="single" w:sz="4" w:color="9FB3CC"/><w:left w:val="single" w:sz="4" w:color="9FB3CC"/><w:bottom w:val="single" w:sz="4" w:color="9FB3CC"/><w:right w:val="single" w:sz="4" w:color="9FB3CC"/><w:insideH w:val="single" w:sz="4" w:color="9FB3CC"/><w:insideV w:val="single" w:sz="4" w:color="9FB3CC"/></w:tblBorders>`;
+  const totalW=cols.reduce((a,c)=>a+c,0);
+  const rows=b.rows.map(r=>{
+    const cells=r.map((c,i)=>cellXml(c,cols[i]||cols[cols.length-1])).join("");
+    const trpr=r._header?`<w:trPr><w:tblHeader/></w:trPr>`:"";
+    return `<w:tr>${trpr}${cells}</w:tr>`;
+  }).join("");
+  return `<w:tbl><w:tblPr><w:tblW w:w="${totalW}" w:type="dxa"/>${border}<w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>${grid}</w:tblGrid>${rows}</w:tbl>`;
+}
+function docxBlob(blocks,landscape){
+  const body=blocks.map(b=>{
+    if(b.t==="p")return paraXml(b);
+    if(b.t==="tbl")return tableXml(b);
+    if(b.t==="pb")return `<w:p><w:r><w:br w:type="page"/></w:r></w:p>`;
+    return "";
+  }).join("");
+  const W=landscape?15840:12240,H=landscape?12240:15840;
+  const sect=`<w:sectPr><w:pgSz w:w="${W}" w:h="${H}"${landscape?' w:orient="landscape"':""}/><w:pgMar w:top="720" w:right="720" w:bottom="720" w:left="720" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr>`;
+  const documentXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><w:body>${body}${sect}</w:body></w:document>`;
+  const numberingXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:abstractNum w:abstractNumId="0"><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="•"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="540" w:hanging="280"/></w:pPr></w:lvl></w:abstractNum>
+<w:abstractNum w:abstractNumId="1"><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1."/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="540" w:hanging="280"/></w:pPr></w:lvl></w:abstractNum>
+<w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num>
+<w:num w:numId="2"><w:abstractNumId w:val="1"/></w:num>
+</w:numbering>`;
+  const stylesXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="18"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>`;
+  const contentTypes=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/></Types>`;
+  const rels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`;
+  const docRels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/></Relationships>`;
+  const enc=new TextEncoder();
+  const files=[
+    {name:"[Content_Types].xml",data:enc.encode(contentTypes)},
+    {name:"_rels/.rels",data:enc.encode(rels)},
+    {name:"word/document.xml",data:enc.encode(documentXml)},
+    {name:"word/styles.xml",data:enc.encode(stylesXml)},
+    {name:"word/numbering.xml",data:enc.encode(numberingXml)},
+    {name:"word/_rels/document.xml.rels",data:enc.encode(docRels)}
+  ];
+  const zip=makeZip(files);
+  return new Blob([zip],{type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
+}
+
+/* ============================================================
+   PDF builder — text + lines + rectangles, multi-page, A4 portrait
+   Minimal but valid PDF 1.4. Helvetica only. Word-wrapping included.
+   ============================================================ */
+function pdfBuilder(o={}){
+  const PW=o.landscape?842:595, PH=o.landscape?595:842; // A4 points
+  const M=40;
+  const pages=[]; let cur=[]; let y=PH-M;
+  const lh=14;
+  function newPage(){if(cur.length)pages.push(cur);cur=[];y=PH-M;}
+  function ensure(h){if(y-h<M){newPage();}}
+  function wrap(text,maxW,fs){
+    const words=String(text).split(/\s+/);const lines=[];let line="";
+    const cw=fs*0.5; // approx Helvetica avg char width
+    const max=Math.floor(maxW/cw);
+    for(const w of words){const test=line?line+" "+w:w;if(test.length>max&&line){lines.push(line);line=w;}else line=test;}
+    if(line)lines.push(line);return lines.length?lines:[""];
+  }
+  const api={
+    PW,PH,M,
+    text(t,opts={}){
+      const fs=opts.size||10,x=(opts.x!=null?opts.x:M),maxW=opts.maxW||(PW-2*M-(x-M));
+      const bold=opts.bold;
+      const lines=opts.wrap===false?[String(t)]:wrap(t,maxW,fs);
+      for(const ln of lines){ensure(lh);cur.push({op:"text",x,y:y-fs,fs,bold,t:ln,color:opts.color});y-=(opts.lh||lh);}
+      return this;
+    },
+    gap(h){y-=(h||8);if(y<M)newPage();return this;},
+    rect(x,w,h,opts={}){ensure(h);cur.push({op:"rect",x,y:y-h,w,h,fill:opts.fill,stroke:opts.stroke!==false});if(opts.advance!==false)y-=h;return this;},
+    line(){ensure(2);cur.push({op:"line",x1:M,x2:PW-M,y:y});y-=6;return this;},
+    /* Draw a bordered table. cols=[widths]. rows=[[cell,...]]. cell={runs:[{text,bold,color}] | text, fill, color, bold, span}. */
+    table(rows,cols,opts={}){
+      const fs=opts.size||8.5, pad=4, lineH=fs+3;
+      const x0=M;
+      for(const row of rows){
+        // compute wrapped lines per cell to get row height
+        let cx=x0; const cellData=[];
+        for(let i=0;i<row.length;i++){
+          const c=row[i]; const span=c.span||1;
+          let w=0; for(let k=0;k<span;k++)w+=cols[i+k]||0;
+          const runs=c.runs|| [{text:c.text||"",bold:c.bold,color:c.color}];
+          // wrap each run's text, but keep simple: join text, wrap as one block (bold applies to first run only visually)
+          const plain=runs.map(r=>r.text).join("");
+          const lines=wrap(plain,w-2*pad,fs);
+          cellData.push({c,w,x:cx,lines,runs});
+          cx+=w; i+=span-1;
+        }
+        const rowH=Math.max(lineH+2, ...cellData.map(cd=>cd.lines.length*lineH+2*pad-2));
+        // page break if needed
+        if(y-rowH<M){newPage();}
+        // draw cells
+        for(const cd of cellData){
+          if(cd.c.fill)cur.push({op:"rect",x:cd.x,y:y-rowH,w:cd.w,h:rowH,fill:cd.c.fill,stroke:true});
+          else cur.push({op:"rect",x:cd.x,y:y-rowH,w:cd.w,h:rowH,stroke:true});
+          let ty=y-pad-fs+2;
+          const bold=cd.runs[0]&&cd.runs[0].bold, col=cd.c.color||(cd.runs[0]&&cd.runs[0].color)||"1c2433";
+          for(const ln of cd.lines){cur.push({op:"text",x:cd.x+pad,y:ty,fs,bold,t:ln,color:col});ty-=lineH;}
+        }
+        y-=rowH;
+      }
+      return this;
+    },
+    setY(v){y=v;},getY(){return y;},
+    blob(){newPage();return renderPDF(pages,PW,PH);}
+  };
+  return api;
+}
+function renderPDF(pages,PW,PH){
+  // Base-14 Helvetica only supports WinAnsi; transliterate common Unicode punctuation
+  // (smart quotes, dashes, bullets) so AI-generated text never renders as garbled glyphs.
+  function pdfSafe(s){
+    return String(s)
+      .replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"')
+      .replace(/[\u2013\u2014]/g,"-").replace(/\u2022/g,"-")
+      .replace(/\u2026/g,"...").replace(/[\u00A0]/g," ")
+      .replace(/[^\x00-\xFF]/g,"?");           // any remaining non-Latin1 char -> '?'
+  }
+  function esc(s){return pdfSafe(s).replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)");}
+  const objs=[];
+  function add(s){objs.push(s);return objs.length;}
+  // 1 catalog, 2 pages tree — fill later
+  const catalogId=add("<< /Type /Catalog /Pages 2 0 R >>");
+  const pageIds=[];const contentIds=[];
+  // reserve pages node
+  const pagesNodeId=add(""); // id 2
+  for(const pg of pages){
+    let stream="";
+    for(const it of pg){
+      if(it.op==="text"){
+        const f=it.bold?"F2":"F1";const c=it.color||"000000";
+        const r=parseInt(c.substr(0,2),16)/255,g=parseInt(c.substr(2,2),16)/255,b=parseInt(c.substr(4,2),16)/255;
+        stream+=`${r.toFixed(2)} ${g.toFixed(2)} ${b.toFixed(2)} rg BT /${f} ${it.fs} Tf 1 0 0 1 ${it.x.toFixed(1)} ${it.y.toFixed(1)} Tm (${esc(it.t)}) Tj ET 0 0 0 rg\n`;
+      }else if(it.op==="rect"){
+        if(it.fill){const r=parseInt(it.fill.substr(0,2),16)/255,g=parseInt(it.fill.substr(2,2),16)/255,b=parseInt(it.fill.substr(4,2),16)/255;
+          stream+=`${r.toFixed(2)} ${g.toFixed(2)} ${b.toFixed(2)} rg ${it.x} ${it.y} ${it.w} ${it.h} re f 0 0 0 rg\n`;}
+        if(it.stroke)stream+=`0.6 0.7 0.8 RG ${it.x} ${it.y} ${it.w} ${it.h} re S 0 0 0 RG\n`;
+      }else if(it.op==="line"){
+        stream+=`0.7 0.7 0.7 RG ${it.x1} ${it.y} m ${it.x2} ${it.y} l S 0 0 0 RG\n`;
+      }
+    }
+    const cid=add(`<< /Length ${stream.length} >>\nstream\n${stream}endstream`);
+    contentIds.push(cid);
+    const pid=add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /Font << /F1 ${'%F1%'} 0 R /F2 ${'%F2%'} 0 R >> >> /Contents ${cid} 0 R >>`);
+    pageIds.push(pid);
+  }
+  const f1=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+  const f2=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
+  // patch font refs
+  for(let i=0;i<objs.length;i++)objs[i]=objs[i].replace(/%F1%/g,f1).replace(/%F2%/g,f2);
+  objs[pagesNodeId-1]=`<< /Type /Pages /Kids [${pageIds.map(id=>id+" 0 R").join(" ")}] /Count ${pageIds.length} >>`;
+  // assemble
+  let out="%PDF-1.4\n";const offsets=[];
+  for(let i=0;i<objs.length;i++){offsets.push(out.length);out+=`${i+1} 0 obj\n${objs[i]}\nendobj\n`;}
+  const xref=out.length;
+  out+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`;
+  for(const off of offsets)out+=String(off).padStart(10,"0")+" 00000 n \n";
+  out+=`trailer\n<< /Size ${objs.length+1} /Root ${catalogId} 0 R >>\nstartxref\n${xref}\n%%EOF`;
+  return new Blob([out],{type:"application/pdf"});
+}
+
+/* ---------- universal download (sandbox-robust) ---------- */
+function blobToDataURL(blob){
+  return new Promise((resolve,reject)=>{
+    const fr=new FileReader();
+    fr.onload=()=>resolve(fr.result);
+    fr.onerror=()=>reject(new Error("read failed"));
+    fr.readAsDataURL(blob);
+  });
+}
+async function downloadBlob(blob,filename){
+  let blobUrl="",dataUrl="",diag=[];
+  try{blobUrl=URL.createObjectURL(blob);diag.push("blobURL:ok");}catch(e){diag.push("blobURL:FAIL");}
+  // Strategy 1: msSaveBlob (legacy Edge/IE)
+  if(window.navigator && window.navigator.msSaveOrOpenBlob){
+    try{window.navigator.msSaveOrOpenBlob(blob,filename);diag.push("msSave:ok");}catch(e){diag.push("msSave:FAIL");}
+  }
+  // Strategy 2: anchor click with blob URL
+  if(blobUrl){
+    try{
+      const a=document.createElement("a");
+      a.href=blobUrl;a.download=filename;a.rel="noopener";a.style.display="none";
+      document.body.appendChild(a);a.click();
+      setTimeout(()=>{try{a.remove();}catch(_){}} ,1500);
+      diag.push("autoClick:tried");
+    }catch(e){diag.push("autoClick:FAIL");}
+  }
+  // NOTE: do NOT build a data: URI here — for large files it can freeze/blank Chrome.
+  // The manual panel uses the blob URL; a data: URI is only built lazily via the backup button.
+  showDownloadFallback(blobUrl,blobUrl,filename,blob,diag.join("  ·  "));
+  if(blobUrl)setTimeout(()=>{try{URL.revokeObjectURL(blobUrl);}catch(e){}},300000);
+  return true;
+}
+/* Persistent panel: a Download button (data-URI), an Open-in-new-tab button, and a diagnostic line. */
+function showDownloadFallback(dlUrl,viewUrl,filename,blob,diag){
+  let box=document.getElementById("dlFallback");
+  if(!box){
+    box=document.createElement("div");box.id="dlFallback";
+    box.style.cssText="margin:0 0 14px;padding:14px 16px;border:1.5px solid var(--gold);border-radius:12px;background:#fffaf0;font-size:.9rem";
+    const host=document.getElementById("previewBody");
+    if(host&&host.parentNode)host.parentNode.insertBefore(box,host);
+    else document.body.insertBefore(box,document.body.firstChild);
+  }
+  const isPdf=/\.pdf$/i.test(filename);
+  box.innerHTML='<div style="font-weight:700;color:var(--ink);margin-bottom:8px">Your file is ready: '+filename.replace(/[<>]/g,"")+'</div>';
+  const row=document.createElement("div");row.style.cssText="display:flex;gap:10px;flex-wrap:wrap;align-items:center";
+  // 1) direct download (data-URI)
+  const a=document.createElement("a");
+  a.href=dlUrl;a.download=filename;a.textContent="⬇ Download";
+  a.style.cssText="display:inline-block;background:var(--ink);color:#fff;padding:10px 18px;border-radius:9px;text-decoration:none;font-weight:600";
+  row.appendChild(a);
+  // 2) open in new tab (works on phones/locked browsers -> then use browser Save / Print to PDF)
+  const open=document.createElement("button");
+  open.textContent=isPdf?"👁 Open / Print":"👁 Open in new tab";
+  open.className="btn btn-ghost btn-sm";
+  open.onclick=()=>{
+    try{
+      const u=URL.createObjectURL(blob);
+      const w=window.open(u,"_blank");
+      if(!w){ // popup blocked -> navigate via the data link instead
+        const t=document.createElement("a");t.href=dlUrl;t.target="_blank";t.rel="noopener";document.body.appendChild(t);t.click();t.remove();
+      }
+    }catch(e){alert("Open failed: "+e.message);}
+  };
+  row.appendChild(open);
+  // Lazy data-URI backup (built only on click — avoids freezing Chrome on big files)
+  const alt=document.createElement("button");
+  alt.textContent="Trouble? Backup link";alt.className="btn btn-ghost btn-sm";
+  alt.onclick=async()=>{alt.textContent="building…";try{const du=await blobToDataURL(blob);const t=document.createElement("a");t.href=du;t.download=filename;document.body.appendChild(t);t.click();t.remove();alt.textContent="backup sent ✓";}catch(e){alt.textContent="backup failed";}};
+  row.appendChild(alt);
+  box.appendChild(row);
+  const tip=document.createElement("div");
+  tip.style.cssText="margin-top:8px;font-size:.78rem;color:var(--muted)";
+  tip.innerHTML="On a phone or if download is blocked, tap <b>Open</b> then use your browser's <b>Save</b> / <b>Print → Save as PDF</b>. &nbsp;<span style='cursor:pointer;text-decoration:underline' onclick=\"this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'\">diagnostics</span><span style='display:none;color:#999'> — "+diag+"</span>";
+  box.appendChild(tip);
+  try{box.scrollIntoView({behavior:"smooth",block:"nearest"});}catch(e){}
+}
+
+/* ============================================================
+   INFLATE (raw DEFLATE + zlib) + ZIP reader — for PPTX/DOCX/PDF
+   Compact tinf-style implementation.
+   ============================================================ */
+function inflate(data){
+  // detect zlib header (0x78) and skip 2 bytes
+  if(data.length>2 && data[0]===0x78 && (data[1]===0x01||data[1]===0x9c||data[1]===0xda||data[1]===0x5e))
+    return rawInflate(data.subarray(2));
+  return rawInflate(data);
+}
+function rawInflate(input){
+  let out=[],bitBuf=0,bitCnt=0,pos=0;
+  function getbit(){if(bitCnt===0){bitBuf=input[pos++];bitCnt=8;}const b=bitBuf&1;bitBuf>>=1;bitCnt--;return b;}
+  function getbits(n){let v=0;for(let i=0;i<n;i++)v|=getbit()<<i;return v;}
+  function buildTree(lengths){
+    const MAXBITS=15;let bl_count=new Array(MAXBITS+1).fill(0);
+    for(const l of lengths)if(l)bl_count[l]++;
+    let next_code=new Array(MAXBITS+1).fill(0),code=0;
+    for(let bits=1;bits<=MAXBITS;bits++){code=(code+bl_count[bits-1])<<1;next_code[bits]=code;}
+    const codes=new Array(lengths.length);
+    for(let n=0;n<lengths.length;n++){const len=lengths[n];if(len){codes[n]=next_code[len]++;}}
+    return {lengths,codes};
+  }
+  function decode(tree){
+    let code=0,len=0;
+    for(;;){code|=getbit();len++;
+      for(let i=0;i<tree.lengths.length;i++){if(tree.lengths[i]===len&&tree.codes[i]===reverseBits(code,len))return i;}
+      code<<=1;if(len>15)throw new Error("bad code");}
+  }
+  function reverseBits(v,n){let r=0;for(let i=0;i<n;i++){r=(r<<1)|((v>>i)&1);}return r;}
+  // The naive decode above is slow; use canonical fast decode instead:
+  function makeFast(lengths){
+    const MAXBITS=15;let bl_count=new Array(MAXBITS+1).fill(0);
+    for(const l of lengths)if(l)bl_count[l]++;
+    let next=new Array(MAXBITS+1).fill(0),code=0;
+    for(let b=1;b<=MAXBITS;b++){code=(code+bl_count[b-1])<<1;next[b]=code;}
+    const map={};
+    for(let n=0;n<lengths.length;n++){const len=lengths[n];if(len){const c=next[len]++;map[len+"_"+c]=n;}}
+    return {map};
+  }
+  function decodeFast(t){let code=0,len=0;for(;;){code=(code<<1)|getbit();len++;const s=t.map[len+"_"+code];if(s!==undefined)return s;if(len>15)throw new Error("bad");}}
+  const lenBase=[3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258];
+  const lenExtra=[0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
+  const distBase=[1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577];
+  const distExtra=[0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+  let final=0;
+  do{
+    final=getbit();const type=getbits(2);
+    if(type===0){ // stored
+      bitCnt=0;const len=input[pos]|(input[pos+1]<<8);pos+=4;for(let i=0;i<len;i++)out.push(input[pos++]);
+    }else{
+      let litTree,distTree;
+      if(type===1){
+        const litLen=new Array(288);for(let i=0;i<144;i++)litLen[i]=8;for(let i=144;i<256;i++)litLen[i]=9;for(let i=256;i<280;i++)litLen[i]=7;for(let i=280;i<288;i++)litLen[i]=8;
+        litTree=makeFast(litLen);const dl=new Array(30).fill(5);distTree=makeFast(dl);
+      }else{
+        const hlit=getbits(5)+257,hdist=getbits(5)+1,hclen=getbits(4)+4;
+        const order=[16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
+        const clLen=new Array(19).fill(0);for(let i=0;i<hclen;i++)clLen[order[i]]=getbits(3);
+        const clTree=makeFast(clLen);const all=[];
+        while(all.length<hlit+hdist){const s=decodeFast(clTree);if(s<16)all.push(s);else if(s===16){const r=getbits(2)+3,p=all[all.length-1];for(let i=0;i<r;i++)all.push(p);}else if(s===17){const r=getbits(3)+3;for(let i=0;i<r;i++)all.push(0);}else{const r=getbits(7)+11;for(let i=0;i<r;i++)all.push(0);}}
+        litTree=makeFast(all.slice(0,hlit));distTree=makeFast(all.slice(hlit));
+      }
+      for(;;){const s=decodeFast(litTree);if(s===256)break;if(s<256)out.push(s);else{const li=s-257;const len=lenBase[li]+getbits(lenExtra[li]);const ds=decodeFast(distTree);const dist=distBase[ds]+getbits(distExtra[ds]);const start=out.length-dist;for(let i=0;i<len;i++)out.push(out[start+i]);}}
+    }
+  }while(!final);
+  return new Uint8Array(out);
+}
+
+function unzip(bytes){
+  // read central directory
+  const dv=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
+  let eocd=-1;
+  for(let i=bytes.length-22;i>=0;i--){if(dv.getUint32(i,true)===0x06054b50){eocd=i;break;}}
+  if(eocd<0)throw new Error("Not a zip");
+  const count=dv.getUint16(eocd+10,true);let off=dv.getUint32(eocd+16,true);
+  const files={};
+  for(let n=0;n<count;n++){
+    if(dv.getUint32(off,true)!==0x02014b50)break;
+    const method=dv.getUint16(off+10,true);
+    const compSize=dv.getUint32(off+20,true);
+    const nameLen=dv.getUint16(off+28,true),extraLen=dv.getUint16(off+30,true),commLen=dv.getUint16(off+32,true);
+    const localOff=dv.getUint32(off+42,true);
+    const name=new TextDecoder().decode(bytes.subarray(off+46,off+46+nameLen));
+    // read local header to find data start
+    const lNameLen=dv.getUint16(localOff+26,true),lExtraLen=dv.getUint16(localOff+28,true);
+    const dataStart=localOff+30+lNameLen+lExtraLen;
+    const comp=bytes.subarray(dataStart,dataStart+compSize);
+    files[name]=method===0?comp:rawInflate(comp);
+    off+=46+nameLen+extraLen+commLen;
+  }
+  return files;
+}
+
+</script>
+<script>
+/* ===== activity library ===== */
+// Activity library extracted from TTA Goody Bag resources.
+// Categories: starter, plenary, collaborative, formative
+const ACTIVITIES = [
+  // ---------- STARTERS ----------
+  { id:"s_60sec", cat:"starter", name:"60 Second Challenge",
+    purpose:"Improves thinking, reasoning, short-term memory and listing/grouping skills by observing a topic image and recalling what was seen.",
+    teacher:"Project a picture related to the topic for 60 seconds and ask learners to observe. Stop sharing and give 1 minute to recall and list what they saw. Ask a few learners to share; redisplay the image so they can self-check and note anything they missed.",
+    learner:"Observe the image, recall and list items/details in the notebook or on a post-it, share responses when called, then self-check against the redisplayed image.",
+    assessment:"Oral questioning; notebook/post-it review",
+    resources:"PPT/Chart with topic image, Notebook, Timer" },
+  { id:"s_readhigh", cat:"starter", name:"Read and Highlight",
+    purpose:"Helps learners organise reading by selecting and highlighting only key words, phrases, vocabulary and central ideas.",
+    teacher:"Assign a paragraph/section from the textbook. Instruct learners to highlight or underline only the key words, phrases and central ideas. Set a timer and circulate to guide and observe.",
+    learner:"Read the assigned text within the time limit, highlight/underline key words and central ideas, and share highlighted work.",
+    assessment:"Observation while circulating; review of highlighted text",
+    resources:"Textbook/handout, Highlighter/pen, Timer" },
+  { id:"s_123q", cat:"starter", name:"1+2+3 Questions",
+    purpose:"Tests prior knowledge through quick multiple-choice questions and engages every learner in responding.",
+    teacher:"Prepare a series of MCQs on the topic. Display a question, give a few seconds to think, then on the cue '1,2,3 Show Me!' ask all learners to show the option (fingers/chat). Mentally note incorrect responses and reveal the correct answer before the next question.",
+    learner:"Read each question, decide on an answer, and show the chosen option on the teacher's cue; self-correct when the answer is revealed.",
+    assessment:"Whole-class show of responses; mental note of misconceptions",
+    resources:"PPT with MCQs, Whiteboard" },
+  { id:"s_venn", cat:"starter", name:"Venn Diagram",
+    purpose:"Supports comparing/contrasting to make connections, determine key ideas and distinguish facts.",
+    teacher:"Provide a Venn diagram template (handout or drawn on A4) with a word bank. Explain the concept and instruct learners to place words/phrases under the correct headings, including the overlap. Circulate to support.",
+    learner:"Complete the Venn diagram by sorting words/phrases into the correct regions; display work and read peers' work on a gallery walk.",
+    assessment:"Worksheet review; gallery walk peer review",
+    resources:"Venn diagram handout/A4 sheet, Word bank" },
+  { id:"s_allyouknow", cat:"starter", name:"All You Know",
+    purpose:"Assesses prior knowledge or revises a previous concept by listing everything known about a shown image/topic.",
+    teacher:"Show a topic picture and give 15–20 seconds to think; explain all answers are welcome. Give 1 minute to list everything they know. Read out responses and add one or two facts to push thinking beyond the obvious.",
+    learner:"Observe the image, then list everything they know about it; listen to peers and the teacher's added facts.",
+    assessment:"Oral sharing; post-it/notebook review",
+    resources:"PPT with image, Post-its/Notebook" },
+  { id:"s_oddoneout", cat:"starter", name:"Odd One Out",
+    purpose:"Develops critical thinking and analysis; tests prior knowledge by spotting the item that does not belong.",
+    teacher:"Display a set of 4–5 images/words/phrases where one is different. Pause for thinking, then give 1 minute to write the odd one and the reason. Read a few responses and confirm the correct option with reasoning.",
+    learner:"Analyse the set, choose the odd one out, write the reason, and share their reasoning.",
+    assessment:"Oral reasoning; notebook/chat review",
+    resources:"PPT with sets" },
+  { id:"s_1020q", cat:"starter", name:"10/20 Questions",
+    purpose:"Builds memory, listening, analytical and questioning skills by guessing a hidden topic item via yes/no questions.",
+    teacher:"Choose a mystery person/place/event/word linked to the lesson and write it on paper. Share the category, then let learners ask up to 20 (or 10) yes/no questions, keeping a count. Reveal the answer at the end.",
+    learner:"Ask yes/no questions in turn, track clues, and attempt to guess the mystery item.",
+    assessment:"Observation of questioning/reasoning",
+    resources:"Paper for the mystery word" },
+  { id:"s_mysterybag", cat:"starter", name:"Mystery Bag",
+    purpose:"Generates interest and an element of surprise at the start of a lesson.",
+    teacher:"Prepare a bag with 3–5 items/pictures linked to the topic. Reveal them one at a time, pausing for learners to guess the topic. Read a few guesses before the next item; give clues if needed.",
+    learner:"Observe each revealed clue, write guesses about the topic, and refine guesses as more clues appear.",
+    assessment:"Oral/written guesses; topic prediction check",
+    resources:"Cloth bag, 3–5 topic-related items/pictures" },
+  { id:"s_complete", cat:"starter", name:"Complete the Sentence",
+    purpose:"Checks prior knowledge, revises concepts, or hooks interest via a sentence starter.",
+    teacher:"Prepare a sentence starter on the topic (e.g. 'An angle is…'). Display it and give 1 minute to complete it. Read a few responses, discuss, and reveal the target sentence.",
+    learner:"Complete the sentence about the topic, share the response, and compare with the target answer.",
+    assessment:"Oral sharing; post-it review",
+    resources:"PPT/Post-its" },
+  { id:"s_whatquestion", cat:"starter", name:"What is the Question?",
+    purpose:"Encourages creative thinking by generating questions for a given answer.",
+    teacher:"Show learners an answer and ask them to think of questions that would produce it. Give 30 seconds to list questions, then collect responses. Reveal the question you had in mind.",
+    learner:"Generate and write possible questions for the given answer; share responses.",
+    assessment:"Review of generated questions",
+    resources:"Whiteboard/notebook" },
+
+  // ---------- COLLABORATIVE LEARNING ----------
+  { id:"c_numbered", cat:"collaborative", name:"Numbered Heads",
+    purpose:"Builds collaboration and communication; used to summarise learning, check prior knowledge or process new information.",
+    teacher:"Form mixed-ability teams of four and assign each member a number 1–4. Pose a topic question and tell teams everyone must know the answer. Give time to discuss in groups, then call a random number to answer. Summarise before the next question.",
+    learner:"Discuss in the team so every member knows the answer; the called number shares the team's response.",
+    assessment:"Random-number oral response; group observation",
+    resources:"Grouping list, PPT with questions" },
+  { id:"c_fourcorners", cat:"collaborative", name:"Four Corners",
+    purpose:"Promotes listening, communication, cooperation, critical thinking and decision-making.",
+    teacher:"Display a question/statement with 4 options and assign each option a corner. Ask learners to choose individually and note a reason, then move to the matching corner to discuss and agree collective reasons. Each group presents a summary.",
+    learner:"Choose an option, write a reason, move to the corner, discuss with the group, and present a summary.",
+    assessment:"Group discussion observation; summary presentation",
+    resources:"4 corner option cards/slides" },
+  { id:"c_placemats", cat:"collaborative", name:"Placemats",
+    purpose:"Lets every learner record individual ideas before reaching a group consensus, maximising participation.",
+    teacher:"Divide into groups of 4–5 and give each a placemat template for the task. Each learner first answers individually (silently) in their section, then the group discusses and writes a collective answer in the centre. Groups present their placemat.",
+    learner:"Write individual responses silently, then discuss and co-write the group's collective answer; present to the class.",
+    assessment:"Placemat review; presentation",
+    resources:"Placemat worksheet per group" },
+  { id:"c_diamond", cat:"collaborative", name:"Diamond Ranking",
+    purpose:"Helps learners prioritise information, clarify thinking and reason about importance.",
+    teacher:"Give each group 9 statement cards on the topic. Ask them to discuss and arrange the cards from most to least important in a diamond shape. Specify time; groups present or display rankings.",
+    learner:"Discuss and rank the nine statements from most to least important; justify the ranking to the class.",
+    assessment:"Ranking rationale; group observation",
+    resources:"9 statement cards per group" },
+  { id:"c_tps", cat:"collaborative", name:"Team-Pair-Solo",
+    purpose:"Helps learners attempt challenging tasks with support before working independently; builds problem-solving.",
+    teacher:"Design a challenging task. Learners first work as a team, then in pairs, then solo on the task. Display team and pair groupings, time each stage, and collect the individual work at the end.",
+    learner:"Work the task as a team, then refine in pairs, then complete it individually and submit.",
+    assessment:"Collection of solo work; staged observation",
+    resources:"Task worksheet, Grouping list, Timer" },
+  { id:"c_buzz", cat:"collaborative", name:"Buzz Groups",
+    purpose:"Small-group discussion to reach consensus quickly, maximising individual participation.",
+    teacher:"Form small groups of 3–4 and display the discussion task. Give a set time to discuss and work, assigning roles if useful. Cold-call or take volunteers for an oral summary; circulate to support.",
+    learner:"Discuss the task in a small group, work towards a consensus, and share an oral summary.",
+    assessment:"Oral group summary; discussion observation",
+    resources:"Discussion prompt, Grouping list" },
+  { id:"c_roundrobin", cat:"collaborative", name:"Round Robin Brainstorming",
+    purpose:"Lists many possibilities to an open-ended question while working cooperatively.",
+    teacher:"Pose an open-ended question. In groups, learners take turns adding non-repeating responses to a shared worksheet until time is up. Each group presents their list.",
+    learner:"Take turns contributing distinct ideas without repetition; present the group's collected list.",
+    assessment:"Review of group lists; presentation",
+    resources:"Group worksheet/board" },
+  { id:"c_showdown", cat:"collaborative", name:"Showdown",
+    purpose:"Reviews a previously taught concept cooperatively, with peers coaching each other.",
+    teacher:"Give each group a list of review questions. Learners take turns leading: the leader reads a question, all solve independently, then 'Showdown!' reveals answers. Correct answers are struck off; if anyone errs, the group coaches before moving on.",
+    learner:"Take turns leading, solve each question independently, reveal answers, and coach peers who make errors.",
+    assessment:"Peer assessment; notebook check",
+    resources:"Review question worksheet" },
+  { id:"c_gallery", cat:"collaborative", name:"Gallery Walk",
+    purpose:"Lets learners share work and examine multiple displays, responding with questions and feedback.",
+    teacher:"Set a topic that can be expressed creatively. Groups design content on charts. At the end, groups rotate to view each display, discussing and leaving a post-it with one thing they liked and one question/suggestion.",
+    learner:"Create a group display, then rotate to view others' work and leave constructive feedback.",
+    assessment:"Peer feedback; display quality review",
+    resources:"Chart paper, Stationery, Post-its" },
+  { id:"c_whatsmissing", cat:"collaborative", name:"What's Missing?",
+    purpose:"Reviews and reinforces previously taught concepts using observation skills.",
+    teacher:"Show a list/diagram/picture/sequence with one piece of information omitted. In groups, learners discuss and identify what is missing. A volunteer lists findings; verify and summarise as consolidation.",
+    learner:"Examine the item in a group, discuss and note what is missing, and present findings.",
+    assessment:"Oral findings; consolidation check",
+    resources:"Prepared incomplete list/diagram" },
+
+  // ---------- FORMATIVE ASSESSMENT ----------
+  { id:"f_postit", cat:"formative", name:"Post-it Parade",
+    purpose:"Checks the current level of knowledge mid-lesson in a visual way before moving on.",
+    teacher:"After teaching a key idea, pause and pose a question. Distribute post-its and ask learners to respond and add them to the board. Scan responses to gauge understanding.",
+    learner:"Write a response on a post-it and add it to the board; review the collective responses.",
+    assessment:"Post-it board scan",
+    resources:"Post-its, Notice board" },
+  { id:"f_polling", cat:"formative", name:"Polling Booth",
+    purpose:"Quickly checks prior/current knowledge by having all learners vote for the best option.",
+    teacher:"Pose a multiple-choice question and display the options. On the signal, learners show their choice (fingers/poll). Read the spread of responses and address misconceptions.",
+    learner:"Read the question and options, then vote by showing the chosen option.",
+    assessment:"Whole-class vote spread",
+    resources:"PPT/poll with MCQ" },
+  { id:"f_exitcards", cat:"formative", name:"Exit Cards",
+    purpose:"Checks cumulative knowledge at the end of class and prompts learners to reflect on key ideas.",
+    teacher:"Prepare an exit prompt (e.g. 'Today I learnt…'). A few minutes before the end, display the prompt and distribute cards. Ask learners to complete and submit before leaving.",
+    learner:"Complete the exit card reflecting on the lesson and submit it.",
+    assessment:"Exit card review",
+    resources:"Exit card slips" },
+  { id:"f_summarisation", cat:"formative", name:"Summarisation",
+    purpose:"Measures content learning by having learners condense what was covered in their own words.",
+    teacher:"Teach for 8–10 minutes, then pause. Ask learners to write a short summary of what has been covered in their own words, reminding them of key vocabulary. Ask a few to read out their summaries.",
+    learner:"Write a concise summary using key vocabulary; read it aloud when asked.",
+    assessment:"Summary review; oral read-out",
+    resources:"Notebook, Key vocabulary list" },
+  { id:"f_predictions", cat:"formative", name:"Predictions",
+    purpose:"Applies learning to predict an outcome with supporting reasoning.",
+    teacher:"Pause mid-lesson and display a prediction question about what happens next. Give thinking time, then on '1,2,3 Show Me!' learners reveal their prediction and reason.",
+    learner:"Make a prediction with an explanation and reveal it on the cue.",
+    assessment:"Prediction + reasoning review",
+    resources:"PPT with prediction prompt" },
+  { id:"f_kwl", cat:"formative", name:"KWL Chart",
+    purpose:"Checks what learners Know, Want to know and have Learned; best at the start of a topic.",
+    teacher:"Distribute a KWL chart. Learners fill K (know) and W (want to know) at the start; teach as planned; revisit at the end for L (learned). Use responses to gauge prior knowledge and interests.",
+    learner:"Complete the K and W columns at the start and the L column at the end of the lesson.",
+    assessment:"KWL chart review",
+    resources:"KWL worksheet" },
+  { id:"f_owlpost", cat:"formative", name:"Owl Post",
+    purpose:"Checks understanding by having learners write a short postcard about their learning.",
+    teacher:"Ask learners to jot the main points, then write a 3–5 sentence postcard to a loved one explaining the topic. Display or 'post' the completed cards.",
+    learner:"Note key points, then write a short postcard explaining the topic in their own words.",
+    assessment:"Postcard content review",
+    resources:"Postcard template" },
+  { id:"f_graffiti", cat:"formative", name:"Cooperative Graffiti",
+    purpose:"Enables free expression of ideas and assesses what learners understand about a topic.",
+    teacher:"Group learners and pose a prompt. Each group creates a visually appealing graffiti chart for the prompt, following agreed rules. Display charts and run a whole-class discussion on the responses.",
+    learner:"Collaborate to create a topic graffiti chart; share and discuss it with the class.",
+    assessment:"Graffiti chart review; class discussion",
+    resources:"Chart paper, Colour pens" },
+  { id:"f_presentations", cat:"formative", name:"Presentations",
+    purpose:"Gauges understanding as learners share knowledge creatively in groups or individually.",
+    teacher:"Assign each group a sub-topic and ask them to prepare a poster/song/slides and a short presentation. Specify time, then have groups present, encouraging questions and feedback after each.",
+    learner:"Prepare and deliver a short presentation on the sub-topic; ask and answer questions.",
+    assessment:"Presentation rubric; Q&A",
+    resources:"Chart/slides, Stationery" },
+  { id:"f_miniwhiteboard", cat:"formative", name:"Mini Whiteboard",
+    purpose:"Quickly checks individual understanding at any point in the lesson.",
+    teacher:"Distribute mini whiteboards. Pose a question; on '1,2,3 Show Me!' learners hold up their written answer. Confirm the correct answer before the next question.",
+    learner:"Write the answer on a mini whiteboard and show it on the cue.",
+    assessment:"Whole-class whiteboard check",
+    resources:"Mini whiteboards, Markers" },
+
+  // ---------- PLENARIES ----------
+  { id:"p_goodbetter", cat:"plenary", name:"Good and Better",
+    purpose:"Gathers feedback on what learners found good and what could be improved.",
+    teacher:"Give two coloured post-its. Ask learners to write one thing they understood well and one thing they could have done better, then post them on the board.",
+    learner:"Write one strength and one improvement point and post them on the board.",
+    assessment:"Feedback post-it review",
+    resources:"Two-colour post-its" },
+  { id:"p_tweet", cat:"plenary", name:"Tweet It!",
+    purpose:"Summarises and reflects on learning in a few sentences (a 'tweet').",
+    teacher:"Provide a tweet slip with a prompt. Learners write a 280-character/3–4 sentence tweet about the topic, adding a # hashtag for something memorable, then submit or share.",
+    learner:"Write a short tweet summarising learning with a hashtag and submit it.",
+    assessment:"Tweet content review",
+    resources:"Tweet slip template" },
+  { id:"p_reflection", cat:"plenary", name:"Reflection",
+    purpose:"Gives learners an opportunity to reflect on and articulate what they have learned.",
+    teacher:"Pose reflection prompts (e.g. three things you did well, one to improve and why, where you can use this). Give time to respond and submit.",
+    learner:"Respond to the reflection prompts about their learning and submit.",
+    assessment:"Reflection review",
+    resources:"Reflection card/form" },
+  { id:"p_give5", cat:"plenary", name:"Give me Five",
+    purpose:"Structures reflection time around five prompts and identifies next steps.",
+    teacher:"Provide a 'Give me Five' hand template with five prompts (learnt, skills used, found difficult, did well, will remember). Learners complete each finger and submit.",
+    learner:"Complete the five reflection prompts on the hand template and submit.",
+    assessment:"Completed template review",
+    resources:"Give-me-Five worksheet" },
+  { id:"p_quiz", cat:"plenary", name:"Quiz Time",
+    purpose:"A competitive way to answer questions and gauge the level of learning.",
+    teacher:"Prepare a quiz (oral, written or online). Run it within a time limit; review answers and address gaps revealed.",
+    learner:"Answer the quiz questions individually or in groups within the time limit.",
+    assessment:"Quiz scores",
+    resources:"Quiz questions/worksheet" },
+  { id:"p_riddles", cat:"plenary", name:"Riddles",
+    purpose:"Creates excitement and consolidates the lesson through topic-linked riddles.",
+    teacher:"Prepare riddles on the lesson. Tell learners a riddle is coming, read it aloud, pause, then on the cue take answers. Reveal and appreciate the first correct response.",
+    learner:"Solve the riddle and answer on the cue.",
+    assessment:"Oral answers",
+    resources:"Riddle slides" },
+  { id:"p_bingo", cat:"plenary", name:"Bingo!",
+    purpose:"Consolidates terms and definitions and sharpens recall through a competitive game.",
+    teacher:"Provide bingo cards of topic terms. Call out questions/clues; learners cross matching answers. The first to complete the card calls 'Bingo!' and the teacher verifies.",
+    learner:"Cross out answers on the bingo card and call 'Bingo!' on completion.",
+    assessment:"Bingo verification; recall check",
+    resources:"Bingo cards" },
+  { id:"p_pyramid", cat:"plenary", name:"Plenary Pyramid",
+    purpose:"Checks understanding in a simple pyramid form and aids reflection.",
+    teacher:"Provide a pyramid template with prompts (e.g. three things learnt, two questions, one thing already known). Learners complete the boxes within the time limit and submit.",
+    learner:"Fill the pyramid prompts and submit.",
+    assessment:"Pyramid review",
+    resources:"Pyramid template" },
+  { id:"p_stuck", cat:"plenary", name:"What stuck with you today?",
+    purpose:"Reflection aid showing which part of the lesson made the strongest impact.",
+    teacher:"Provide a board/post-its headed 'What stuck with you today?'. Learners add a fact/thing that stuck with them from the lesson.",
+    learner:"Write and post the idea that stuck with them most.",
+    assessment:"Post-it review",
+    resources:"Post-its/board" },
+  { id:"p_321", cat:"plenary", name:"3, 2, 1",
+    purpose:"Versatile reflection: gauges learning through three tiered prompts.",
+    teacher:"Set three prompts (e.g. 3 facts recalled, 2 examples, 1 question/use). Learners complete and submit within the time limit.",
+    learner:"Respond to the 3-2-1 prompts and submit.",
+    assessment:"3-2-1 response review",
+    resources:"3-2-1 form/worksheet" }
+];
+
+</script>
+<script>
+/* ===================== reference data ===================== */
+const GRADES=Array.from({length:12},(_,i)=>"Grade "+(i+1));
+const SUBJECTS=["English","Hindi","Sanskrit","Kannada","Tamil","Telugu","Marathi","French","German",
+  "Mathematics","EVS (Environmental Studies)","Science","Physics","Chemistry","Biology",
+  "Social Science","History","Geography","Civics / Political Science","Economics",
+  "Computer Science","Information Technology","Accountancy","Business Studies",
+  "General Knowledge","Art & Craft","Physical Education","Moral Science / Value Education"];
+const LIB_CATS=[{id:"all",label:"All"},{id:"starter",label:"Starters"},{id:"collaborative",label:"Collaborative"},{id:"formative",label:"Formative"},{id:"plenary",label:"Plenaries"}];
+
+/* ===================== state ===================== */
+let mode="build",selected=new Set(),libFilter="all";
+let lastOut=null,uploadedText="",powText="",powChaptersData=[],uploadedDocxStructure=null;
+
+/* ===================== init ===================== */
+function fillSelect(id,arr){const s=document.getElementById(id);if(!s)return;arr.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;s.appendChild(o);});}
+["f_grade","c_grade","p_grade","pw_grade"].forEach(id=>fillSelect(id,GRADES));
+["f_subject","c_subject","p_subject","pw_subject"].forEach(id=>fillSelect(id,SUBJECTS));
+["f_date","c_date","pw_date"].forEach(id=>{const e=document.getElementById(id);if(e)e.valueAsDate=new Date();});
+
+function renderLibTabs(){const w=document.getElementById("libTabs");w.innerHTML="";LIB_CATS.forEach(c=>{const b=document.createElement("button");b.className="lib-tab"+(libFilter===c.id?" active":"");b.textContent=c.label;b.onclick=()=>{libFilter=c.id;renderLibTabs();renderActs();};w.appendChild(b);});}
+function renderActs(){const g=document.getElementById("actGrid");g.innerHTML="";ACTIVITIES.filter(a=>libFilter==="all"||a.cat===libFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(selected.has(a.id)?" sel":"");d.onclick=()=>{if(!selected.has(a.id)){selected.add(a.id);renderActs();renderSelBar();}};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${selected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
+function renderSelBar(){const bar=document.getElementById("selBar");if(selected.size===0){bar.innerHTML="<span>No activities selected yet.</span>";return;}const order=["starter","collaborative","formative","plenary"];const items=[...selected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));bar.innerHTML="<span>Selected ("+items.length+"):</span>"+items.map(a=>`<span class="chip">${a.name}<b onclick="event.stopPropagation();selected.delete('${a.id}');renderActs();renderSelBar();">✕</b></span>`).join("");}
+renderLibTabs();renderActs();renderSelBar();
+
+/* ===================== mode switch ===================== */
+function setMode(m){mode=m;[["m1","build","buildPanel"],["m2","convert","convertPanel"],["m3","pptai","pptAiPanel"],["m4","pow","powPanel"]].forEach(([btn,name,panel])=>{document.getElementById(btn).classList.toggle("active",m===name);document.getElementById(panel).classList.toggle("hide",m!==name);});document.getElementById("previewWrap").style.display="none";}
+
+/* ===================== helpers ===================== */
+function val(id){const e=document.getElementById(id);return e?(e.value||"").trim():"";}
+function fmtDate(iso){if(!iso)return"";const d=new Date(iso);return String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear();}
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function autoAim(t,s){return `Learners will develop a clear understanding of ${t||"the topic"} in ${s||"the subject"}, connecting prior knowledge to new concepts and applying their learning through guided and collaborative tasks.`;}
+function autoObjectives(t){t=t||"the topic";return [`describe the key ideas and vocabulary related to ${t}`,`explain the main concepts of ${t} in their own words`,`apply their understanding of ${t} to solve problems or complete a task`,`collaborate with peers to discuss and consolidate learning about ${t}`,`reflect on what they have learned about ${t} and identify next steps`];}
+function autoHomework(t){return `Write a short paragraph (5–6 sentences) summarising what you learned about ${t}. Add one question you still have, and one real-life example where ${t} is useful.`;}
+function distribute(total,n,weights){const mins=parseInt(total)||40;weights=weights||Array(n).fill(1);const sum=weights.reduce((a,b)=>a+b,0)||1;let alloc=weights.map(w=>Math.max(3,Math.round(mins*w/sum)));let diff=mins-alloc.reduce((a,b)=>a+b,0),i=0;while(diff!==0&&alloc.length){const idx=i%alloc.length;alloc[idx]+=diff>0?1:-1;if(alloc[idx]<2)alloc[idx]=2;diff=mins-alloc.reduce((a,b)=>a+b,0);i++;if(i>500)break;}return alloc;}
+
+/* ===================== AI (in-artifact Claude API) ===================== */
+/* ---------- AI providers: Google Gemini (free tier) or OpenAI — teacher's own key ---------- */
+/* ---------- SCHOOL-WIDE AI (recommended for non-technical staff) ----------
+   If your tech coordinator has deployed the companion Google Apps Script proxy (see Code.gs),
+   paste its Web App URL below. Once set, EVERY teacher gets AI features with zero setup —
+   no login, no key, nothing to paste. Leave blank to disable this option. */
+const SCHOOL_PROXY_URL="";  // e.g. "https://script.google.com/macros/s/AKfycb.../exec"
+const SCHOOL_PASSPHRASE="";  // must match APP_PASSPHRASE in the Apps Script's Script Properties (optional but recommended)
+let AI_PROVIDER=SCHOOL_PROXY_URL?"school":"gemini";    // 'school' (no key needed), 'gemini' (free tier, own key), or 'openai'
+let OPENAI_KEY="";           // set via Settings; kept only on this device
+let OPENAI_MODEL="gpt-4o-mini";
+let GEMINI_KEY="";
+let GEMINI_MODEL="gemini-2.0-flash";
+function hasAI(){return (AI_PROVIDER==="school"&&!!SCHOOL_PROXY_URL)||(AI_PROVIDER==="gemini"&&GEMINI_KEY)||(AI_PROVIDER==="openai"&&OPENAI_KEY);}
+async function callAI(prompt,maxTokens){
+  if(!hasAI())throw new Error("AI isn't set up yet. Ask your tech coordinator, or add a free Google Gemini key in ⚙ AI Settings.");
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),45000);
+  try{
+    // School-wide AI — zero setup for teachers, calls the school's own Apps Script proxy
+    if(AI_PROVIDER==="school" && SCHOOL_PROXY_URL){
+      const res=await fetch(SCHOOL_PROXY_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+        body:JSON.stringify({prompt,maxTokens:maxTokens||1400,passphrase:SCHOOL_PASSPHRASE}),signal:controller.signal});
+      if(!res.ok)throw new Error("School AI proxy error "+res.status+" — ask your tech coordinator to check the Apps Script deployment.");
+      const data=await res.json();
+      if(!data.ok)throw new Error(data.error||"School AI proxy returned an error.");
+      if(!data.text)throw new Error("School AI returned no text.");
+      return data.text;
+    }
+    // Google Gemini — has a genuinely free tier
+    if(AI_PROVIDER==="gemini" && GEMINI_KEY){
+      const url="https://generativelanguage.googleapis.com/v1beta/models/"+GEMINI_MODEL+":generateContent?key="+encodeURIComponent(GEMINI_KEY);
+      const res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.5,maxOutputTokens:maxTokens||1400}}),signal:controller.signal});
+      if(!res.ok){let msg="";try{msg=(await res.json()).error?.message||"";}catch(e){}throw new Error("Gemini error "+res.status+(msg?": "+msg:""));}
+      const data=await res.json();
+      const txt=(data.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("").trim();
+      if(!txt)throw new Error("Gemini returned no text (check the key/model).");
+      return txt;
+    }
+    // OpenAI — teacher's own key (paid usage)
+    if(AI_PROVIDER==="openai" && OPENAI_KEY){
+      const res=await fetch("https://api.openai.com/v1/chat/completions",{
+        method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+OPENAI_KEY},
+        body:JSON.stringify({model:OPENAI_MODEL,messages:[{role:"user",content:prompt}],max_tokens:maxTokens||1400,temperature:0.5}),signal:controller.signal});
+      if(!res.ok){let msg="";try{msg=(await res.json()).error?.message||"";}catch(e){}throw new Error("OpenAI error "+res.status+(msg?": "+msg:""));}
+      const data=await res.json();return (data.choices?.[0]?.message?.content||"").trim();
+    }
+    throw new Error("AI isn't set up yet. Ask your tech coordinator, or add a free Google Gemini key in ⚙ AI Settings.");
+  }catch(err){
+    if(err.name==="AbortError")throw new Error("Request timed out after 45s — check your internet connection and try again.");
+    if(err instanceof TypeError)throw new Error("Couldn't reach "+(AI_PROVIDER==="school"?"the school AI":AI_PROVIDER==="gemini"?"Gemini":"OpenAI")+" — check your internet connection."+(AI_PROVIDER==="openai"?" Some networks/accounts block direct browser calls to OpenAI; Gemini is the more reliable option for this portal.":""));
+    throw err;
+  }finally{
+    clearTimeout(timer);
+  }
+}
+function parseJSON(t){
+  let s=t.replace(/```json|```/g,"").trim();
+  const a=s.indexOf("{"), b=s.lastIndexOf("}"), a2=s.indexOf("["), b2=s.lastIndexOf("]");
+  if(a>=0&&b>a&&(a2<0||a<a2))s=s.slice(a,b+1);
+  else if(a2>=0&&b2>a2)s=s.slice(a2,b2+1);
+  return JSON.parse(s);
+}
+function toggleSettings(){document.getElementById("settingsBar").classList.toggle("hide");}
+const MODELS={
+  gemini:[["gemini-2.0-flash","gemini-2.0-flash (free, fast)"],["gemini-2.5-flash","gemini-2.5-flash (free)"],["gemini-1.5-flash","gemini-1.5-flash (free)"]],
+  openai:[["gpt-4o-mini","gpt-4o-mini (low cost)"],["gpt-4o","gpt-4o (higher quality)"]]
+};
+const HELP={
+  gemini:['Go to <b>aistudio.google.com/apikey</b> in a new tab (sign in with any Google account).','Click <b>Create API key</b> — it appears instantly, free, no card needed.','Copy it and paste it in the box above, then press <b>Save</b>.'],
+  openai:['Go to <b>platform.openai.com</b> → API keys (a ChatGPT subscription is separate and won\'t work here).','Click <b>Create new secret key</b> and copy it — OpenAI only shows it once.','Paste it in the box above, then press <b>Save</b>. Usage is billed to your OpenAI account.']
+};
+function onProvChange(){
+  const checked=document.querySelector('input[name="prov"]:checked');
+  const prov=checked?checked.value:"gemini";
+  if(prov==="school"){document.getElementById("set_help").innerHTML="";return;}
+  const sel=document.getElementById("set_model");sel.innerHTML="";
+  MODELS[prov].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;sel.appendChild(o);});
+  document.getElementById("set_help").innerHTML=HELP[prov].map(s=>"<li>"+s+"</li>").join("");
+  document.getElementById("set_key").placeholder=prov==="gemini"?"Paste your Google Gemini API key":"Paste your OpenAI key (sk-…)";
+}
+function saveSettings(){
+  const checked=document.querySelector('input[name="prov"]:checked');
+  const prov=checked?checked.value:"gemini";
+  const st=document.getElementById("set_status"),pill=document.getElementById("aiPill"),banner=document.getElementById("aiBanner");
+  AI_PROVIDER=prov;
+  if(prov==="school"){
+    st.textContent="✓ Saved. AI is ON — using the school's shared AI, nothing else needed.";pill.classList.add("aiPill-on");pill.textContent="⚙ AI: ON";
+    if(banner)banner.style.display="none";
+    try{localStorage.setItem("nafl_ai_provider","school");localStorage.removeItem("nafl_ai_key");}catch(e){}
+    refreshPwButtonState();
+    setTimeout(()=>toggleSettings(),1000);
+    return;
+  }
+  const key=(document.getElementById("set_key").value||"").trim();
+  const model=document.getElementById("set_model").value;
+  if(prov==="gemini"){GEMINI_KEY=key;GEMINI_MODEL=model||"gemini-2.0-flash";}
+  else{OPENAI_KEY=key;OPENAI_MODEL=model||"gpt-4o-mini";}
+  if(key){
+    st.textContent="✓ Saved. AI is ON ("+prov+").";pill.classList.add("aiPill-on");pill.textContent="⚙ AI: ON";
+    if(banner)banner.style.display="none";
+    try{localStorage.setItem("nafl_ai_provider",prov);localStorage.setItem("nafl_ai_key",key);localStorage.setItem("nafl_ai_model",model);}catch(e){}
+  }else{
+    st.textContent="Key cleared.";pill.classList.remove("aiPill-on");pill.textContent="⚙ AI Settings";
+    try{localStorage.removeItem("nafl_ai_key");}catch(e){}
+  }
+  refreshPwButtonState();
+  setTimeout(()=>toggleSettings(),1000);
+}
+/* Keep the PPT->Word "Convert with AI" button in sync with AI status even if a file was
+   already uploaded before the key was set — otherwise it stays stuck disabled forever. */
+function refreshPwButtonState(){
+  const btn=document.getElementById("pwBtn");
+  if(!btn)return;
+  if(typeof pwUploadedText!=="undefined" && pwUploadedText){
+    btn.disabled=false;
+    const ps=document.getElementById("pwStatus");
+    if(ps && hasAI() && /no AI key set/i.test(ps.textContent)){
+      ps.className="status ok";ps.textContent="AI is now ready — click Convert to use it for a smarter restructure.";
+    }
+  }
+}
+/* Restore a previously saved provider/key on this device, and show the School AI option if it's configured. */
+(function restoreKey(){
+  window.addEventListener("DOMContentLoaded",()=>{
+    if(SCHOOL_PROXY_URL){const row=document.getElementById("schoolAiRow");if(row)row.style.display="block";}
+    const pill=document.getElementById("aiPill"),banner=document.getElementById("aiBanner");
+    let prov="",key="",model="";
+    try{prov=localStorage.getItem("nafl_ai_provider")||"";key=localStorage.getItem("nafl_ai_key")||"";model=localStorage.getItem("nafl_ai_model")||"";}catch(e){}
+    if(prov==="school" && SCHOOL_PROXY_URL){
+      AI_PROVIDER="school";
+      const radio=document.querySelector('input[name="prov"][value="school"]');if(radio)radio.checked=true;
+      if(pill){pill.classList.add("aiPill-on");pill.textContent="⚙ AI: ON";}
+      if(banner)banner.style.display="none";
+    }else if(prov&&key&&(prov==="gemini"||prov==="openai")){
+      AI_PROVIDER=prov;
+      if(prov==="gemini"){GEMINI_KEY=key;GEMINI_MODEL=model||"gemini-2.0-flash";}else{OPENAI_KEY=key;OPENAI_MODEL=model||"gpt-4o-mini";}
+      const radio=document.querySelector('input[name="prov"][value="'+prov+'"]');if(radio)radio.checked=true;
+      try{onProvChange();}catch(e){}
+      const ks=document.getElementById("set_key"),ms=document.getElementById("set_model");
+      if(ks)ks.value=key;if(ms)ms.value=model||"";
+      if(pill){pill.classList.add("aiPill-on");pill.textContent="⚙ AI: ON";}
+      if(banner)banner.style.display="none";
+    }else{
+      // Nothing saved yet — default to School AI if it's configured, else Gemini.
+      const radio=document.querySelector('input[name="prov"][value="'+AI_PROVIDER+'"]');if(radio)radio.checked=true;
+      try{onProvChange();}catch(e){}
+    }
+  });
+})();
+/* Bloom's taxonomy action verbs by cognitive level (used to guide objective writing) */
+const BLOOM={
+  Remember:["define","list","recall","name","identify","label","state","recognise"],
+  Understand:["explain","describe","summarise","classify","compare","interpret","illustrate","paraphrase"],
+  Apply:["apply","solve","demonstrate","use","calculate","construct","implement","execute"],
+  Analyse:["analyse","differentiate","examine","categorise","investigate","distinguish","deconstruct"],
+  Evaluate:["evaluate","justify","critique","assess","argue","defend","judge","recommend"],
+  Create:["design","create","develop","compose","formulate","plan","produce","devise"]
+};
+function bloomGuide(){return Object.entries(BLOOM).map(([k,v])=>`${k}: ${v.slice(0,5).join(", ")}`).join(" | ");}
+/* Source-grounding hint built from subject + the references the school uses */
+function sourceHint(subject){
+  let src=["the NCERT/CBSE textbook for this grade"];
+  if(/computer|information tech|coding|python/i.test(subject))src.push("standard CS teaching resources such as opencs.com and 'Happy Coder' style textbook content");
+  return src.join(", and ");
+}
+let lastFetchedContent=null; // {aim, objectives, keyConcepts, ncertRef} — set by aiFetchContent(), read by buildPlan()
+let buildReferenceText="";   // real textbook/NCERT page text, if the teacher uploaded one — takes priority over AI general knowledge
+let buildReferenceUsed=false;
+async function handleRefFile(file){
+  const rs=document.getElementById("refStatus");
+  if(!file)return;
+  rs.className="status";rs.textContent="Reading reference PDF…";
+  try{
+    const raw=await readPDFtext(file);
+    buildReferenceText=raw.replace(/\[\[SEG\]\]/g," ").replace(/\s+/g," ").trim();
+    if(buildReferenceText.length<20)throw new Error("No readable text found (scanned/image-only PDF?).");
+    rs.className="status ok";rs.textContent="Loaded "+buildReferenceText.length.toLocaleString()+" characters — AI will ground content directly in this text.";
+  }catch(e){
+    buildReferenceText="";
+    rs.className="status err";rs.textContent="Couldn't read reference: "+(e.message||e);
+  }
+}
+/* Returns a prompt block instructing the AI to use the teacher's uploaded reference as the primary
+   source (real grounding) instead of relying only on its own training-knowledge approximation of NCERT. */
+function groundingBlock(){
+  if(!buildReferenceText)return "";
+  return `\n\nPRIMARY SOURCE — the teacher uploaded this real textbook page. Base your content directly on it: quote/paraphrase the actual facts, definitions, examples and terminology it contains, rather than relying on general knowledge. Only supplement from standard CBSE knowledge where this text doesn't cover something needed:\n"""${clip(buildReferenceText,6000)}"""`;
+}
+function groundingLabel(){return buildReferenceText?"Grounded in your uploaded textbook page.":"Grounded in AI's general NCERT/CBSE knowledge — please verify against the actual textbook before use.";}
+async function aiFetchContent(){
+  const t=val("f_topic"),g=val("f_grade"),s=val("f_subject"),st=document.getElementById("aiContentStatus");
+  if(!t||!g||!s){st.className="status err";st.textContent="Fill Grade, Subject and Content/Unit/Chapter first.";return;}
+  if(!hasAI()){st.className="status err";st.innerHTML="No AI key set. Add a free Gemini key in <b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>⚙ AI Settings</b>.";return;}
+  st.className="status";st.textContent="Fetching NCERT/CBSE-aligned content…";
+  try{
+    const prompt=`You are an experienced ${s} subject master preparing a ${g} CBSE lesson on "${t}".
+Ground everything in ${sourceHint(s)}, matching what is actually prescribed for "${t}" at this grade.${groundingBlock()}
+Return ONLY valid JSON, no preamble, in this exact shape:
+{
+ "aim":"one sentence describing the overall purpose of this lesson on ${t}",
+ "objectives":["4-5 measurable learning objectives, each starting with a Bloom's taxonomy action verb, specific to ${t}"],
+ "keyConcepts":["5-7 core concepts/terms/facts a ${g} learner must know for ${t}, each as a short phrase"],
+ "ncertRef":"the NCERT/CBSE chapter or unit name this topic maps to for ${g} ${s} (best estimate; say 'not certain' if unsure rather than inventing a chapter number)"
+}`;
+    const data=parseJSON(await callAI(prompt,1200));
+    lastFetchedContent=data;
+    buildReferenceUsed=!!buildReferenceText;
+    if(data.aim)document.getElementById("f_aim").value=data.aim;
+    if(data.objectives&&data.objectives.length)document.getElementById("f_obj").value=data.objectives.join("\n");
+    const box=document.getElementById("keyConceptsBox"),list=document.getElementById("keyConceptsList"),ref=document.getElementById("ncertRefLine");
+    list.innerHTML=(data.keyConcepts||[]).map(k=>"<li>"+esc(k)+"</li>").join("");
+    ref.innerHTML=(data.ncertRef?("NCERT/CBSE reference: "+esc(data.ncertRef)+"<br>"):"")+"<b style='color:"+(buildReferenceUsed?"#2e7d32":"#a05a00")+"'>"+esc(groundingLabel())+"</b>";
+    box.classList.remove("hide");
+    st.className="status ok";st.textContent="Fetched. Aim, objectives and key concepts filled in below.";
+  }catch(e){
+    // Graceful fallback — same pattern as the other AI buttons: never leave the teacher with empty fields.
+    lastFetchedContent=null;
+    if(!val("f_aim"))document.getElementById("f_aim").value=autoAim(t,s);
+    if(!val("f_obj"))document.getElementById("f_obj").value=autoObjectives(t).join("\n");
+    st.className="status err";st.innerHTML="Couldn't fetch AI content: "+esc(e.message||String(e))+" — filled Aim/objectives with a generic template instead. <b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>Check ⚙ AI Settings</b> and try again for real NCERT-grounded content.";
+  }
+}
+async function aiObjectives(){
+  const t=val("f_topic"),g=val("f_grade"),s=val("f_subject"),st=document.getElementById("aiObjStatus");
+  if(!t){st.className="status err";st.textContent="Enter a topic first.";return;}
+  st.className="status";st.textContent="Writing Bloom-aligned objectives…";
+  try{
+    const out=await callAI(
+`You are an experienced ${s} subject master writing CBSE lesson objectives for ${g} on "${t}".
+Write 4-5 measurable learning objectives, each starting with a Bloom's taxonomy action verb, and spanning a range of cognitive levels (lower to higher order) appropriate for ${g}.
+Use Bloom verbs from these levels — ${bloomGuide()}.
+Ground the objectives in ${sourceHint(s)} so they match what is actually taught for "${t}".${groundingBlock()}
+Each objective must be specific to "${t}" (not generic). Return ONLY a JSON array of strings, no preamble.`,700);
+    const arr=parseJSON(out);
+    document.getElementById("f_obj").value=arr.join("\n");
+    st.className="status ok";st.textContent="Added "+arr.length+" Bloom-aligned objectives"+(buildReferenceText?" (grounded in your uploaded reference).":".");
+  }
+  catch(e){
+    // offline Bloom-based fallback
+    const fb=[
+      `define and ${BLOOM.Remember[1]} the key terms related to ${t}`,
+      `explain the main concepts of ${t} in their own words`,
+      `apply their understanding of ${t} to solve a problem or complete a task`,
+      `analyse how the parts of ${t} relate to each other`,
+      `evaluate or create an example that demonstrates ${t}`
+    ];
+    document.getElementById("f_obj").value=fb.join("\n");
+    st.className="status err";st.textContent="AI unavailable — inserted a Bloom-based template you can edit. (Add a free Gemini key in ⚙ AI Settings.)";
+  }
+}
+
+/* ===================== BUILD ===================== */
+async function buildPlan(){
+  const teacher=val("f_teacher"),grade=val("f_grade"),subject=val("f_subject"),topic=val("f_topic"),date=fmtDate(val("f_date")),dur=val("f_dur");
+  const st=document.getElementById("buildStatus");
+  if(!grade||!subject||!topic){st.className="status err";st.textContent="Fill grade, subject and topic.";return;}
+  if(selected.size===0){st.className="status err";st.textContent="Select at least one activity.";return;}
+  let aim=val("f_aim")||autoAim(topic,subject);
+  let objs=val("f_obj")?val("f_obj").split("\n").map(s=>s.trim()).filter(Boolean):autoObjectives(topic);
+  const order=["starter","collaborative","formative","plenary"];
+  const acts=[...selected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));
+  const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
+  const rows=acts.map((a,i)=>({time:times[i]+" min",act:a,name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,topic),learner:a.learner.replace(/\btopic\b/g,topic),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
+  // Objective-driven activity CONTENT (AI). Fills each activity with real topic content, stage-appropriate
+  // mini-lecture-depth explanations, and follow-up questions — all embedded directly in the row.
+  const wantContent=document.getElementById("f_content").checked;
+  let aiWarn="";
+  if(wantContent && !hasAI()){
+    aiWarn="No AI key set, so activity content uses templates only (no rich explanations/questions). Add a free Gemini key in ⚙ AI Settings for real topic content.";
+  }
+  if(wantContent){
+    st.className="status";st.textContent="Generating rich activity content and questions from your objectives…";
+    try{
+      await fillActivityContent(rows,topic,subject,grade,objs);
+    }catch(e){aiWarn="Activity content needs AI: "+(e.message||e)+" — used standard steps. Add a free Gemini key in ⚙ AI Settings.";}
+  }
+  lastOut={kind:"lesson",plans:[{meta:{teacher,grade,subject,topic,date,dur},aim,objs,rows,homework:autoHomework(topic),title:"In-session"}],name:"Lesson Plan - "+subject+" "+grade+" - "+topic};
+  renderPreview();
+  if(aiWarn){st.className="status err";st.innerHTML=esc(aiWarn).replace("⚙ AI Settings","<b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>⚙ AI Settings</b>");}
+  else{st.className="status ok";st.textContent="Done. Preview below — Word/PDF download ready. "+(buildReferenceText?"Content grounded in your uploaded reference.":"Content grounded in AI's general NCERT/CBSE knowledge — spot-check against the textbook.");}
+}
+/* Generate rich, mini-lecture-quality content for each chosen activity, matched to its stage
+   (starter/collaborative/plenary), and 2-4 follow-up questions embedded directly in that row —
+   so there's no separate "mini-lecture" section; everything lives in the table itself. */
+async function fillActivityContent(rows,topic,subject,grade,objs){
+  const list=rows.map((r,i)=>`${i+1}. ${r.act.name} — stage: ${r.act.cat} — method: ${r.act.purpose}`).join("\n");
+  const kc=(lastFetchedContent&&lastFetchedContent.keyConcepts&&lastFetchedContent.keyConcepts.length)?`\nKey concepts to draw on: ${lastFetchedContent.keyConcepts.join("; ")}.`:"";
+  const prompt=`You are an experienced ${subject} subject master planning a ${grade} CBSE lesson on "${topic}".
+Learning objectives (Bloom-aligned):\n- ${objs.join("\n- ")}${kc}
+Ground all content in ${sourceHint(subject)} so it matches the actual prescribed syllabus and examples for "${topic}".${groundingBlock()}
+For EACH activity below, write the REAL, mini-lecture-quality subject content the teacher will actually deliver during that activity — not generic instructions. Match the depth to its stage:
+- stage "starter": a short engaging hook connecting "${topic}" to something learners already know or have seen, plus a quick recall of any prior concept needed today.
+- stage "collaborative" or any main-teaching activity: the real explanation of the concept, at least one worked example or demonstration specific to "${topic}" (include real code and expected output if this is a coding/CS topic), and one common misconception to watch for and correct.
+- stage "plenary": a summary of the key learning points from today and the core vocabulary/definitions to reinforce.
+Whatever the stage, use correct subject terminology throughout, and ALWAYS include 2-4 concrete follow-up questions specific to "${topic}" and matched to that stage (simple recall for starter, higher-order for main/collaborative, reflective for plenary).
+Activities:\n${list}
+Return ONLY valid JSON: an array with one object per activity in the same order:
+[{"teacher":"the rich, stage-appropriate content the teacher delivers for THIS activity — 4-7 sentences of real subject content, not generic instructions","learner":"what learners actually do and produce (1-3 sentences)","questions":["2-4 concrete follow-up questions for THIS stage on ${topic}"]}]`;
+  const data=parseJSON(await callAI(prompt,2800));
+  data.forEach((d,i)=>{
+    if(!rows[i])return;
+    if(d.teacher)rows[i].teacher=d.teacher;
+    if(d.learner)rows[i].learner=d.learner;
+    rows[i].questions=(d.questions&&d.questions.length)?d.questions:[];
+  });
+}
+/* ---- Teacher mini-lecture: AI with offline fallback ---- */
+function stageLabel(a){return a.cat==="starter"?"Starter — "+a.name+": ":a.cat==="plenary"?"Plenary — "+a.name+": ":"Main activity — "+a.name+": ";}
+function stageName(a){return a.cat==="starter"?"Starter: "+a.name:a.cat==="plenary"?"Plenary: "+a.name:"Main Activity: "+a.name;}
+function pedagogyFor(c){return c==="collaborative"?"Collaborative Learning":c==="formative"?"Formative Assessment / AfL":c==="starter"?"Activity-Based Learning":"Reflective Learning";}
+
+/* ===================== CONVERT ===================== */
+const drop=document.getElementById("drop"),fileInput=document.getElementById("fileInput");
+drop.onclick=()=>fileInput.click();
+["dragover","dragenter"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add("over");}));
+["dragleave","drop"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove("over");}));
+drop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handleFile(ev.dataTransfer.files[0]);});
+fileInput.onchange=e=>{if(e.target.files.length)handleFile(e.target.files[0]);};
+function clearFile(){uploadedText="";uploadedDocxStructure=null;fileInput.value="";document.getElementById("fileMeta").classList.remove("show");document.getElementById("convBtn").disabled=true;document.getElementById("convStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";convSelected.clear();const cp=document.getElementById("convActPicker");if(cp){cp.classList.add("hide");cp.dataset.built="";}}
+
+/* ===================== PPT -> WORD, AI only (module 4) ===================== */
+let pwUploadedText="";
+const pwDrop=document.getElementById("pwDrop"),pwFileInput=document.getElementById("pwFileInput");
+pwDrop.onclick=()=>pwFileInput.click();
+["dragover","dragenter"].forEach(e=>pwDrop.addEventListener(e,ev=>{ev.preventDefault();pwDrop.classList.add("over");}));
+["dragleave","drop"].forEach(e=>pwDrop.addEventListener(e,ev=>{ev.preventDefault();pwDrop.classList.remove("over");}));
+pwDrop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handlePwFile(ev.dataTransfer.files[0]);});
+pwFileInput.onchange=e=>{if(e.target.files.length)handlePwFile(e.target.files[0]);};
+function clearPwFile(){pwUploadedText="";pwFileInput.value="";document.getElementById("pwFileMeta").classList.remove("show");document.getElementById("pwBtn").disabled=true;document.getElementById("pwStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
+async function handlePwFile(file){
+  const ps=document.getElementById("pwStatus");
+  if(!/\.pptx$/i.test(file.name)){ps.className="status err";ps.textContent="Please upload a .pptx file.";return;}
+  document.getElementById("pwFmName").textContent=file.name;document.getElementById("pwFmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("pwFileMeta").classList.add("show");
+  ps.className="status";ps.textContent="Reading slides…";
+  try{
+    pwUploadedText=await readPPTX(file);
+    if(pwUploadedText.trim().length<20)throw new Error("No readable text in this PPT (image-only slides?).");
+    const n=pwUploadedText.split("[[SEG]]").map(s=>s.trim()).filter(Boolean).length;
+    document.getElementById("pwBtn").disabled=false;
+    ps.className="status ok";ps.textContent="Read "+n+" slide(s) of text. "+(hasAI()?"AI will restructure it into a full lesson plan.":"No AI key set, so it'll convert slide-by-slide directly — still produces a full Word/PDF lesson plan.");
+    const g=guessTopic(pwUploadedText);if(g&&!val("pw_topic"))document.getElementById("pw_topic").value=g;
+  }catch(err){ps.className="status err";ps.textContent="Error: "+err.message;document.getElementById("pwBtn").disabled=true;}
+}
+async function convertPptWithAI(){
+  const ps=document.getElementById("pwStatus");
+  if(!pwUploadedText){ps.className="status err";ps.textContent="Upload a PPT first.";return;}
+  const teacher=val("pw_teacher"),grade=val("pw_grade"),subject=val("pw_subject");
+  let topic=val("pw_topic")||guessTopic(pwUploadedText)||"Lesson Topic";
+  const date=fmtDate(val("pw_date")),dur=val("pw_dur");
+  const slides=pwUploadedText.split("[[SEG]]").map(s=>s.trim()).filter(Boolean);
+  if(hasAI()){
+    ps.className="status";ps.textContent="AI is analysing the slides…";
+    try{
+      const slideText=clip(slides.map((s,i)=>(i+1)+". "+s).join("\n"),9000);
+      const prompt=`You are an experienced ${subject||"subject"} master. Below is the raw slide-by-slide text extracted from a PowerPoint deck for a ${grade||"CBSE"} lesson${topic?(' on "'+topic+'"'):""}. Analyse it and restructure it into the school's In-session lesson-plan format for a ${dur} lesson.
+Slide text:
+${slideText}
+Return ONLY valid JSON, no preamble, in this exact shape:
+{
+ "topic":"a short topic name for this deck (only if not already obvious, else repeat it)",
+ "aim":"one sentence describing the overall purpose of this lesson",
+ "objectives":["4-5 measurable learning objectives, Bloom-aligned, specific to this content"],
+ "rows":[
+   {"name":"short stage name e.g. Starter: Recap, Main Activity: ..., Plenary: ...","time_weight":1,"teacher":"what the teacher does AND the specific content/questions to use, grounded in the slide content (3-5 sentences)","learner":"what learners actually do and produce (1-3 sentences)","fa":"how the teacher checks understanding for this stage","res":"resources/materials used for this stage (comma-separated)"}
+ ]
+}
+Break the deck into 4-7 sensible timed stages (starter, 1-3 main teaching/activity stages that walk through the actual slide content in order, a formative check, and a plenary). "time_weight" is a relative weight (1 = short, 2 = double length) used to split the ${dur} lesson — weights don't need to sum to anything specific.`;
+      const data=parseJSON(await callAI(prompt,2200));
+      if(!data.rows||!data.rows.length)throw new Error("AI returned no rows.");
+      const weights=data.rows.map(r=>Number(r.time_weight)||1);
+      const times=distribute(dur,data.rows.length,weights);
+      const rows=data.rows.map((r,i)=>({time:times[i]+" min",name:r.name||"",teacher:r.teacher||"",learner:r.learner||"",fa:r.fa||"",res:r.res||"Whiteboard, Notebook, Textbook",pedagogy:""}));
+      const finalTopic=topic||data.topic||"Lesson Topic";
+      lastOut={kind:"lesson",plans:[{meta:{teacher,grade,subject,topic:finalTopic,date,dur},aim:data.aim||autoAim(finalTopic,subject),objs:(data.objectives&&data.objectives.length)?data.objectives:autoObjectives(finalTopic),rows,homework:autoHomework(finalTopic),title:"In-session"}],name:"Lesson Plan - "+subject+" "+grade+" - "+finalTopic};
+      renderPreview();
+      ps.className="status ok";ps.textContent="Done — AI restructured "+rows.length+" stages directly from your uploaded PPT's actual content. Preview below.";
+      return;
+    }catch(e){
+      ps.className="status";ps.textContent="AI unavailable ("+(e.message||e)+") — converting slide-by-slide instead so you still get a Word/PDF file…";
+      // fall through to the mechanical path below
+    }
+  }
+  // Mechanical fallback — no AI needed. One row per slide, same as the non-AI Convert module.
+  // This is what makes the module "just work": AI enhances it when available, but never blocks it.
+  try{
+    const expanded=slides.map((s,i)=>expandSegment(s,i,slides.length));
+    if(!expanded.length)throw new Error("No slide content found to convert.");
+    const times=distribute(dur,expanded.length,expanded.map(()=>1));
+    const rows=expanded.map((r,i)=>({time:times[i]+" min",name:r.name,teacher:r.teacher,learner:r.learner,fa:r.fa,res:r.res,pedagogy:""}));
+    const finalTopic=topic||"Lesson Topic";
+    lastOut={kind:"lesson",plans:[{meta:{teacher,grade,subject,topic:finalTopic,date,dur},aim:autoAim(finalTopic,subject),objs:autoObjectives(finalTopic),rows,homework:autoHomework(finalTopic),title:"In-session"}],name:"Lesson Plan - "+subject+" "+grade+" - "+finalTopic};
+    renderPreview();
+    ps.className="status ok";ps.textContent="Done — converted "+rows.length+" slides directly into the lesson-plan format (no AI used). Preview below."+(hasAI()?"":" Add a working AI key for a smarter restructure next time.");
+  }catch(e){
+    ps.className="status err";ps.textContent="Conversion failed: "+(e.message||e);
+  }
+}
+async function handleFile(file){
+  const cs=document.getElementById("convStatus");
+  document.getElementById("fmName").textContent=file.name;document.getElementById("fmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("fileMeta").classList.add("show");
+  cs.className="status";cs.textContent="Reading…";
+  uploadedDocxStructure=null;
+  try{const ext=file.name.split(".").pop().toLowerCase();
+    if(ext==="pdf")uploadedText=await readPDFtext(file);
+    else if(ext==="pptx")uploadedText=await readPPTX(file);
+    else if(ext==="docx"){const r=await readDOCX(file);uploadedDocxStructure=r;uploadedText=r.raw;}
+    else throw new Error("Unsupported file type");
+    if(uploadedText.trim().length<20)throw new Error("No readable text (image-only file?).");
+    const tableNote=uploadedDocxStructure&&uploadedDocxStructure.hasTable?" (table structure detected — will map columns directly)":"";
+    cs.className="status ok";cs.textContent="Read "+uploadedText.length.toLocaleString()+" characters."+tableNote;document.getElementById("convBtn").disabled=false;
+    const g=guessTopic(uploadedText);if(g&&!val("c_topic"))document.getElementById("c_topic").value=g;
+  }catch(err){cs.className="status err";cs.textContent="Error: "+err.message;document.getElementById("convBtn").disabled=true;}
+}
+async function readPDFtext(file){
+  const buf=new Uint8Array(await file.arrayBuffer());let raw="";const CH=8192;
+  for(let i=0;i<buf.length;i+=CH)raw+=String.fromCharCode.apply(null,buf.subarray(i,i+CH));
+  let text="";const streamRe=/stream\r?\n([\s\S]*?)\r?\nendstream/g;let m;const t0=Date.now();
+  while((m=streamRe.exec(raw))){
+    if(Date.now()-t0>15000)break;            // time guard
+    let chunk=m[1];
+    if(chunk.length>200000)continue;          // skip big (image) streams
+    try{const bytes=Uint8Array.from(chunk,c=>c.charCodeAt(0)&0xff);const inflated=inflate(bytes);if(inflated&&inflated.length<2000000)text+=" "+extractPdfText(new TextDecoder("latin1").decode(inflated));}catch(e){}
+  }
+  if(text.trim().length<20)text=extractPdfText(raw);
+  return text.replace(/\s+/g," ").split(/(?<=[.\u2022])\s/).map(s=>"[[SEG]] "+s.trim()).filter(s=>s.length>10).join("\n");
+}
+function extractPdfText(s){let out="";const tjRe=/\[((?:[^\[\]\\]|\\.)*)\]\s*TJ|(\((?:[^()\\]|\\.)*\))\s*Tj/g;let m;
+  while((m=tjRe.exec(s))){const parts=(m[0].match(/\((?:[^()\\]|\\.)*\)/g)||[]);parts.forEach(p=>{out+=p.slice(1,-1).replace(/\\(\d{3})/g,(_,o)=>String.fromCharCode(parseInt(o,8))).replace(/\\([()\\])/g,"$1");});out+=" ";}
+  return out;}
+async function readPPTX(file){const files=unzip(new Uint8Array(await file.arrayBuffer()));const slides=Object.keys(files).filter(n=>/ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a,b)=>parseInt(a.match(/slide(\d+)/)[1])-parseInt(b.match(/slide(\d+)/)[1]));let out=[];const dec=new TextDecoder();for(const n of slides){const xml=dec.decode(files[n]);const t=[...xml.matchAll(/<a:t>([\s\S]*?)<\/a:t>/g)].map(x=>x[1].replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">"));const j=t.join(" ").replace(/\s+/g," ").trim();if(j)out.push("[[SEG]] "+j);}return out.join("\n");}
+/* Extract plain text from a run of <w:p> nodes (paragraph text, joined). */
+function pNodesText(xmlChunk){
+  return [...xmlChunk.matchAll(/<w:p[ >][\s\S]*?<\/w:p>/g)].map(p=>{
+    const t=[...p[0].matchAll(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g)].map(x=>x[1]).join("");
+    return t.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").trim();
+  }).filter(Boolean).join("\n");
+}
+/* Table-aware DOCX reader. Detects <w:tbl> tables and returns them as structured rows
+   (so a 4/5-column lesson-plan table maps onto Time/Teacher/Learner/Resources correctly)
+   instead of flattening every cell into one undifferentiated stream of text. */
+async function readDOCX(file){
+  const files=unzip(new Uint8Array(await file.arrayBuffer()));
+  const dec=new TextDecoder();
+  const xml=dec.decode(files["word/document.xml"]);
+
+  // Walk the body top-to-bottom, alternating between plain paragraphs and tables,
+  // so output order matches the document's reading order.
+  const blockRe=/<w:tbl>[\s\S]*?<\/w:tbl>|<w:p[ >][\s\S]*?<\/w:p>/g;
+  let m, out=[], tablesFound=0;
+  while((m=blockRe.exec(xml))){
+    const block=m[0];
+    if(block.startsWith("<w:tbl>")){
+      tablesFound++;
+      const rowsXml=[...block.matchAll(/<w:tr[ >][\s\S]*?<\/w:tr>/g)].map(r=>r[0]);
+      if(rowsXml.length===0)continue;
+      const rows=rowsXml.map(r=>[...r.matchAll(/<w:tc[ >][\s\S]*?<\/w:tc>/g)].map(c=>pNodesText(c[0])));
+      // Heading row detection: short cells, looks like column titles (Time/Teacher/Learner/Resources/etc.)
+      const head=rows[0]||[];
+      const looksLikeHeader=head.length>=2 && head.every(c=>c.length<40) && /time|teacher|learner|activity|resource|topic|objective|month/i.test(head.join(" "));
+      out.push({type:"table",header:looksLikeHeader?head:null,rows:looksLikeHeader?rows.slice(1):rows});
+    }else{
+      const t=pNodesText(block);
+      if(t)out.push({type:"para",text:t});
+    }
+  }
+  if(out.length===0){
+    // fallback: no recognisable blocks — try a flat paragraph scan
+    const t=pNodesText(xml);
+    return t?{blocks:[{type:"para",text:t}],hasTable:false,raw:t}:{blocks:[],hasTable:false,raw:""};
+  }
+  // Build a "raw" SEG stream for any code that still wants flat text (topic-guessing etc.),
+  // while keeping the structured blocks for table-aware conversion.
+  const rawParts=[];
+  out.forEach(b=>{
+    if(b.type==="para")rawParts.push(b.text);
+    else b.rows.forEach(row=>rawParts.push(row.filter(Boolean).map(c=>c.replace(/\n/g," ")).join(" — ")));
+  });
+  return {blocks:out,hasTable:tablesFound>0,raw:rawParts.filter(Boolean).map(s=>"[[SEG]] "+s).join("\n")};
+}
+function guessTopic(t){const f=t.replace(/\[\[SEG\]\]/g,"").trim().split(/[\n.]/)[0].trim();return f.length>3&&f.length<70?f:"";}
+function detectNamedActivities(segs){
+  const text=segs.join(" ").toLowerCase();
+  return ACTIVITIES.filter(a=>text.includes(a.name.toLowerCase()));
+}
+let convSegsCache=[];
+/* Map a detected table's columns onto Time/Teacher/Learner/Resources by header name. */
+function mapTableColumns(header){
+  const idx={time:-1,teacher:-1,learner:-1,res:-1};
+  header.forEach((h,i)=>{
+    const hl=h.toLowerCase();
+    if(idx.time<0 && /time/.test(hl))idx.time=i;
+    else if(idx.teacher<0 && /teacher/.test(hl))idx.teacher=i;
+    else if(idx.learner<0 && /learner|student/.test(hl))idx.learner=i;
+    else if(idx.res<0 && /resource|iip|material/.test(hl))idx.res=i;
+  });
+  return idx;
+}
+/* Build lesson rows directly from a structured docx table — the accurate, column-aware path. */
+function rowsFromDocxTable(tbl){
+  const idx=mapTableColumns(tbl.header||[]);
+  const hasMapping=idx.teacher>=0 || idx.time>=0;
+  if(!hasMapping)return null;
+  const rows=tbl.rows.map((cells,i)=>{
+    const time=idx.time>=0?(cells[idx.time]||"").trim():((i+1)*8)+" min";
+    const teacherRaw=idx.teacher>=0?(cells[idx.teacher]||"").trim():"";
+    const learner=idx.learner>=0?(cells[idx.learner]||"").trim():"";
+    const res=idx.res>=0?(cells[idx.res]||"").trim():"";
+    if(!teacherRaw && !learner)return null;
+    // First short line often doubles as the activity name (e.g. "Starter: 60 Second Challenge")
+    const lines=teacherRaw.split(/\n|(?<=[a-z])(?=[A-Z][a-z]+:)/).map(s=>s.trim()).filter(Boolean);
+    let name="",teacher=teacherRaw;
+    if(lines.length>1 && lines[0].length<60 && /^[A-Za-z][\w\s]*:?$/.test(lines[0].replace(/:$/,""))){
+      name=lines[0].replace(/:$/,"");teacher=lines.slice(1).join("\n");
+    }
+    return {time:time||"-",name,teacher:teacher||"(see source document)",learner:learner||"(see source document)",fa:"",res:res||"Whiteboard, Notebook, Textbook",pedagogy:""};
+  }).filter(Boolean);
+  return rows.length?rows:null;
+}
+function convertFile(){
+  const cs=document.getElementById("convStatus");if(!uploadedText){cs.className="status err";cs.textContent="Upload a file first.";return;}
+  // Priority path: if the uploaded Word file has a recognisable Time/Teacher/Learner/Resources table,
+  // map it directly — far more accurate than splitting flat text into generic segments.
+  if(uploadedDocxStructure && uploadedDocxStructure.hasTable){
+    const tableBlock=uploadedDocxStructure.blocks.find(b=>b.type==="table" && b.header && mapTableColumns(b.header).teacher>=0);
+    if(tableBlock){
+      const rows=rowsFromDocxTable(tableBlock);
+      if(rows){
+        const teacher=val("c_teacher"),grade=val("c_grade"),subject=val("c_subject");
+        let topic=val("c_topic")||guessTopic(uploadedText)||"Lesson Topic";
+        const date=fmtDate(val("c_date")),dur=val("c_dur");
+        document.getElementById("convActPicker").classList.add("hide");
+        lastOut={kind:"lesson",plans:[{meta:{teacher,grade,subject,topic,date,dur},aim:autoAim(topic,subject),objs:autoObjectives(topic),rows,homework:autoHomework(topic),title:"In-session"}],name:"Lesson Plan - "+subject+" "+grade+" - "+topic};
+        renderPreview();cs.className="status ok";cs.textContent="Mapped "+rows.length+" rows directly from the Word table's columns. Preview below.";
+        return;
+      }
+    }
+  }
+  let segs=uploadedText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(s=>s.length>2).filter(s=>!/^(list of contents|table of contents|thank you|learning with tta|tutorial links)/i.test(s));
+  if(segs.length===0)segs=[uploadedText];
+  convSegsCache=segs;
+  const named=detectNamedActivities(segs);
+  if(named.length===0 && convSelected.size===0){
+    // No recognisable activities in the source, and the teacher hasn't picked any yet.
+    cs.className="status";cs.innerHTML="No named activities found in this file. Pick activities below, then click <b>Convert to lesson plan</b> again.";
+    showConvertActivityPicker();
+    return;
+  }
+  document.getElementById("convActPicker").classList.add("hide");
+  runConvert(segs);
+}
+function showConvertActivityPicker(){
+  const box=document.getElementById("convActPicker");
+  box.classList.remove("hide");
+  if(!box.dataset.built){
+    box.innerHTML=`<div class="section-h"><div class="bar"></div><h3>Choose activities</h3><span class="hint">No activities were named in the file — pick from the library</span></div>
+      <div class="lib-tabs" id="convLibTabs"></div><div class="acts" id="convActGrid"></div><div class="selbar" id="convSelBar"></div>`;
+    box.dataset.built="1";
+    renderConvLibTabs();renderConvActs();renderConvSelBar();
+  }
+}
+let convLibFilter="all",convSelected=new Set();
+function renderConvLibTabs(){const w=document.getElementById("convLibTabs");w.innerHTML="";LIB_CATS.forEach(c=>{const b=document.createElement("button");b.className="lib-tab"+(convLibFilter===c.id?" active":"");b.textContent=c.label;b.onclick=()=>{convLibFilter=c.id;renderConvLibTabs();renderConvActs();};w.appendChild(b);});}
+function renderConvActs(){const g=document.getElementById("convActGrid");g.innerHTML="";ACTIVITIES.filter(a=>convLibFilter==="all"||a.cat===convLibFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(convSelected.has(a.id)?" sel":"");d.onclick=()=>{if(!convSelected.has(a.id)){convSelected.add(a.id);renderConvActs();renderConvSelBar();}};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${convSelected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
+function renderConvSelBar(){const bar=document.getElementById("convSelBar");if(convSelected.size===0){bar.innerHTML="<span>No activities selected yet.</span>";return;}const order=["starter","collaborative","formative","plenary"];const items=[...convSelected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));bar.innerHTML="<span>Selected ("+items.length+"):</span>"+items.map(a=>`<span class="chip">${a.name}<b onclick="event.stopPropagation();convSelected.delete('${a.id}');renderConvActs();renderConvSelBar();">✕</b></span>`).join("");}
+function runConvert(segs){
+  const cs=document.getElementById("convStatus");
+  const teacher=val("c_teacher"),grade=val("c_grade"),subject=val("c_subject");let topic=val("c_topic")||guessTopic(uploadedText)||"Lesson Topic";const date=fmtDate(val("c_date")),dur=val("c_dur");
+  let rows;
+  if(convSelected.size>0){
+    // Teacher picked activities from the library — use those, with the file's content as topic context.
+    const order=["starter","collaborative","formative","plenary"];
+    const acts=[...convSelected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));
+    const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
+    rows=acts.map((a,i)=>({time:times[i]+" min",name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,topic),learner:a.learner.replace(/\btopic\b/g,topic),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
+  }else{
+    const ROWS=6,chunk=segs.slice(0,ROWS);const times=distribute(dur,chunk.length);
+    rows=chunk.map((seg,i)=>{const e=expandSegment(seg,i,chunk.length);return {time:times[i]+" min",...e,pedagogy:""};});
+  }
+  const multi=convSelected.size===0 && segs.length>6;
+  const chunks=multi?(()=>{const ROWS=6,cks=[];for(let i=0;i<segs.length;i+=ROWS)cks.push(segs.slice(i,i+ROWS));return cks;})():null;
+  let plans;
+  if(multi){
+    plans=chunks.map((chunk,ci)=>{const times=distribute(dur,chunk.length);const r=chunk.map((seg,i)=>{const e=expandSegment(seg,i,chunk.length);return {time:times[i]+" min",...e,pedagogy:""};});return {meta:{teacher,grade,subject,topic:topic+" — Part "+(ci+1),date,dur},aim:autoAim(topic,subject),objs:autoObjectives(topic),rows:r,homework:autoHomework(topic),title:"In-session — Lesson Plan "+(ci+1)};});
+  }else{
+    plans=[{meta:{teacher,grade,subject,topic,date,dur},aim:autoAim(topic,subject),objs:autoObjectives(topic),rows,homework:autoHomework(topic),title:"In-session"}];
+  }
+  lastOut={kind:"lesson",plans,name:"Lesson Plan - "+subject+" "+grade+" - "+topic};
+  renderPreview();cs.className="status ok";cs.textContent=multi?("Done — "+chunks.length+" lesson plans."):"Done. Preview below.";
+}
+function expandSegment(seg,i,n){const clean=seg.replace(/\s+/g," ").trim(),lower=clean.toLowerCase();let stage=i===0?"Introduction":(i===n-1?"Consolidation":"Development");let ped=/group|team|pair|collaborat|discuss/.test(lower)?" Organise learners into groups/pairs to discuss and work collaboratively.":"";if(/question|quiz|poll|exit|reflect/.test(lower))ped+=" Use the responses to check understanding before moving on.";const teacher=`Present and explain the following content from the source: "${clip(clean,260)}". Display any related image/diagram, ask probing questions to connect prior knowledge, and give clear task instructions.`+ped;const learner=`Observe and listen, discuss key points with a partner or group, record important points in the notebook, answer the teacher's questions, and participate actively.`;const fa=/quiz|question|poll|exit/.test(lower)?"Oral questioning / quick quiz":/reflect/.test(lower)?"Reflection review":"Oral questioning; notebook review";const res=/video|image|picture|diagram|ppt|slide/.test(lower)?"PPT/Interactive panel, Notebook, Whiteboard":"Whiteboard, Notebook, Textbook";return {name:stage,teacher,learner,fa,res};}
+function clip(s,n){return s.length>n?s.slice(0,n).trim()+"…":s;}
+
+/* ===================== POW ===================== */
+const powDrop=document.getElementById("powDrop"),powInput=document.getElementById("powInput");
+powDrop.onclick=()=>powInput.click();
+["dragover","dragenter"].forEach(e=>powDrop.addEventListener(e,ev=>{ev.preventDefault();powDrop.classList.add("over");}));
+["dragleave","drop"].forEach(e=>powDrop.addEventListener(e,ev=>{ev.preventDefault();powDrop.classList.remove("over");}));
+powDrop.addEventListener("drop",ev=>{if(ev.dataTransfer.files.length)handlePow(ev.dataTransfer.files[0]);});
+powInput.onchange=e=>{if(e.target.files.length)handlePow(e.target.files[0]);};
+function clearPow(){powText="";powInput.value="";document.getElementById("powMeta").classList.remove("show");document.getElementById("powBtn").disabled=true;document.getElementById("powList").classList.add("hide");document.getElementById("powStatus").textContent="";lastOut=null;document.getElementById("previewWrap").style.display="none";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";powSelected.clear();}
+async function handlePow(file){const ps=document.getElementById("powStatus");document.getElementById("pmName").textContent=file.name;document.getElementById("pmSize").textContent="· "+(file.size/1024/1024).toFixed(2)+" MB";document.getElementById("powMeta").classList.add("show");ps.className="status";ps.textContent="Reading…";try{powText=await readPDFtext(file);if(powText.trim().length<20)throw new Error("No readable text in PDF.");ps.className="status ok";ps.textContent="Read. Click 'Read syllabus' to list chapters.";document.getElementById("powBtn").disabled=false;}catch(e){ps.className="status err";ps.textContent="Error: "+e.message;document.getElementById("powBtn").disabled=true;}}
+const SCHOOL_RESOURCES=[];  // retained for legacy compat, no longer shown
+function readPow(){const ps=document.getElementById("powStatus");const segs=powText.split("[[SEG]]").map(s=>s.replace(/\s+/g," ").trim()).filter(Boolean);const cands=segs.filter(s=>/(chapter|unit|lesson|week|ch\.?\s*\d|topic)\b/i.test(s)&&s.length<140);powChaptersData=[...new Set((cands.length?cands:segs.slice(0,15)).map(s=>s.replace(/^[\-•\d.\s]+/,"").trim()).filter(s=>s.length>3))].slice(0,30);const box=document.getElementById("powChapters");if(powChaptersData.length===0){ps.className="status err";ps.textContent="Couldn't detect chapters — the PDF may be image-only.";return;}
+  box.innerHTML=`
+    <div style="margin-bottom:14px">
+      ${powChaptersData.map((c,i)=>`
+        <div class="qtype-row" style="align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+          <span style="color:var(--muted);font-size:.78rem;white-space:nowrap">${i+1}.</span>
+          <input id="pch_${i}" value="${esc(c)}" style="flex:1;min-width:220px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:.88rem" placeholder="Chapter / topic name">
+          <span style="color:var(--muted);font-size:.76rem;white-space:nowrap">No. of lesson plans</span>
+          <input id="plp_${i}" type="number" min="1" max="10" value="3" style="width:56px">
+          <button class="btn btn-ghost btn-sm" onclick="powChapterToLessons(${i})">→ Generate lesson plans</button>
+        </div>`).join("")}
+    </div>
+    <div class="section-h" style="margin-top:6px"><div class="bar"></div><h3>Choose activities for lesson plans</h3><span class="hint">Click each activity once to select — stays selected. Remove from chip bar.</span></div>
+    <div class="lib-tabs" id="powLibTabs"></div>
+    <div class="acts" id="powActGrid"></div>
+    <div class="selbar" id="powSelBar"></div>`;
+  renderPowLibTabs();renderPowActs();renderPowSelBar();
+  document.getElementById("powList").classList.remove("hide");ps.className="status ok";ps.textContent="Found "+powChaptersData.length+" chapters/units. Edit names if needed, then pick activities and set how many lesson plans per topic.";}
+
+let powLibFilter="all",powSelected=new Set();
+function renderPowLibTabs(){const w=document.getElementById("powLibTabs");if(!w)return;w.innerHTML="";LIB_CATS.forEach(c=>{const b=document.createElement("button");b.className="lib-tab"+(powLibFilter===c.id?" active":"");b.textContent=c.label;b.onclick=()=>{powLibFilter=c.id;renderPowLibTabs();renderPowActs();};w.appendChild(b);});}
+function renderPowActs(){const g=document.getElementById("powActGrid");if(!g)return;g.innerHTML="";ACTIVITIES.filter(a=>powLibFilter==="all"||a.cat===powLibFilter).forEach(a=>{const d=document.createElement("div");d.className="act"+(powSelected.has(a.id)?" sel":"");d.onclick=()=>{if(!powSelected.has(a.id)){powSelected.add(a.id);renderPowActs();renderPowSelBar();}};d.innerHTML=`<span class="catdot cat-${a.cat}">${a.cat}</span><div class="check">${powSelected.has(a.id)?"✓":""}</div><h4>${a.name}</h4><p>${a.purpose}</p>`;g.appendChild(d);});}
+function renderPowSelBar(){const bar=document.getElementById("powSelBar");if(!bar)return;if(powSelected.size===0){bar.innerHTML="<span>No activities selected yet.</span>";return;}const order=["starter","collaborative","formative","plenary"];const items=[...powSelected].map(id=>ACTIVITIES.find(a=>a.id===id)).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));bar.innerHTML="<span>Selected ("+items.length+"):</span>"+items.map(a=>`<span class="chip">${a.name}<b onclick="event.stopPropagation();powSelected.delete('${a.id}');renderPowActs();renderPowSelBar();">✕</b></span>`).join("");}
+/* Split a topic into N coherent lesson-plan session foci. AI proposes a session-by-session
+   breakdown when available; otherwise objectives are divided evenly across sessions. */
+async function planSessions(chapter,grade,subject,count,objs){
+  if(hasAI()){
+    try{
+      const prompt=`You are an experienced ${subject} subject master sequencing the CBSE ${grade} topic "${chapter}" into exactly ${count} separate classroom sessions (lesson plans), each roughly 40 minutes, building logically from one to the next.
+Return ONLY a JSON array of exactly ${count} objects, no preamble:
+[{"focus":"short session focus, e.g. 'Introducing the concept and key vocabulary'","objectives":["2-3 objectives for THIS session only, Bloom-aligned"]}]`;
+      const arr=parseJSON(await callAI(prompt,1600));
+      if(Array.isArray(arr) && arr.length===count)return arr.map(s=>({focus:s.focus||chapter,objectives:s.objectives&&s.objectives.length?s.objectives:objs.slice(0,3)}));
+    }catch(e){/* fall through to even split */}
+  }
+  // Offline / fallback: distribute the chapter's objectives evenly across sessions.
+  const per=Math.max(1,Math.ceil(objs.length/count));
+  return Array.from({length:count},(_,i)=>({
+    focus:chapter+" — Session "+(i+1)+" of "+count,
+    objectives:objs.slice(i*per,(i+1)*per).length?objs.slice(i*per,(i+1)*per):objs.slice(0,2)
+  }));
+}
+/* Pick a balanced, non-repeating set of real Goody Bag activities for one session. */
+function pickSessionActivities(sessionIndex,usedIds){
+  const order=["starter","collaborative","formative","plenary"];
+  const picks=[];
+  order.forEach(cat=>{
+    const pool=ACTIVITIES.filter(a=>a.cat===cat && !usedIds.has(a.id));
+    const fallbackPool=ACTIVITIES.filter(a=>a.cat===cat);
+    const chosen=(pool.length?pool:fallbackPool)[sessionIndex % (pool.length?pool.length:fallbackPool.length)];
+    if(chosen){picks.push(chosen);usedIds.add(chosen.id);}
+  });
+  return picks;
+}
+/* Generate the teacher's chosen number of full lesson plans for one POW chapter,
+   using real activities from the school's Goody Bag library — not a stub row. */
+async function powChapterToLessons(i){
+  const chInput=document.getElementById("pch_"+i);
+  const chapter=(chInput?chInput.value.trim():"")||powChaptersData[i];
+  const grade=val("p_grade"),subject=val("p_subject"),ps=document.getElementById("powStatus");
+  const teacher=val("p_teacher")||"",date=fmtDate(val("p_date")||""),dur=val("p_dur")||"40 min";
+  const count=Math.max(1,Math.min(10,parseInt(val("plp_"+i))||3));
+  if(!grade||!subject){ps.className="status err";ps.textContent="Select grade and subject first.";return;}
+  ps.className="status";ps.textContent="Planning "+count+" lesson plan(s) for: "+chapter+" …";
+  let baseObjs;
+  try{baseObjs=parseJSON(await callAI(`Write 6-8 measurable CBSE learning objectives for the ${grade} ${subject} chapter "${chapter}", spanning Bloom levels, grounded in ${sourceHint(subject)}. Return ONLY a JSON array of strings.`,800));}
+  catch(e){baseObjs=autoObjectives(chapter);}
+
+  const sessions=await planSessions(chapter,grade,subject,count,baseObjs);
+  // Use the teacher's selected activities from the POW Goody Bag picker,
+  // falling back to the auto-rotation if none were picked.
+  const usedIds=new Set();
+  const plans=[];
+  for(let s=0;s<sessions.length;s++){
+    ps.textContent="Building lesson plan "+(s+1)+" of "+count+" for "+chapter+" …";
+    let acts;
+    if(powSelected.size>0){
+      // Use chosen activities in sequence (cycling through the selection)
+      const order=["starter","collaborative","formative","plenary"];
+      const selList=[...powSelected].map(id=>ACTIVITIES.find(a=>a.id===id)).filter(Boolean).sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat));
+      // For each session use a window of activities starting from offset s, so sessions vary
+      const start=(s*2)%selList.length;
+      acts=[...selList.slice(start),...selList.slice(0,start)].slice(0,4);
+    }else{
+      acts=pickSessionActivities(s,usedIds);
+    }
+    const times=distribute(dur,acts.length,acts.map(a=>a.cat==="starter"||a.cat==="plenary"?1:1.6));
+    const rows=acts.map((a,k)=>({time:times[k]+" min",act:a,name:stageName(a),teacher:a.teacher.replace(/\btopic\b/g,chapter),learner:a.learner.replace(/\btopic\b/g,chapter),fa:a.assessment,res:a.resources,pedagogy:pedagogyFor(a.cat)}));
+    plans.push({
+      meta:{teacher,grade,subject,topic:"",date,dur},
+      aim:sessions[s].focus||autoAim(chapter,subject),
+      objs:sessions[s].objectives&&sessions[s].objectives.length?sessions[s].objectives:baseObjs.slice(0,3),
+      rows,
+      homework:autoHomework(chapter),
+      title:"In-session "+(s+1)+"/"+count
+    });
+  }
+  lastOut={kind:"lesson",plans,name:"Lesson Plans - "+subject+" "+grade+" - "+chapter+" ("+count+" sessions)"};
+  renderPreview();
+  ps.className=hasAI()?"status ok":"status err";
+  ps.innerHTML=hasAI()?("Built "+count+" lesson plans for "+esc(chapter)+" using the school's activity library. Word/PDF below."):("Built "+count+" lesson plans with an even objective split (no AI key, so session focus is generic). <b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>Add a free Gemini key</b> for a smarter session-by-session sequence.");
+}
+
+const MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];
+function monthSequence(startIdx,count){const out=[];for(let i=0;i<count;i++)out.push(MONTH_NAMES[(startIdx+i)%12]);return out;}
+/* Build the full-year Month -> Objectives table (Word + PDF), covering every detected chapter. */
+async function generatePowTable(){
+  const grade=val("p_grade"),subject=val("p_subject"),ps=document.getElementById("powStatus");
+  if(!grade||!subject){ps.className="status err";ps.textContent="Select grade and subject first.";return;}
+  if(!powChaptersData.length){ps.className="status err";ps.textContent="Read the syllabus first.";return;}
+  const layout=val("p_layout")||"topics";
+  const startIdx=parseInt(val("p_startmonth"))||3;
+  const months=layout==="month"?monthSequence(startIdx,powChaptersData.length):null;
+  ps.className="status";ps.textContent="Writing objectives for "+powChaptersData.length+" chapters…";
+  const rows=[];
+  if(hasAI()){
+    // Batch in groups to keep prompts manageable
+    const BATCH=6;
+    for(let i=0;i<powChaptersData.length;i+=BATCH){
+      const chunk=powChaptersData.slice(i,i+BATCH);
+      ps.textContent="Writing objectives ("+(i+1)+"–"+Math.min(i+BATCH,powChaptersData.length)+" of "+powChaptersData.length+")…";
+      try{
+        const prompt=`You are an experienced ${subject} subject master. For each ${grade} CBSE chapter/unit below, write 2-3 measurable learning objectives using Bloom's taxonomy action verbs, grounded in ${sourceHint(subject)}.
+Chapters:\n${chunk.map((c,k)=>(k+1)+". "+c).join("\n")}
+Return ONLY a JSON array, same order, one string per chapter (semicolon-separated objectives in that single string):
+["objective 1; objective 2; objective 3", ...]`;
+        const arr=parseJSON(await callAI(prompt,1400));
+        chunk.forEach((c,k)=>rows.push({chapter:c,objectives:(arr[k]||"").split(";").map(s=>s.trim()).filter(Boolean)}));
+      }catch(e){
+        chunk.forEach(c=>rows.push({chapter:c,objectives:autoObjectives(c).slice(0,3)}));
+      }
+    }
+  }else{
+    powChaptersData.forEach(c=>rows.push({chapter:c,objectives:autoObjectives(c).slice(0,3)}));
+  }
+  lastOut={kind:"pow",pow:{grade,subject,layout,months,rows},name:"Plan of Work - "+subject+" "+grade};
+  renderPreview();
+  ps.className=hasAI()?"status ok":"status err";
+  ps.innerHTML=hasAI()?"Plan of Work ready — Word/PDF download below.":"Built with editable placeholders (no AI key). <b style='cursor:pointer;text-decoration:underline' onclick='toggleSettings()'>Add a free Gemini key</b> for chapter-specific objectives, then regenerate.";
+}
+document.addEventListener("DOMContentLoaded",()=>{
+  const sel=document.getElementById("p_layout"),wrap=document.getElementById("p_startmonth_wrap");
+  if(sel&&wrap){const sync=()=>{wrap.style.display=sel.value==="month"?"block":"none";};sync();sel.addEventListener("change",sync);}
+});
+
+/* ===================== PREVIEW ===================== */
+function renderPreview(){const wrap=document.getElementById("previewWrap"),body=document.getElementById("previewBody"),title=document.getElementById("prevTitle");if(lastOut.kind==="lesson"){title.textContent="Lesson plan preview";body.innerHTML=lastOut.plans.map(planHTML).join("<div style='height:18px'></div>");}else{title.textContent="Plan of Work preview";body.innerHTML=powHTML(lastOut.pow);}wrap.style.display="block";try{wrap.scrollIntoView({behavior:"smooth",block:"start"});}catch(e){}}
+function powHTML(pow){
+  const isMonth=pow.layout==="month";
+  const colHead=isMonth?"Month":"Topics";
+  const rows=pow.rows.map((r,i)=>`<tr><td style="font-weight:600;${isMonth?"white-space:nowrap":""}">${esc(isMonth?pow.months[i]:r.chapter)}</td><td>${esc(r.objectives.join("; "))}</td></tr>`).join("");
+  return `<div class="lp-preview"><div class="lp-head"><h3>Plan of Work</h3><span style="font-size:.8rem;color:#dcc89a">${esc(pow.subject)} · ${esc(pow.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="colhdr"><th style="width:22%">${colHead}</th><th>Objectives</th></tr>${rows}</table></div></div>`;
+}
+function planHTML(p){
+  const m=p.meta,objLis=p.objs.map(o=>`<li>${esc(o)}</li>`).join("");
+  const rows=p.rows.map(r=>{
+    const resItems=String(r.res).split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join("");
+    const faItems=String(r.fa||"").split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join("");
+    const teacherLines=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean);
+    const teacherItems=(teacherLines.length>1?teacherLines:[r.teacher]).map(s=>`<li>${esc(s)}</li>`).join("");
+    const learnerLines=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean);
+    const learnerItems=(learnerLines.length>1?learnerLines:String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean)).map(s=>`<li>${esc(s.trim())}</li>`).join("");
+    const qItems=(r.questions&&r.questions.length)?`<div style="margin-top:6px;padding-top:5px;border-top:1px dashed #c7b8d8"><b style="font-size:.74rem;color:#5b3d8c">Questions to ask:</b><ol style="margin:2px 0 0;padding-left:16px">${r.questions.map(q=>`<li style="font-size:.82rem">${esc(q)}</li>`).join("")}</ol></div>`:"";
+    return `<tr><td>${esc(r.time)}</td><td>${r.name?`<b>${esc(r.name)}</b>`:""}<ul style="margin:2px 0 0;padding-left:16px">${teacherItems}</ul>${r.pedagogy?`<b style="color:#1b4f82;font-size:.74rem">[${esc(r.pedagogy)}]</b>`:""}${qItems}</td><td><ul style="margin:0;padding-left:16px">${learnerItems||esc(r.learner)}</ul></td><td><ul style="margin:0;padding-left:16px">${faItems||esc(r.fa||"")}</ul></td><td><ul style="margin:0;padding-left:16px">${resItems||esc(r.res)}</ul></td></tr>`;
+  }).join("");
+  const sessionLabel=p.title&&p.title.includes("/")?p.title.replace(/^In-session\s*/,"Session ")+": In-session":"In-session";
+  return `<div class="lp-preview"><div class="lp-head"><h3>${esc(p.title)} · Lesson Plan</h3><span style="font-size:.8rem;color:#dcc89a">${esc(m.subject)} · ${esc(m.grade)}</span></div><div class="lp-body"><table class="lp"><tr class="metarow"><td><b>Teacher:</b> ${esc(m.teacher)}</td><td><b>Class:</b> ${esc(m.grade)}</td><td><b>Subject:</b> ${esc(m.subject)}</td><td><b>Content/Unit/Chapter:</b> ${esc(m.topic)}</td><td><b>Date:</b> ${esc(m.date)}</td><td><b>Duration:</b> ${esc(m.dur)}</td></tr><tr class="aimrow"><td colspan="6"><b>Aim:</b> ${esc(p.aim)}</td></tr><tr class="objrow"><td colspan="6"><b>Learning Objectives:</b> The learner will<ul>${objLis}</ul></td></tr><tr class="colhdr"><th style="width:7%">Time</th><th style="width:36%">Teacher Activity</th><th style="width:25%">Learner Activity</th><th style="width:16%">Formative Assessments</th><th style="width:16%">Resources</th></tr>${rows}<tr class="reflrow"><td colspan="6"><b>Teacher Reflection:</b> What would you keep the same / change? &nbsp; <b>Worked well:</b> Yes/No &nbsp; <b>Did not work well:</b> Yes/No</td></tr></table><div style="font-size:.78rem;color:#2E6FB5;margin-top:6px;font-style:italic">Note: Add more rows if needed</div><div class="extra"><h4>Support for Struggling Learners</h4><ul><li>Guided notes and simplified instructions</li><li>Vocabulary support and visual aids</li><li>Peer support / buddy pairing</li></ul><h4>Extension for Advanced Learners</h4><ul><li>Higher-order thinking questions and research tasks</li><li>Additional challenge problems or an independent mini-project</li><li>Opportunity to present findings to the class</li></ul><h4>Homework</h4><ul><li>${esc(p.homework)}</li></ul></div></div></div>`;
+}
+
+/* ===================== EXPORTS ===================== */
+function downloadDocxOut(){
+  if(!lastOut){alert("Generate a lesson plan or Plan of Work first.");return;}
+  try{
+    const builder=lastOut.kind==="lesson"?lessonDocx(lastOut.plans):powDocx(lastOut.pow);
+    const blob=builder.blob();              // blob() is SYNCHRONOUS (returns a Blob)
+    downloadBlob(blob,safe(lastOut.name)+".docx");
+  }catch(e){alert("Could not build the Word file: "+(e&&e.message||e));}
+}
+function downloadPdfOut(){
+  if(!lastOut){alert("Generate a lesson plan or Plan of Work first.");return;}
+  try{
+    const blob=lastOut.kind==="lesson"?lessonPdf(lastOut.plans):powPdf(lastOut.pow);
+    downloadBlob(blob,safe(lastOut.name)+".pdf");
+  }catch(e){alert("Could not build the PDF: "+e.message);}
+}
+function safe(s){return (s||"output").replace(/[\\/:*?"<>|]+/g,"").slice(0,80);}
+/* ---- Plan of Work: Topics|Objectives (school template, portrait, slim single-line rows) ---- */
+function powDocx(pow){
+  const isMonth=pow.layout==="month";
+  const colHead=isMonth?"Month":"Topics";
+  const b=docBuilder({landscape:false});
+  b.para([{text:"Plan of Work",bold:true,size:24,color:"13233F"}]);
+  b.para([{text:pow.subject+"   ·   "+pow.grade,size:16,color:"6a7384"}]);
+  b.spacer();
+  const cw=[1700,7660];
+  const head=[{runs:[{text:colHead,bold:true,size:22}]},{runs:[{text:"Objectives",bold:true,size:22}]}];
+  const rows=[head];
+  pow.rows.forEach((r,i)=>{
+    rows.push([
+      {runs:[{text:isMonth?pow.months[i]:r.chapter,bold:true,size:18}]},
+      {runs:[{text:r.objectives.join("; "),size:18}]}
+    ]);
+  });
+  b.table(rows,cw);
+  b.spacer();b.para([{text:licenseLine(),size:14,color:"9aa8b8",italics:true}]);
+  return b;
+}
+function powPdf(pow){
+  const isMonth=pow.layout==="month";
+  const colHead=isMonth?"Month":"Topics";
+  const pb=pdfBuilder({landscape:false});
+  const TW=pb.PW-2*pb.M;
+  pb.text("Plan of Work",{size:14,bold:true,color:"13233F"});
+  pb.text(pow.subject+"   ·   "+pow.grade,{size:9,color:"6a7384"});
+  pb.gap(3);
+  const cw=[TW*0.18,TW*0.82];
+  const rows=[[{text:colHead,bold:true},{text:"Objectives",bold:true}]];
+  pow.rows.forEach((r,i)=>{
+    rows.push([{text:isMonth?pow.months[i]:r.chapter,bold:true},{text:r.objectives.join("; ")}]);
+  });
+  pb.table(rows,cw,{size:8.5});
+  pb.gap(6);pb.text(licenseLine(),{size:7.5,color:"9aa8b8"});
+  return pb.blob();
+}
+function lessonDocx(plans){const b=docBuilder({landscape:true});plans.forEach((p,pi)=>{const m=p.meta;
+  const sessionLabel=plans.length>1?("Session "+(pi+1)+": In-session"):"In-session";
+  b.para([{text:sessionLabel,size:18,color:"6a7384"}],{after:20});
+  b.para([{text:"Lesson Plan",bold:true,size:24,color:"7c1f2e"}],{after:120});
+  b.table([[{runs:[{text:"Teacher: ",bold:true},{text:m.teacher||""}]},{runs:[{text:"Class: ",bold:true},{text:m.grade||""}]},{runs:[{text:"Subject: ",bold:true},{text:m.subject||""}]},{runs:[{text:"Content/Unit/Chapter: ",bold:true},{text:m.topic||""}]},{runs:[{text:"Date: ",bold:true},{text:m.date||""}]},{runs:[{text:"Lesson Duration: ",bold:true},{text:m.dur}]}],[{span:6,fill:"B8CCE4",runs:[{text:"Aim: ",bold:true},{text:p.aim}]}],[{span:6,fill:"FBD4B4",paras:[{runs:[{text:"Learning Objectives: ",bold:true},{text:"The learner will"}]},...p.objs.map(o=>({bullet:true,runs:[{text:o}]}))]}]],[1560,1560,1560,1560,1560,1560]);b.spacer();
+  const cw=[650,3200,2700,1620,1690];
+  const head=["Time","Teacher Activity","Learner Activity","Formative Assessments","Resources"].map(t=>({fill:"FFFFFF",runs:[{text:t,bold:true,color:"000000"}]}));head._header=1;const rows=[head];
+  p.rows.forEach(r=>{
+    const teacherLines=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean);
+    const tp=[{runs:[{text:r.name||"",bold:true}]},...(teacherLines.length?teacherLines:[r.teacher]).map(l=>({bullet:true,runs:[{text:l}]}))];
+    if(r.pedagogy)tp.push({runs:[{text:"["+r.pedagogy+"]",italics:true,color:"1b4f82"}]});
+    if(r.questions&&r.questions.length){
+      tp.push({runs:[{text:"Questions to ask:",bold:true,italics:true,color:"5b3d8c",size:16}]});
+      r.questions.forEach((q,qi)=>tp.push({runs:[{text:(qi+1)+". "+q,size:16}]}));
+    }
+    const lp=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean);
+    const lpFinal=(lp.length>1?lp:String(r.learner).split(/(?<=[.;])\s+(?=[A-Z])/).filter(Boolean)).map(s=>({bullet:true,runs:[{text:s.trim()}]}));
+    const faItems=String(r.fa||"").split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>({bullet:true,runs:[{text:s}]}));
+    const resItems=String(r.res).split(/\n|,/).map(s=>s.trim()).filter(Boolean).map(s=>({bullet:true,runs:[{text:s}]}));
+    rows.push([{text:r.time},{paras:tp},{paras:lpFinal.length?lpFinal:[{runs:[{text:r.learner}]}]},{paras:faItems.length?faItems:[{runs:[{text:r.fa||""}]}]},{paras:resItems.length?resItems:[{runs:[{text:r.res}]}]}]);
+  });
+  rows.push([{span:5,fill:"F6F3EC",runs:[{text:"Teacher Reflection: ",bold:true},{text:"What would you keep the same / change?     "},{text:"Worked well: ",bold:true},{text:"Yes / No     "},{text:"Did not work well: ",bold:true},{text:"Yes / No"}]}]);
+  b.table(rows,cw);
+  b.para([{text:"Note: Add more rows if needed",italics:true,color:"2E6FB5",size:16}],{after:40});
+  b.heading("Support for Struggling Learners",{size:20});b.bullets(["Guided notes and simplified instructions","Vocabulary support and visual aids","Peer support / buddy pairing"]);b.heading("Extension for Advanced Learners",{size:20});b.bullets(["Higher-order thinking questions and research tasks","Additional challenge problems or an independent mini-project","Opportunity to present findings to the class"]);b.heading("Homework",{size:20});b.para([{text:p.homework}]);b.spacer();b.para([{text:licenseLine(),size:14,color:"9aa8b8",italics:true}]);if(pi<plans.length-1)b.pageBreak();});return b;}
+function licenseLine(){return "© "+new Date().getFullYear()+" National Academy for Learning — for internal classroom use. Generated with the PLP-NAFL-SPARK Portal.";}
+function lessonPdf(plans){
+  const pb=pdfBuilder({landscape:true});
+  const PW=pb.PW, M=pb.M, TW=PW-2*M;           // total usable width (landscape A4 ≈ 762pt)
+  plans.forEach((p,pi)=>{
+    if(pi>0){pb.gap(2);}                          // new content; pages auto-advance
+    const m=p.meta;
+    const sessionLabel=plans.length>1?("Session "+(pi+1)+": In-session"):"In-session";
+    pb.text(sessionLabel,{size:10,color:"6a7384"});
+    pb.text("Lesson Plan",{size:15,bold:true,color:"7c1f2e"});
+    pb.gap(3);
+    // META TABLE — 6 columns
+    const mc=[TW*0.16,TW*0.12,TW*0.16,TW*0.22,TW*0.16,TW*0.18];
+    pb.table([[
+      {runs:[{text:"Teacher: ",bold:true},{text:m.teacher||""}]},
+      {runs:[{text:"Class: ",bold:true},{text:m.grade||""}]},
+      {runs:[{text:"Subject: ",bold:true},{text:m.subject||""}]},
+      {runs:[{text:"Chapter: ",bold:true},{text:m.topic||""}]},
+      {runs:[{text:"Date: ",bold:true},{text:m.date||""}]},
+      {runs:[{text:"Duration: ",bold:true},{text:m.dur||""}]}
+    ]],mc,{size:8.5});
+    // AIM + OBJECTIVES
+    pb.table([[{text:"Aim: "+p.aim,fill:"B8CCE4"}]],[TW],{size:8.5});
+    pb.table([[{text:"Learning Objectives - The learner will:  -  "+p.objs.join("   -  "),fill:"FBD4B4"}]],[TW],{size:8.5});
+    // ACTIVITY TABLE — 5 columns matching the school's In-session format
+    const cw=[TW*0.07,TW*0.36,TW*0.25,TW*0.16,TW*0.16];
+    const head=[
+      {text:"Time",fill:"FFFFFF",color:"000000",bold:true},
+      {text:"Teacher Activity",fill:"FFFFFF",color:"000000",bold:true},
+      {text:"Learner Activity",fill:"FFFFFF",color:"000000",bold:true},
+      {text:"Formative Assessments",fill:"FFFFFF",color:"000000",bold:true},
+      {text:"Resources",fill:"FFFFFF",color:"000000",bold:true}
+    ];
+    const body=[head];
+    p.rows.forEach(r=>{
+      const teacherFlat=String(r.teacher).split("\n").map(s=>s.trim()).filter(Boolean).map(s=>"- "+s).join("   ");
+      const namePart=r.name?r.name+":  ":"";
+      let tcell=namePart+teacherFlat;
+      if(r.pedagogy)tcell+="  ["+r.pedagogy+"]";
+      if(r.questions&&r.questions.length)tcell+="   Questions to ask: "+r.questions.map((q,qi)=>(qi+1)+". "+q).join("   ");
+      const learnerFlat=String(r.learner).split("\n").map(s=>s.trim()).filter(Boolean).join("   ");
+      const faText=String(r.fa||"").split(/\n|,/).map(s=>"- "+s.trim()).join("   ");
+      const resText=String(r.res).split(/\n|,/).map(s=>"- "+s.trim()).join("   ");
+      body.push([{text:r.time},{text:tcell},{text:learnerFlat},{text:faText},{text:resText}]);
+    });
+    body.push([{text:"Teacher Reflection: What would you keep the same / change?     Worked well: Yes / No     Did not work well: Yes / No",fill:"F6F3EC",span:5}]);
+    pb.table(body,cw,{size:8.5});
+    pb.gap(2);pb.text("Note: Add more rows if needed",{size:8,color:"2E6FB5"});
+    // Differentiation + homework
+    pb.gap(4);pb.text("Support for Struggling Learners:",{size:9,bold:true,color:"13233F"});
+    pb.text("Guided notes and simplified instructions; vocabulary support and visual aids; peer support / buddy pairing.",{size:8.5,x:M+8});
+    pb.text("Extension for Advanced Learners:",{size:9,bold:true,color:"13233F"});
+    pb.text("Higher-order thinking questions and research tasks; additional challenge problems or a mini-project; present findings to the class.",{size:8.5,x:M+8});
+    pb.text("Homework:",{size:9,bold:true,color:"13233F"});
+    pb.text(p.homework,{size:8.5,x:M+8});
+    pb.gap(6);pb.text(licenseLine(),{size:7.5,color:"9aa8b8"});
+  });
+  return pb.blob();
+}
+/* ===================== reset ===================== */
+function resetBuild(){["f_teacher","f_topic","f_aim","f_obj"].forEach(id=>document.getElementById(id).value="");document.getElementById("f_grade").value="";document.getElementById("f_subject").value="";selected.clear();renderActs();renderSelBar();document.getElementById("buildStatus").textContent="";document.getElementById("previewWrap").style.display="none";lastOut=null;lastFetchedContent=null;buildReferenceText="";buildReferenceUsed=false;const refFile=document.getElementById("f_refFile");if(refFile)refFile.value="";const refSt=document.getElementById("refStatus");if(refSt)refSt.textContent="";const kcBox=document.getElementById("keyConceptsBox");if(kcBox)kcBox.classList.add("hide");const kcList=document.getElementById("keyConceptsList");if(kcList)kcList.innerHTML="";const ref=document.getElementById("ncertRefLine");if(ref)ref.textContent="";const ac=document.getElementById("aiContentStatus");if(ac)ac.textContent="";const fb=document.getElementById("dlFallback");if(fb)fb.remove();document.getElementById("previewBody").innerHTML="";}
+</script>
+</body>
+</html>  --ink:#13233f;          /* deep academic navy */
   --ink2:#1d3358;
   --gold:#c79a3e;         /* warm academic gold */
   --gold-d:#a87f2c;
