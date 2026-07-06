@@ -350,7 +350,7 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
     <div id="previewBody"></div>
   </div>
 
-  <footer><span class="seal">National Academy for Learning</span> · PLP-NAFL-SPARK Portal · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF · all 4 modules work without AI (AI enhances results when available); loading this page always needs internet.<br><span style="opacity:.6">build 2026-07-05.11 — if this date looks old after updating the file, hard-refresh (Ctrl/Cmd+Shift+R)</span></footer>
+  <footer><span class="seal">National Academy for Learning</span> · PLP-NAFL-SPARK Portal · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF · all 4 modules work without AI (AI enhances results when available); loading this page always needs internet.<br><span style="opacity:.6">build 2026-07-05.12 — if this date looks old after updating the file, hard-refresh (Ctrl/Cmd+Shift+R)</span></footer>
 </div>
 
 <script>
@@ -1484,6 +1484,21 @@ async function handlePwFile(file){
   }catch(err){ps.className="status err";ps.textContent="Error: "+err.message;document.getElementById("pwBtn").disabled=true;}
 }
 const FALLBACK_MID_NAMES=["Main Teaching: Core Concepts","Collaborative: Group Discussion","Concept Mapping","Main Teaching: Deeper Analysis","Formative Check"];
+const SLIDES_PER_SESSION=15; // shared by both the AI path and the mechanical fallback, so session boundaries agree
+/* Split a deck's slides into session-sized batches (by SLIDE COUNT, not char count) — used by
+   both convertPptWithAI's AI path and its mechanical fallback so a long deck is never sent to
+   the AI in one oversized chunk that silently truncates later slides out of the prompt. */
+function splitIntoSessionBatches(slides){
+  const sessionCount=Math.max(1,Math.ceil(slides.length/SLIDES_PER_SESSION));
+  const perSession=Math.ceil(slides.length/sessionCount);
+  const batches=[];
+  for(let s=0;s<sessionCount;s++){
+    const startIdx=s*perSession;
+    const sessionSlides=slides.slice(startIdx,startIdx+perSession);
+    if(sessionSlides.length)batches.push({startIdx,slides:sessionSlides});
+  }
+  return batches;
+}
 /* Split the deck into sessions by SLIDE COUNT first (so each session is a complete, teachable
    chunk with its own distinct sub-topic), THEN build each session's own Starter->...->Plenary
    arc independently. This fixes two bugs from the previous version:
@@ -1492,14 +1507,10 @@ const FALLBACK_MID_NAMES=["Main Teaching: Core Concepts","Collaborative: Group D
    (2) each session gets its own sub-topic (guessed from its own slides) so its aim/objectives are
        genuinely different, not the same generic ones repeated across every session. */
 function groupSlidesForFallback(slides){
-  const SLIDES_PER_SESSION=15; // a deck of ~15 slides or fewer stays as ONE session; longer decks split cleanly
-  const sessionCount=Math.max(1,Math.ceil(slides.length/SLIDES_PER_SESSION));
-  const perSession=Math.ceil(slides.length/sessionCount);
+  const batches=splitIntoSessionBatches(slides);
   const sessions=[];
-  for(let s=0;s<sessionCount;s++){
-    const startIdx=s*perSession;
-    const sessionSlides=slides.slice(startIdx,startIdx+perSession);
-    if(!sessionSlides.length)continue;
+  for(const batch of batches){
+    const startIdx=batch.startIdx,sessionSlides=batch.slides;
     const totalStages=Math.min(Math.max(Math.ceil(sessionSlides.length/2),4),7);
     const chunkSize=Math.ceil(sessionSlides.length/totalStages);
     const chunks=[];
@@ -1531,45 +1542,68 @@ async function convertPptWithAI(){
   const date=fmtDate(val("pw_date")),dur=val("pw_dur");
   const slides=pwUploadedText.split("[[SEG]]").map(s=>s.trim()).filter(Boolean);
   if(hasAI()){
-    ps.className="status";ps.textContent="AI is analysing the deck and grouping it into named teaching stages…";
-    try{
-      const slideText=clip(slides.map((s,i)=>"Slide "+(i+1)+": "+s).join("\n"),9500);
-      const prompt=`You are an experienced ${subject||"subject"} teacher analysing a PowerPoint deck to write a complete, ready-to-teach lesson plan in the same rich style as a professional CBSE lesson plan — grouping slides into clearly named pedagogical stages (NOT one row per slide), each referencing the exact PPT slide numbers it draws from.
+    const batches=splitIntoSessionBatches(slides);
+    const finalTopic=topic||"Lesson Topic";
+    const plans=[];
+    let anyFailed=false,firstError="";
+    for(let bi=0;bi<batches.length;bi++){
+      const batch=batches[bi];
+      ps.className="status";ps.textContent="AI is analysing session "+(bi+1)+" of "+batches.length+" (slides "+(batch.startIdx+1)+"–"+(batch.startIdx+batch.slides.length)+")…";
+      try{
+        // Each call only ever covers ONE session's own slides — however large the full deck is,
+        // no single call's slide text gets anywhere near a length that would risk truncation,
+        // so every slide's real content is guaranteed to actually reach the AI.
+        const slideText=batch.slides.map((s,i)=>"Slide "+(batch.startIdx+i+1)+": "+s).join("\n");
+        const prompt=`You are an experienced ${subject||"subject"} teacher writing ONE session of a lesson plan directly from these real PowerPoint slides (slides ${batch.startIdx+1}-${batch.startIdx+batch.slides.length} of a ${grade||"CBSE"} ${subject||""} deck${topic?(' on "'+topic+'"'):""}), for a class lasting ${dur}.
 
-There are ${slides.length} slides for a ${grade||"CBSE"} ${subject||""} lesson${topic?(' on "'+topic+'"'):""}. Split them into one or more ${dur} SESSIONS — use multiple sessions only if the content genuinely needs more time to teach properly; a short/simple deck should stay as ONE session.
+Write, grounded ONLY in the real slide content below (do not invent unrelated material):
+- aim: one sentence describing this session's purpose
+- objectives: 3-4 measurable, Bloom-aligned objectives specific to this session's actual content
+- rows: 5-9 stages that walk through these slides in order — a starter/hook, 2-4 main teaching/analysis stages, at least one collaborative or interactive activity (pick whatever genuinely suits this content), a formative check, and a plenary.
 
-For each session, write:
-- aim: one sentence describing that session's purpose
-- objectives: 3-4 measurable, Bloom-aligned objectives specific to that session's actual content
-- rows: 5-9 stages that walk through the deck in slide order — a starter/hook, 2-4 main teaching/analysis stages, at least one collaborative or interactive activity (pick whatever genuinely suits this content — e.g. group discussion, concept mapping, a quick game, debate, role-play), a formative check, and a plenary.
+For EACH row/stage give it a SPECIFIC, memorable name the way an experienced teacher would title it (not "Main Activity 1") — e.g. "Starter: Fastest Finger First", "Collaborative: Buzz Groups", "Concept Mapping", "Plenary: Exit Ticket". Only ever use "Plenary" for the true LAST stage.
 
-For EACH row/stage give it a SPECIFIC, memorable name the way an experienced teacher would title it in their plan (not "Main Activity 1") — e.g. "Starter: Fastest Finger First", "Collaborative: Buzz Groups", "Concept Mapping", "Word Play: Vocabulary Unscramble", "Plenary: Exit Ticket".
-
-IMPORTANT: if you create more than one session, each session's aim, objectives, and stage names must be genuinely different from every other session's — reflecting that session's own distinct slice of content. Never repeat the same objectives or stage name across two sessions, and only ever use "Plenary" for the LAST stage in a session, never for any other stage.
-
-Return ONLY valid JSON, no preamble, in this exact shape:
-{"sessions":[{"aim":"...","objectives":["...","..."],"rows":[{"name":"specific named stage/technique","slideRange":"the real slide numbers this stage covers, e.g. '3-5' or '12'","teacher":"what the teacher actually does and explains, grounded in the real content of those slides (3-5 sentences)","learner":"what learners actually do (1-2 sentences)","fa":"the specific formative assessment method for this stage","res":"materials/resources used, comma-separated — do not repeat the slide numbers here, they're added automatically"}]}]}
+Return ONLY valid JSON, no preamble:
+{"aim":"...","objectives":["...","..."],"rows":[{"name":"specific named stage/technique","slideRange":"the real slide numbers (from ${batch.startIdx+1} to ${batch.startIdx+batch.slides.length}) this stage covers, e.g. '${batch.startIdx+1}-${batch.startIdx+3}'","teacher":"what the teacher actually does and explains, grounded in the real content of those slides (3-5 sentences)","learner":"what learners actually do (1-2 sentences)","fa":"the specific formative assessment method for this stage","res":"materials/resources used, comma-separated — do not repeat the slide numbers here, they're added automatically"}]}
 
 Slides:
 ${slideText}`;
-      const data=parseJSON(await callAI(prompt,4000));
-      const sessions=data.sessions||[];
-      if(!sessions.length || !sessions[0].rows || !sessions[0].rows.length)throw new Error("AI returned no sessions.");
-      const finalTopic=topic||"Lesson Topic";
-      const plans=sessions.map((sess,si)=>{
+        const sess=parseJSON(await callAI(prompt,2800));
         const rowsIn=sess.rows||[];
+        if(!rowsIn.length)throw new Error("AI returned no rows for this session.");
         const times=distribute(dur,rowsIn.length,rowsIn.map(()=>1));
         const rows=rowsIn.map((r,i)=>({time:times[i]+" min",name:r.name||("Stage "+(i+1)),teacher:r.teacher||"",learner:r.learner||"",fa:r.fa||"Oral questioning",res:(r.res?r.res+", ":"")+"PPT Slides "+(r.slideRange||"—"),pedagogy:""}));
-        return {meta:{teacher,grade,subject,topic:finalTopic,date,dur},aim:sess.aim||autoAim(finalTopic,subject),objs:(()=>{const n=normalizeList(sess.objectives);return n.length?n:autoObjectives(finalTopic);})(),rows,homework:autoHomework(finalTopic),title:sessions.length>1?("In-session "+(si+1)+"/"+sessions.length):"In-session"};
-      });
+        const sessionObjs=normalizeList(sess.objectives);
+        plans.push({meta:{teacher,grade,subject,topic:finalTopic,date,dur},aim:sess.aim||autoAim(finalTopic,subject),objs:sessionObjs.length?sessionObjs:autoObjectives(finalTopic),rows,homework:autoHomework(finalTopic),title:""});
+      }catch(e){
+        // This ONE session's AI call failed (e.g. quota, network) — fall back to a mechanical
+        // grouping for just this session's own real slides, rather than losing the whole deck.
+        anyFailed=true;firstError=e.message||String(e);
+        const [mechSession]=groupSlidesForFallback(batch.slides);
+        if(mechSession){
+          const times=distribute(dur,mechSession.stages.length,mechSession.stages.map(()=>1));
+          const rows=mechSession.stages.map((s,i)=>{
+            // Re-offset slide ranges to the real global slide numbers for this batch.
+            const m=s.slideRange.match(/(\d+)(?:–(\d+))?/);
+            const start=batch.startIdx+parseInt(m[1]),end=m[2]?batch.startIdx+parseInt(m[2]):start;
+            return {time:times[i]+" min",name:s.name,teacher:s.teacher,learner:s.learner,fa:s.fa,res:s.res+", PPT Slides "+(start===end?start:start+"–"+end),pedagogy:""};
+          });
+          const sessionTopic=clip((batch.slides[0]||"").replace(/\s+/g," ").trim(),60)||finalTopic;
+          plans.push({meta:{teacher,grade,subject,topic:finalTopic,date,dur},aim:autoAim(sessionTopic,subject),objs:autoObjectives(sessionTopic),rows,homework:autoHomework(sessionTopic),title:""});
+        }
+      }
+    }
+    if(plans.length){
+      plans.forEach((p,pi)=>{p.title=plans.length>1?("In-session "+(pi+1)+"/"+plans.length):"In-session";});
       lastOut={kind:"lesson",plans,name:"Lesson Plan - "+subject+" "+grade+" - "+finalTopic+(plans.length>1?" ("+plans.length+" sessions)":"")};
       renderPreview();
-      ps.className="status ok";ps.textContent="Done — AI grouped the deck into "+plans.length+(plans.length>1?" sessions":" session")+" with named teaching stages, each referencing its PPT slides. Preview below.";
+      if(anyFailed){ps.className="status";ps.textContent="Built "+plans.length+(plans.length>1?" sessions":" session")+" — some used a direct fallback because AI failed partway ("+firstError+"). Preview below.";}
+      else{ps.className="status ok";ps.textContent="Done — AI wrote "+plans.length+(plans.length>1?" sessions":" session")+" grounded in the deck's real content, session by session, each referencing its own PPT slides. Preview below.";}
+      document.getElementById("pwDownloadRow")?.classList.remove("hide");
       return;
-    }catch(e){
-      ps.className="status";ps.textContent="AI unavailable ("+(e.message||e)+") — grouping slides into stages directly instead so you still get a Word/PDF file…";
-      // fall through to the mechanical path below
     }
+    ps.className="status";ps.textContent="AI unavailable — grouping slides into stages directly instead so you still get a Word/PDF file…";
+    // fall through to the mechanical path below
   }
   // Mechanical fallback — no AI needed. Groups slides into named stages with slide ranges,
   // split into sessions for long decks — same shape as the AI path, just without AI wording.
