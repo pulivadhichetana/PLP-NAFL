@@ -350,7 +350,7 @@ footer .seal{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;lette
     <div id="previewBody"></div>
   </div>
 
-  <footer><span class="seal">National Academy for Learning</span> · PLP-NAFL-SPARK Portal · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF · all 4 modules work without AI (AI enhances results when available); loading this page always needs internet.<br><span style="opacity:.6">build 2026-07-05.9 — if this date looks old after updating the file, hard-refresh (Ctrl/Cmd+Shift+R)</span></footer>
+  <footer><span class="seal">National Academy for Learning</span> · PLP-NAFL-SPARK Portal · activities from the school Goody Bag · plans follow the In-session format · exports Word + PDF · all 4 modules work without AI (AI enhances results when available); loading this page always needs internet.<br><span style="opacity:.6">build 2026-07-05.11 — if this date looks old after updating the file, hard-refresh (Ctrl/Cmd+Shift+R)</span></footer>
 </div>
 
 <script>
@@ -1169,6 +1169,36 @@ function parseJSON(t){
   else if(a2>=0&&b2>a2)s=s.slice(a2,b2+1);
   return JSON.parse(s);
 }
+/* Defends against a real, observed AI formatting quirk: instead of a clean array of strings,
+   the model sometimes double-encodes — returning a single-element array whose one string IS
+   itself a JSON-stringified array, or a plain comma/semicolon-separated string instead of an
+   array at all. Left unguarded, this renders as one bullet showing the raw "[...]" text instead
+   of proper separate bullets. Always run AI-returned list fields (objectives, keyConcepts,
+   questions) through this before using them. */
+function normalizeList(v){
+  const unwrapIfJsonArrayString=(s)=>{
+    const t=String(s).trim();
+    if(/^\[[\s\S]*\]$/.test(t)){
+      try{const inner=JSON.parse(t);if(Array.isArray(inner))return inner;}catch(e){}
+    }
+    return null;
+  };
+  if(Array.isArray(v)){
+    if(v.length===1 && typeof v[0]==="string"){
+      const unwrapped=unwrapIfJsonArrayString(v[0]);
+      if(unwrapped)return normalizeList(unwrapped);
+    }
+    return v.map(x=>typeof x==="string"?x:(x&&typeof x==="object"?JSON.stringify(x):String(x))).filter(Boolean);
+  }
+  if(typeof v==="string"){
+    const unwrapped=unwrapIfJsonArrayString(v);
+    if(unwrapped)return normalizeList(unwrapped);
+    const t=v.trim();
+    if(!t)return [];
+    return t.split(/\n+|;\s*/).map(s=>s.trim()).filter(Boolean);
+  }
+  return [];
+}
 function toggleSettings(){document.getElementById("settingsBar").classList.toggle("hide");}
 const MODELS={
   gemini:[["gemini-2.0-flash","gemini-2.0-flash (free, fast)"],["gemini-2.5-flash","gemini-2.5-flash (free)"],["gemini-1.5-flash","gemini-1.5-flash (free)"]],
@@ -1313,11 +1343,13 @@ Return ONLY valid JSON, no preamble, in this exact shape:
 }`;
     const data=parseJSON(await callAI(prompt,1200));
     lastFetchedContent=data;
+    const normObjs=normalizeList(data.objectives),normKC=normalizeList(data.keyConcepts);
+    lastFetchedContent.objectives=normObjs;lastFetchedContent.keyConcepts=normKC;
     buildReferenceUsed=!!buildReferenceText;
     if(data.aim)document.getElementById("f_aim").value=data.aim;
-    if(data.objectives&&data.objectives.length)document.getElementById("f_obj").value=data.objectives.join("\n");
+    if(normObjs.length)document.getElementById("f_obj").value=normObjs.join("\n");
     const box=document.getElementById("keyConceptsBox"),list=document.getElementById("keyConceptsList"),ref=document.getElementById("ncertRefLine");
-    list.innerHTML=(data.keyConcepts||[]).map(k=>"<li>"+esc(k)+"</li>").join("");
+    list.innerHTML=normKC.map(k=>"<li>"+esc(k)+"</li>").join("");
     ref.innerHTML=(data.ncertRef?("NCERT/CBSE reference: "+esc(data.ncertRef)+"<br>"):"")+"<b style='color:"+(buildReferenceUsed?"#2e7d32":"#a05a00")+"'>"+esc(groundingLabel())+"</b>";
     box.classList.remove("hide");
     st.className="status ok";st.textContent="Fetched. Aim, objectives and key concepts filled in below.";
@@ -1340,7 +1372,7 @@ Write 4-5 measurable learning objectives, each starting with a Bloom's taxonomy 
 Use Bloom verbs from these levels — ${bloomGuide()}.
 Ground the objectives in ${sourceHint(s)} so they match what is actually taught for "${t}".${groundingBlock()}
 Each objective must be specific to "${t}" (not generic). Return ONLY a JSON array of strings, no preamble.`,700);
-    const arr=parseJSON(out);
+    const arr=normalizeList(parseJSON(out));
     document.getElementById("f_obj").value=arr.join("\n");
     st.className="status ok";st.textContent="Added "+arr.length+" Bloom-aligned objectives"+(buildReferenceText?" (grounded in your uploaded reference).":".");
   }
@@ -1410,7 +1442,7 @@ Return ONLY valid JSON: an array with one object per activity in the same order:
     if(!rows[i])return;
     if(d.teacher)rows[i].teacher=d.teacher;
     if(d.learner)rows[i].learner=d.learner;
-    rows[i].questions=(d.questions&&d.questions.length)?d.questions:[];
+    rows[i].questions=normalizeList(d.questions);
   });
 }
 /* ---- Teacher mini-lecture: AI with offline fallback ---- */
@@ -1451,35 +1483,44 @@ async function handlePwFile(file){
     const g=guessTopic(pwUploadedText);if(g&&!val("pw_topic"))document.getElementById("pw_topic").value=g;
   }catch(err){ps.className="status err";ps.textContent="Error: "+err.message;document.getElementById("pwBtn").disabled=true;}
 }
-const FALLBACK_STAGE_NAMES=[
-  "Starter: Quick Recall",
-  "Main Teaching: Core Concepts",
-  "Collaborative: Group Discussion",
-  "Concept Mapping",
-  "Main Teaching: Deeper Analysis",
-  "Formative Check",
-  "Plenary: Summary Round-up",
-];
-/* Group slides into named stages for the no-AI fallback: ~3 slides per stage, 4-9 stages per
-   session, split into multiple sessions if the deck is long — same shape the AI path produces. */
+const FALLBACK_MID_NAMES=["Main Teaching: Core Concepts","Collaborative: Group Discussion","Concept Mapping","Main Teaching: Deeper Analysis","Formative Check"];
+/* Split the deck into sessions by SLIDE COUNT first (so each session is a complete, teachable
+   chunk with its own distinct sub-topic), THEN build each session's own Starter->...->Plenary
+   arc independently. This fixes two bugs from the previous version:
+   (1) stage names no longer reused/clamped to "Plenary" for every overflow stage — each session
+       gets its own correctly-ordered Starter/Main/Collaborative/Plenary sequence.
+   (2) each session gets its own sub-topic (guessed from its own slides) so its aim/objectives are
+       genuinely different, not the same generic ones repeated across every session. */
 function groupSlidesForFallback(slides){
-  const totalStages=Math.min(Math.max(Math.ceil(slides.length/3),4),9);
-  const chunkSize=Math.ceil(slides.length/totalStages);
-  const chunks=[];
-  for(let i=0;i<slides.length;i+=chunkSize)chunks.push({start:i+1,end:Math.min(i+chunkSize,slides.length),text:slides.slice(i,i+chunkSize).join(" ")});
-  const stages=chunks.map((c,i)=>{
-    const clean=c.text.replace(/\s+/g," ").trim();
-    return {
-      name:FALLBACK_STAGE_NAMES[Math.min(i,FALLBACK_STAGE_NAMES.length-1)],
-      slideRange:c.start===c.end?String(c.start):c.start+"–"+c.end,
-      teacher:"Present and explain: \""+clip(clean,260)+"\". Ask probing questions to connect prior knowledge and check understanding before moving on.",
-      learner:"Observe, discuss key points with a partner, record important points in the notebook, and respond to the teacher's questions.",
-      fa:"Oral questioning",
-      res:"Whiteboard, Notebook",
-    };
-  });
-  const PER_SESSION=7,sessions=[];
-  for(let i=0;i<stages.length;i+=PER_SESSION)sessions.push(stages.slice(i,i+PER_SESSION));
+  const SLIDES_PER_SESSION=15; // a deck of ~15 slides or fewer stays as ONE session; longer decks split cleanly
+  const sessionCount=Math.max(1,Math.ceil(slides.length/SLIDES_PER_SESSION));
+  const perSession=Math.ceil(slides.length/sessionCount);
+  const sessions=[];
+  for(let s=0;s<sessionCount;s++){
+    const startIdx=s*perSession;
+    const sessionSlides=slides.slice(startIdx,startIdx+perSession);
+    if(!sessionSlides.length)continue;
+    const totalStages=Math.min(Math.max(Math.ceil(sessionSlides.length/2),4),7);
+    const chunkSize=Math.ceil(sessionSlides.length/totalStages);
+    const chunks=[];
+    for(let i=0;i<sessionSlides.length;i+=chunkSize){
+      chunks.push({start:startIdx+i+1,end:Math.min(startIdx+i+chunkSize,startIdx+sessionSlides.length),text:sessionSlides.slice(i,i+chunkSize).join(" ")});
+    }
+    const stages=chunks.map((c,i)=>{
+      const clean=c.text.replace(/\s+/g," ").trim();
+      const isFirst=i===0,isLast=i===chunks.length-1&&chunks.length>1;
+      const name=chunks.length===1?"Main Teaching: Core Concepts":isFirst?"Starter: Quick Recall":isLast?"Plenary: Summary Round-up":FALLBACK_MID_NAMES[Math.min(i-1,FALLBACK_MID_NAMES.length-1)];
+      return {
+        name,
+        slideRange:c.start===c.end?String(c.start):c.start+"–"+c.end,
+        teacher:"Present and explain: \""+clip(clean,260)+"\". Ask probing questions to connect prior knowledge and check understanding before moving on.",
+        learner:"Observe, discuss key points with a partner, record important points in the notebook, and respond to the teacher's questions.",
+        fa:"Oral questioning",
+        res:"Whiteboard, Notebook",
+      };
+    });
+    sessions.push({stages,firstSlide:sessionSlides[0]||"",slideText:sessionSlides.join(" ")});
+  }
   return sessions;
 }
 async function convertPptWithAI(){
@@ -1504,6 +1545,8 @@ For each session, write:
 
 For EACH row/stage give it a SPECIFIC, memorable name the way an experienced teacher would title it in their plan (not "Main Activity 1") — e.g. "Starter: Fastest Finger First", "Collaborative: Buzz Groups", "Concept Mapping", "Word Play: Vocabulary Unscramble", "Plenary: Exit Ticket".
 
+IMPORTANT: if you create more than one session, each session's aim, objectives, and stage names must be genuinely different from every other session's — reflecting that session's own distinct slice of content. Never repeat the same objectives or stage name across two sessions, and only ever use "Plenary" for the LAST stage in a session, never for any other stage.
+
 Return ONLY valid JSON, no preamble, in this exact shape:
 {"sessions":[{"aim":"...","objectives":["...","..."],"rows":[{"name":"specific named stage/technique","slideRange":"the real slide numbers this stage covers, e.g. '3-5' or '12'","teacher":"what the teacher actually does and explains, grounded in the real content of those slides (3-5 sentences)","learner":"what learners actually do (1-2 sentences)","fa":"the specific formative assessment method for this stage","res":"materials/resources used, comma-separated — do not repeat the slide numbers here, they're added automatically"}]}]}
 
@@ -1517,7 +1560,7 @@ ${slideText}`;
         const rowsIn=sess.rows||[];
         const times=distribute(dur,rowsIn.length,rowsIn.map(()=>1));
         const rows=rowsIn.map((r,i)=>({time:times[i]+" min",name:r.name||("Stage "+(i+1)),teacher:r.teacher||"",learner:r.learner||"",fa:r.fa||"Oral questioning",res:(r.res?r.res+", ":"")+"PPT Slides "+(r.slideRange||"—"),pedagogy:""}));
-        return {meta:{teacher,grade,subject,topic:finalTopic,date,dur},aim:sess.aim||autoAim(finalTopic,subject),objs:(sess.objectives&&sess.objectives.length)?sess.objectives:autoObjectives(finalTopic),rows,homework:autoHomework(finalTopic),title:sessions.length>1?("In-session "+(si+1)+"/"+sessions.length):"In-session"};
+        return {meta:{teacher,grade,subject,topic:finalTopic,date,dur},aim:sess.aim||autoAim(finalTopic,subject),objs:(()=>{const n=normalizeList(sess.objectives);return n.length?n:autoObjectives(finalTopic);})(),rows,homework:autoHomework(finalTopic),title:sessions.length>1?("In-session "+(si+1)+"/"+sessions.length):"In-session"};
       });
       lastOut={kind:"lesson",plans,name:"Lesson Plan - "+subject+" "+grade+" - "+finalTopic+(plans.length>1?" ("+plans.length+" sessions)":"")};
       renderPreview();
@@ -1534,10 +1577,14 @@ ${slideText}`;
     if(!slides.length)throw new Error("No slide content found to convert.");
     const sessionsRaw=groupSlidesForFallback(slides);
     const finalTopic=topic||"Lesson Topic";
-    const plans=sessionsRaw.map((stageList,si)=>{
+    const plans=sessionsRaw.map((sess,si)=>{
+      const stageList=sess.stages;
       const times=distribute(dur,stageList.length,stageList.map(()=>1));
       const rows=stageList.map((s,i)=>({time:times[i]+" min",name:s.name,teacher:s.teacher,learner:s.learner,fa:s.fa,res:s.res+", PPT Slides "+s.slideRange,pedagogy:""}));
-      return {meta:{teacher,grade,subject,topic:finalTopic,date,dur},aim:autoAim(finalTopic,subject),objs:autoObjectives(finalTopic),rows,homework:autoHomework(finalTopic),title:sessionsRaw.length>1?("In-session "+(si+1)+"/"+sessionsRaw.length):"In-session"};
+      // Each session gets its own sub-topic guessed from its own slides, so aim/objectives are
+      // genuinely distinct per session rather than the same generic text repeated everywhere.
+      const sessionTopic=(sessionsRaw.length>1?clip(sess.firstSlide.replace(/\s+/g," ").trim(),60):"")||finalTopic;
+      return {meta:{teacher,grade,subject,topic:finalTopic,date,dur},aim:autoAim(sessionTopic,subject),objs:autoObjectives(sessionTopic),rows,homework:autoHomework(sessionTopic),title:sessionsRaw.length>1?("In-session "+(si+1)+"/"+sessionsRaw.length):"In-session"};
     });
     lastOut={kind:"lesson",plans,name:"Lesson Plan - "+subject+" "+grade+" - "+finalTopic+(plans.length>1?" ("+plans.length+" sessions)":"")};
     renderPreview();
@@ -1783,7 +1830,7 @@ async function planSessions(chapter,grade,subject,count,objs){
 Return ONLY a JSON array of exactly ${count} objects, no preamble:
 [{"focus":"short session focus, e.g. 'Introducing the concept and key vocabulary'","objectives":["2-3 objectives for THIS session only, Bloom-aligned"]}]`;
       const arr=parseJSON(await callAI(prompt,1600));
-      if(Array.isArray(arr) && arr.length===count)return arr.map(s=>({focus:s.focus||chapter,objectives:s.objectives&&s.objectives.length?s.objectives:objs.slice(0,3)}));
+      if(Array.isArray(arr) && arr.length===count)return arr.map(s=>({focus:s.focus||chapter,objectives:(()=>{const n=normalizeList(s.objectives);return n.length?n:objs.slice(0,3);})()}));
     }catch(e){/* fall through to even split */}
   }
   // Offline / fallback: distribute the chapter's objectives evenly across sessions.
@@ -1816,7 +1863,7 @@ async function powChapterToLessons(i){
   if(!grade||!subject){ps.className="status err";ps.textContent="Select grade and subject first.";return;}
   ps.className="status";ps.textContent="Planning "+count+" lesson plan(s) for: "+chapter+" …";
   let baseObjs;
-  try{baseObjs=parseJSON(await callAI(`Write 6-8 measurable CBSE learning objectives for the ${grade} ${subject} chapter "${chapter}", spanning Bloom levels, grounded in ${sourceHint(subject)}. Return ONLY a JSON array of strings.`,800));}
+  try{baseObjs=normalizeList(parseJSON(await callAI(`Write 6-8 measurable CBSE learning objectives for the ${grade} ${subject} chapter "${chapter}", spanning Bloom levels, grounded in ${sourceHint(subject)}. Return ONLY a JSON array of strings.`,800)));if(!baseObjs.length)baseObjs=autoObjectives(chapter);}
   catch(e){baseObjs=autoObjectives(chapter);}
 
   const sessions=await planSessions(chapter,grade,subject,count,baseObjs);
@@ -1885,7 +1932,7 @@ Chapters:\n${chunk.map((c,k)=>(k+1)+". "+c).join("\n")}
 Return ONLY a JSON array, same order, one string per chapter (semicolon-separated objectives in that single string):
 ["objective 1; objective 2; objective 3", ...]`;
         const arr=parseJSON(await callAI(prompt,1400));
-        chunk.forEach((c,k)=>rows.push({chapter:c,objectives:(arr[k]||"").split(";").map(s=>s.trim()).filter(Boolean)}));
+        chunk.forEach((c,k)=>{const objs=normalizeList(arr[k]);rows.push({chapter:c,objectives:objs.length?objs:autoObjectives(c).slice(0,3)});});
       }catch(e){
         chunk.forEach(c=>rows.push({chapter:c,objectives:autoObjectives(c).slice(0,3)}));
       }
